@@ -8,34 +8,23 @@ Mopidy-GMusic
 Usage
 -----
 
-#. You must register for a user account at http://www.soundcloud.com/
+#. You must have a Google account
 
-#. Install the Mopidy-Soundcloud extension by running::
+#. Install the Mopidy-GMusic extension by running::
 
     sudo pip install mopidy-gmusic
 
-#. You need a SoundCloud authentication token for Mopidy from
-   http://www.mopidy.com/authenticate
+#. Before starting Mopidy, you must add your Soundspot username and
+   password to the Mopidy configuration file::
 
-#. Add the authentication token to the ``mopidy.conf`` config file::
-
-    [soundcloud]
-    auth_key = 1-1111-1111111
-
-#. Extra playlists from http://www.soundcloud.com/explore can be retrieved by
-   setting the ``soundcloud/explore`` config value. For example, if you want
-   Smooth Jazz from https://soundcloud.com/explore/jazz%2Bblues your entry
-   would be "jazz%2Bblues/Smooth Jazz". Example config::
-
-    [soundcloud]
-    auth_key = 1-1111-1111111
-    explore = electronic/Ambient, pop/New Wave, rock/Indie
-
-
+   [gmusic]
+   username = alice
+   password = secret
+   
 Project resources
 -----------------
 
-- `Source code <https://github.com/dz0ny/mopidy-soundcloud>`_
-- `Issue tracker <https://github.com/mopidy/mopidy-soundcloud/issues>`_
+- `Source code <https://github.com/hechtus/mopidy-gmusic>`_
+- `Issue tracker <https://github.com/mopidy/mopidy-gmusic/issues>`_
 - `Download development snapshot
-  <https://github.com/dz0ny/mopidy-soundcloud/tarball/develop#egg=mopidy-soundcloud-dev>`_
+  <https://github.com/mopidy/mopidy-gmusic/tarball/develop#egg=mopidy-gmusic-dev>`_
