@@ -17,9 +17,9 @@ Usage
 #. Before starting Mopidy, you must add your Soundspot username and
    password to the Mopidy configuration file::
 
-   [gmusic]
-   username = alice
-   password = secret
+    [gmusic]
+    username = alice
+    password = secret
    
 Project resources
 -----------------
