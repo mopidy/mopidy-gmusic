@@ -4,11 +4,16 @@ import logging
 import urlparse
 
 from mopidy.backends import base
-from mopidy.models import Track, Album, Artist, SearchResult
+from mopidy.models import SearchResult
+
+from . import translator
 
 logger = logging.getLogger('mopidy.backends.gmusic')
 
 class GMusicLibraryProvider(base.BaseLibraryProvider):
+
+    def find_exact(self, query=None, uris=None):
+        return self.search(query=query, uris=uris)
 
     def lookup(self, uri):
         print "lockup"
@@ -18,7 +23,6 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
         print "refresh"
 
     def search(self, query=None, uris=None):
-
         if query is None:
             query = {}
         print query
@@ -36,7 +40,7 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
                 track_filter = lambda t: q in t['name'].lower()
                 album_filter = lambda t: q in t['album'].lower()
                 artist_filter = lambda t: q in t['artist'].lower()
-                date_filter = lambda t: q in t['year']
+                date_filter = lambda t: q in str(t['year'])
                 any_filter = lambda t: track_filter(t) or album_filter(t) or \
                     artist_filter(t) or uri_filter(t)
         
@@ -55,13 +59,11 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
                 else:
                     raise LookupError('Invalid lookup field: %s' % field)
                 
-        tracks = [Track(uri = self.backend.api.get_stream_url(track['id']),
-                        name = track['name'],
-                        artists = [Artist(name = track['artist'])],
-                        album = Album(name = track['album'], images = [track['albumArtUrl']]),
-                        track_no = track['track']) for track in result_tracks]
-
-        return SearchResult(uri = 'gmusic:search', tracks = tracks)
+        return SearchResult(uri = 'gmusic:search',
+                            tracks = [translator.to_mopidy_track(track) for track in result_tracks])
+                            # Causes disconnet problems with ncmpcpp
+                            #artists = list(set([translator.to_mopidy_artist(track) for track in result_tracks])))
+                            #albums = list(set([translator.to_mopidy_album(track) for track in result_tracks])))
               
     def _validate_query(self, query):
         for (_, values) in query.iteritems():
