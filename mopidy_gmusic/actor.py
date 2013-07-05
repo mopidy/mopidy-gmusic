@@ -1,13 +1,10 @@
 from __future__ import unicode_literals
 
 import logging
-import urlparse
 
 import pykka
 
-from mopidy import audio as audio_lib
 from mopidy.backends import base
-from mopidy.models import Track, Album, SearchResult
 
 from gmusicapi import Webclient
 
