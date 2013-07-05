@@ -16,8 +16,7 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
         return self.search(query=query, uris=uris)
 
     def lookup(self, uri):
-        print "lockup"
-        return []
+        return [translator.lookup_mopidy_track(uri)]
 
     def refresh(self, uri=None):
         print "refresh"

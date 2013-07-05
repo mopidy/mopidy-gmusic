@@ -12,6 +12,7 @@ from mopidy.models import Track, Album, SearchResult
 from gmusicapi import Webclient
 
 from .library import GMusicLibraryProvider
+from .playback import GMusicPlaybackProvider
 
 logger = logging.getLogger('mopidy.backends.gmusic')
 
@@ -23,7 +24,7 @@ class GMusicBackend(pykka.ThreadingActor, base.Backend):
         self.config = config
 
         self.library = GMusicLibraryProvider(backend=self)
-        self.playback = base.BasePlaybackProvider(audio=audio, backend=self)
+        self.playback = GMusicPlaybackProvider(audio=audio, backend=self)
         self.playlists = None
 
         self.uri_schemes = ['gmusic']

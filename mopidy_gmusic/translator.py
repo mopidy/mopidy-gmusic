@@ -3,21 +3,18 @@ from __future__ import unicode_literals
 import logging
 
 from mopidy.models import Artist, Album, Track, Playlist
-from gmusicapi import CallFailure
 
 logger = logging.getLogger('mopidy.backends.gmusic')
+
+track_cache = {}
 
 def to_mopidy_track(track):
     if track is None:
         return
-    try:
-        # This is too slow here ...
-        # uri = self.backend.api.get_stream_url(track['id'])
-        uri = "TBD"
-    except CallFailure as error:
-        uri = ''
-        logger.debug(u'Failed to lookup "%s": %s', track['id'], error)
-    return Track(
+    uri = 'gmusic:' + track['id']
+    if uri in track_cache:
+        return track_cache[uri]
+    track_cache[uri] = Track(
         uri = uri,
         name = track['name'],
         artists = [to_mopidy_artist(track)],
@@ -27,6 +24,10 @@ def to_mopidy_track(track):
         date = track['year'],
         length = track['durationMillis'],
         bitrate = track['bitrate'])
+    return track_cache[uri]
+
+def lookup_mopidy_track(uri):
+    return track_cache[uri]
 
 def to_mopidy_artist(track):
     if track is None:
