@@ -24,7 +24,6 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
     def search(self, query=None, uris=None):
         if query is None:
             query = {}
-        print query
         self._validate_query(query)
         result_tracks = self.backend.songs
         
@@ -35,7 +34,7 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
             for value in values:
                 q = value.strip().lower()
 
-                uri_filter = lambda t: q in t['name'].lower()
+                uri_filter = lambda t: q in 'gmusic:' + t['id']
                 track_filter = lambda t: q in t['name'].lower()
                 album_filter = lambda t: q in t['album'].lower()
                 artist_filter = lambda t: q in t['artist'].lower()
