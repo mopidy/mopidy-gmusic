@@ -30,4 +30,4 @@ Project resources
 - `Source code <https://github.com/hechtus/mopidy-gmusic>`_
 - `Issue tracker <https://github.com/hechtus/mopidy-gmusic/issues>`_
 - `Download development snapshot
-  <https://github.com/mopidy/mopidy-gmusic/tarball/develop#egg=mopidy-gmusic-dev>`_
+  <https://github.com/hechtus/mopidy-gmusic/archive/master.zip>`_
