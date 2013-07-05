@@ -8,13 +8,16 @@ Mopidy-GMusic
 Usage
 -----
 
-#. You must have a Google account
+#. You must have a Google account and some music in your library
+
+#. Install the `Google Music API
+   <https://github.com/simon-weber/Unofficial-Google-Music-API>`_
 
 #. Install the Mopidy-GMusic extension by running::
 
     sudo pip install mopidy-gmusic
 
-#. Before starting Mopidy, you must add your Soundspot username and
+#. Before starting Mopidy, you must add your Google username and
    password to the Mopidy configuration file::
 
     [gmusic]
