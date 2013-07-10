@@ -59,9 +59,6 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
                 
         return SearchResult(uri = 'gmusic:search',
                             tracks = [translator.to_mopidy_track(track) for track in result_tracks])
-                            # Causes disconnet problems with ncmpcpp
-                            #artists = list(set([translator.to_mopidy_artist(track) for track in result_tracks])))
-                            #albums = list(set([translator.to_mopidy_album(track) for track in result_tracks])))
               
     def _validate_query(self, query):
         for (_, values) in query.iteritems():

@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import logging
 
-from mopidy.models import Artist, Album, Track, Playlist
+from mopidy.models import Artist, Album, Track
 
 logger = logging.getLogger('mopidy.backends.gmusic')
 
@@ -17,7 +17,7 @@ def to_mopidy_track(track):
     track_cache[uri] = Track(
         uri = uri,
         name = track['name'],
-        artists = [to_mopidy_artist(track)],
+        artists = [Artist(name = track['artist'])],
         album = to_mopidy_album(track),
         track_no = track['track'],
         disc_no = track['disc'],
@@ -29,20 +29,15 @@ def to_mopidy_track(track):
 def lookup_mopidy_track(uri):
     return track_cache[uri]
 
-def to_mopidy_artist(track):
-    if track is None:
-        return
-    return Artist(
-        name = track['artist'])
-
 def to_mopidy_album(track):
     if track is None:
         return
+    artist = track['albumArtist']
+    if artist.strip() == '':
+        artist = track['artist']
     return Album(
         name = track['album'],
-        artists = [to_mopidy_artist(track)],
+        artists = [Artist(name = artist)],
         num_tracks = track['totalTracks'],
         num_discs = track['totalDiscs'],
         date = track['year'])
-        # Doesn't make sense when fetched from the client and not from mopidy
-        # images = [track['albumArtUrl']])
