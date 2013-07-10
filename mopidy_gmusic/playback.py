@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import logging
 
 from mopidy.backends import base
-from mopidy.models import Artist, Album, Track, Playlist
 from gmusicapi import CallFailure
 
 logger = logging.getLogger('mopidy.backends.gmusic')
