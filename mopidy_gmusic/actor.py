@@ -1,7 +1,5 @@
 from __future__ import unicode_literals
 
-import logging
-
 import pykka
 
 from mopidy.backends import base
@@ -10,8 +8,7 @@ from gmusicapi import Webclient
 
 from .library import GMusicLibraryProvider
 from .playback import GMusicPlaybackProvider
-
-logger = logging.getLogger('mopidy.backends.gmusic')
+from .session import GMusicSession
 
 
 class GMusicBackend(pykka.ThreadingActor, base.Backend):
@@ -23,16 +20,14 @@ class GMusicBackend(pykka.ThreadingActor, base.Backend):
         self.library = GMusicLibraryProvider(backend=self)
         self.playback = GMusicPlaybackProvider(audio=audio, backend=self)
         self.playlists = None
+        self.session = GMusicSession()
 
         self.uri_schemes = ['gmusic']
 
     def on_start(self):
-        logger.info('Mopidy uses Google Music')
-        logger.debug('Connecting to Google Music')
-        self.api = Webclient()
-        self.api.login(self.config['gmusic']['username'],
-                       self.config['gmusic']['password'])
-        self.songs = self.api.get_all_songs()
+        self.session.login(self.config['gmusic']['username'],
+                           self.config['gmusic']['password'])
+        self.songs = self.session.get_all_songs()
 
     def on_stop(self):
-        self.api.logout()
+        self.session.logout()
