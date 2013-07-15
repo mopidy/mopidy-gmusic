@@ -8,6 +8,7 @@ from gmusicapi import Webclient
 
 from .library import GMusicLibraryProvider
 from .playback import GMusicPlaybackProvider
+from .playlists import GMusicPlaylistsProvider
 from .session import GMusicSession
 
 
@@ -19,7 +20,7 @@ class GMusicBackend(pykka.ThreadingActor, base.Backend):
 
         self.library = GMusicLibraryProvider(backend=self)
         self.playback = GMusicPlaybackProvider(audio=audio, backend=self)
-        self.playlists = None
+        self.playlists = GMusicPlaylistsProvider(backend=self)
         self.session = GMusicSession()
 
         self.uri_schemes = ['gmusic']
@@ -28,6 +29,7 @@ class GMusicBackend(pykka.ThreadingActor, base.Backend):
         self.session.login(self.config['gmusic']['username'],
                            self.config['gmusic']['password'])
         self.songs = self.session.get_all_songs()
+        self.playlists.refresh()
 
     def on_stop(self):
         self.session.logout()
