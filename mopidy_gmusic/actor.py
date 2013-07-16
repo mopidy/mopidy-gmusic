@@ -28,7 +28,7 @@ class GMusicBackend(pykka.ThreadingActor, base.Backend):
     def on_start(self):
         self.session.login(self.config['gmusic']['username'],
                            self.config['gmusic']['password'])
-        self.songs = self.session.get_all_songs()
+        self.library.refresh()
         self.playlists.refresh()
 
     def on_stop(self):

@@ -19,13 +19,13 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
         return [translator.lookup_mopidy_track(uri)]
 
     def refresh(self, uri=None):
-        print "refresh"
+        self.songs = self.backend.session.get_all_songs()
 
     def search(self, query=None, uris=None):
         if query is None:
             query = {}
         self._validate_query(query)
-        result_tracks = self.backend.songs
+        result_tracks = self.songs
         
         for (field, values) in query.iteritems():
             if not hasattr(values, '__iter__'):
