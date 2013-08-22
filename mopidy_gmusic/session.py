@@ -38,7 +38,7 @@ class GMusicSession(object):
     def get_stream_url(self, song_id):
         if self.api.is_authenticated():
             try:
-                return self.api.get_stream_url(song_id)
+                return self.api.get_stream_urls(song_id)[0]
             except CallFailure as error:
                 logger.error(u'Failed to lookup "%s": %s', song_id, error)
 
