@@ -12,6 +12,9 @@ Usage
 
 #. Install the `Google Music API
    <https://github.com/simon-weber/Unofficial-Google-Music-API>`_
+   by running::
+   
+    sudo pip install gmusicapi
 
 #. Install the Mopidy-GMusic extension by running::
 
