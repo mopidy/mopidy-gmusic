@@ -15,7 +15,7 @@ Usage
 
 #. Install the Mopidy-GMusic extension by running::
 
-    sudo pip install mopidy-gmusic
+    sudo pip install git+git://github.com/hechtus/mopidy-gmusic.git@master
 
 #. Before starting Mopidy, you must add your Google username and
    password to the Mopidy configuration file::
