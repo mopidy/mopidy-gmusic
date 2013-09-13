@@ -12,10 +12,13 @@ Usage
 
 #. Install the `Google Music API
    <https://github.com/simon-weber/Unofficial-Google-Music-API>`_
+   by running::
+   
+    sudo pip install gmusicapi
 
 #. Install the Mopidy-GMusic extension by running::
 
-    sudo pip install mopidy-gmusic
+    sudo pip install git+git://github.com/hechtus/mopidy-gmusic.git@master
 
 #. Before starting Mopidy, you must add your Google username and
    password to the Mopidy configuration file::
