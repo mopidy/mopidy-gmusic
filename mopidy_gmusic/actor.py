@@ -4,8 +4,6 @@ import pykka
 
 from mopidy.backends import base
 
-from gmusicapi import Webclient
-
 from .library import GMusicLibraryProvider
 from .playback import GMusicPlaybackProvider
 from .playlists import GMusicPlaylistsProvider
@@ -27,7 +25,8 @@ class GMusicBackend(pykka.ThreadingActor, base.Backend):
 
     def on_start(self):
         self.session.login(self.config['gmusic']['username'],
-                           self.config['gmusic']['password'])
+                           self.config['gmusic']['password'],
+                           self.config['gmusic']['deviceid'])
         self.library.refresh()
         self.playlists.refresh()
 

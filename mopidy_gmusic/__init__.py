@@ -23,6 +23,7 @@ class GMusicExtension(ext.Extension):
         schema = super(GMusicExtension, self).get_config_schema()
         schema['username'] = config.String()
         schema['password'] = config.Secret()
+        schema['deviceid'] = config.String(optional=True)
         return schema
 
     def validate_environment(self):
