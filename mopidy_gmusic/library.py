@@ -20,6 +20,9 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
 
     def refresh(self, uri=None):
         self.songs = self.backend.session.get_all_songs()
+        # Build up track cache
+        for song in self.songs:
+            translator.to_mopidy_track(song)
 
     def search(self, query=None, uris=None):
         if query is None:

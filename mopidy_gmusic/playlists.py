@@ -26,14 +26,14 @@ class GMusicPlaylistsProvider(base.BasePlaylistsProvider):
     def refresh(self):
         playlists = []
 
-        for subdir, entry in self.backend.session.get_all_playlist_ids().items():
-            for name, ids in entry.items():
-                for i in ids:
-                    tracks = [translator.to_mopidy_track(track) for track in 
-                              self.backend.session.get_playlist_songs(i)]
+        for playlist in self.backend.session.get_all_playlist_contents():
+            tracks = []
+            for track in playlist['tracks']:
+                if not track['deleted']:
+                    tracks.append(translator.lookup_mopidy_track('gmusic:' + track['trackId']))
                   
-                    playlist = Playlist(uri='gmusic:' + i, name=name, tracks=tracks)
-                    playlists.append(playlist)
+            playlist = Playlist(uri='gmusic:' + playlist['id'], name=playlist['name'], tracks=tracks)
+            playlists.append(playlist)
 
         self.playlists = playlists
         listener.BackendListener.send('playlists_loaded')
