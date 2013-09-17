@@ -16,14 +16,14 @@ def to_mopidy_track(track):
         return track_cache[uri]
     track_cache[uri] = Track(
         uri = uri,
-        name = track['name'],
+        name = track['title'],
         artists = [Artist(name = track['artist'])],
         album = to_mopidy_album(track),
-        track_no = track.get('track',1),
-        disc_no = track.get('disc',1), # default to disc 1
-        date = track.get('year',1970), # epoch?
-        length = track['durationMillis'],
-        bitrate = track.get('bitrate',0))
+        track_no = track.get('trackNumber', 1),
+        disc_no = track.get('discNumber', 1),
+        date = track.get('year', 1970),
+        length = int(track['durationMillis']),
+        bitrate = 320)
     return track_cache[uri]
 
 def lookup_mopidy_track(uri):
@@ -38,6 +38,6 @@ def to_mopidy_album(track):
     return Album(
         name = track['album'],
         artists = [Artist(name = artist)],
-        num_tracks = track.get('totalTracks',1),
-        num_discs = track.get('totalDiscs',track.get('disc',1)),
-        date = track.get('year',1970))
+        num_tracks = track.get('totalTrackCount', 1),
+        num_discs = track.get('totalDiscCount', track.get('discNumber', 1)),
+        date = track.get('year', 1970))
