@@ -38,7 +38,7 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
                 q = value.strip().lower()
 
                 uri_filter = lambda t: q in 'gmusic:' + t['id']
-                track_filter = lambda t: q in t['name'].lower()
+                track_filter = lambda t: q in t['title'].lower()
                 album_filter = lambda t: q in t['album'].lower()
                 artist_filter = lambda t: q in t['artist'].lower()
                 date_filter = lambda t: q in str(t['year'])
