@@ -4,8 +4,6 @@ import pykka
 
 from mopidy.backends import base
 
-from gmusicapi import Webclient
-
 from .library import GMusicLibraryProvider
 from .playback import GMusicPlaybackProvider
 from .playlists import GMusicPlaylistsProvider
