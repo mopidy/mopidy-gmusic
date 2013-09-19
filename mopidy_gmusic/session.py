@@ -12,7 +12,7 @@ class GMusicSession(object):
     def __init__(self):
         super(GMusicSession, self).__init__()
         logger.info('Mopidy uses Google Music')
-        self.api = Webclient()
+        self.api = Webclient(validate=False)
 
     def login(self, username, password):
         if self.api.is_authenticated():
