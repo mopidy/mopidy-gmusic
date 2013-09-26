@@ -5,8 +5,6 @@ import logging
 from mopidy.backends import base, listener
 from mopidy.models import Playlist
 
-from . import translator
-
 logger = logging.getLogger('mopidy.backends.gmusic')
 
 
@@ -30,7 +28,7 @@ class GMusicPlaylistsProvider(base.BasePlaylistsProvider):
             tracks = []
             for track in playlist['tracks']:
                 if not track['deleted']:
-                    tracks.append(translator.lookup_mopidy_track('gmusic:' + track['trackId']))
+                    tracks.append(self.backend.library.lookup('gmusic:' + track['trackId'])[0])
                   
             playlist = Playlist(uri='gmusic:' + playlist['id'], name=playlist['name'], tracks=tracks)
             playlists.append(playlist)

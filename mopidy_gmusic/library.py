@@ -4,9 +4,7 @@ import logging
 import urlparse
 
 from mopidy.backends import base
-from mopidy.models import SearchResult
-
-from . import translator
+from mopidy.models import Artist, Album, Track, SearchResult
 
 logger = logging.getLogger('mopidy.backends.gmusic')
 
@@ -16,7 +14,7 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
         if query is None:
             query = {}
         self._validate_query(query)
-        result_tracks = self.songs
+        result_tracks = self.tracks.values()
         
         for (field, values) in query.iteritems():
             if not hasattr(values, '__iter__'):
@@ -25,13 +23,15 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
             for value in values:
                 q = value.strip()
 
-                uri_filter = lambda t: q == 'gmusic:' + t['id']
-                track_filter = lambda t: q == t['title']
-                album_filter = lambda t: q == t['album']
-                artist_filter = lambda t: q == t['artist']
-                date_filter = lambda t: q == str(t['year'])
-                any_filter = lambda t: track_filter(t) or album_filter(t) or \
-                    artist_filter(t) or uri_filter(t)
+                uri_filter = lambda t: q == t.uri
+                track_filter = lambda t: q == t.name
+                album_filter = lambda t: q == getattr(t, 'album', Album()).name
+                artist_filter = lambda t: filter(
+                    lambda a: q == a.name, t.artists)
+                date_filter = lambda t: q == unicode(t.date)
+                any_filter = lambda t: (
+                    track_filter(t) or album_filter(t) or
+                    artist_filter(t) or uri_filter(t))
         
                 if field == 'uri':
                     result_tracks = filter(uri_filter, result_tracks)
@@ -47,24 +47,26 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
                     result_tracks = filter(any_filter, result_tracks)
                 else:
                     raise LookupError('Invalid lookup field: %s' % field)
-                
-        return SearchResult(uri = 'gmusic:search',
-                            tracks = [translator.to_mopidy_track(track) for track in result_tracks])
+
+        return SearchResult(uri='gmusic:search', tracks=result_tracks)
 
     def lookup(self, uri):
-        return [translator.lookup_mopidy_track(uri)]
+        try:
+            return [self.tracks[uri]]
+        except KeyError:
+            logger.debug('Failed to lookup %r', uri)
+            return []
 
     def refresh(self, uri=None):
-        self.songs = self.backend.session.get_all_songs()
-        # Build up track cache
-        for song in self.songs:
-            translator.to_mopidy_track(song)
+        self.tracks = {}
+        for song in self.backend.session.get_all_songs():
+            self._to_mopidy_track(song)
 
     def search(self, query=None, uris=None):
         if query is None:
             query = {}
         self._validate_query(query)
-        result_tracks = self.songs
+        result_tracks = self.tracks.values()
         
         for (field, values) in query.iteritems():
             if not hasattr(values, '__iter__'):
@@ -73,11 +75,13 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
             for value in values:
                 q = value.strip().lower()
 
-                uri_filter = lambda t: q in 'gmusic:' + t['id'].lower()
-                track_filter = lambda t: q in t['title'].lower()
-                album_filter = lambda t: q in t['album'].lower()
-                artist_filter = lambda t: q in t['artist'].lower()
-                date_filter = lambda t: q in str(t['year'])
+                uri_filter = lambda t: q in t.uri.lower()
+                track_filter = lambda t: q in t.name.lower()
+                album_filter = lambda t: q in getattr(
+                    t, 'album', Album()).name.lower()
+                artist_filter = lambda t: filter(
+                    lambda a: q in a.name.lower(), t.artists)
+                date_filter = lambda t: q in unicode(t.date)
                 any_filter = lambda t: track_filter(t) or album_filter(t) or \
                     artist_filter(t) or uri_filter(t)
         
@@ -96,8 +100,7 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
                 else:
                     raise LookupError('Invalid lookup field: %s' % field)
                 
-        return SearchResult(uri = 'gmusic:search',
-                            tracks = [translator.to_mopidy_track(track) for track in result_tracks])
+        return SearchResult(uri='gmusic:search', tracks=result_tracks)
               
     def _validate_query(self, query):
         for (_, values) in query.iteritems():
@@ -106,3 +109,28 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
             for value in values:
                 if not value:
                     raise LookupError('Missing query')
+
+    def _to_mopidy_track(self, song):
+        uri = 'gmusic:' + song['id']
+        self.tracks[uri] = Track(
+            uri = uri,
+            name = song['title'],
+            artists = [Artist(name = song['artist'])],
+            album = self._to_mopidy_album(song),
+            track_no = song.get('trackNumber', 1),
+            disc_no = song.get('discNumber', 1),
+            date = song.get('year', 1970),
+            length = int(song['durationMillis']),
+            bitrate = 320)
+        return self.tracks[uri]
+
+    def _to_mopidy_album(self, song):
+        artist = song['albumArtist']
+        if artist.strip() == '':
+            artist = song['artist']
+        return Album(
+            name = song['album'],
+            artists = [Artist(name = artist)],
+            num_tracks = song.get('totalTrackCount', 1),
+            num_discs = song.get('totalDiscCount', song.get('discNumber', 1)),
+            date = song.get('year', 1970))
