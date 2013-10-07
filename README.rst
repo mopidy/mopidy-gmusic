@@ -16,11 +16,11 @@ Usage
    <https://github.com/simon-weber/Unofficial-Google-Music-API>`_
    by running::
    
-    sudo pip install gmusicapi
+    pip install gmusicapi
 
 #. Install the Mopidy-GMusic extension by running::
 
-    sudo pip install mopidy-gmusic
+    pip install mopidy-gmusic
 
 #. Before starting Mopidy, you must add your Google username,
    password, and Android mobile device ID to the Mopidy configuration
