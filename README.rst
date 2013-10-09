@@ -30,9 +30,9 @@ Dependencies
 
 - You must have an Android device registered for Google Play Music.
 
-- Install the `Google Music API
-  <https://github.com/simon-weber/Unofficial-Google-Music-API>`_
-  by running::
+- The `Unofficial Google Music API
+  <https://github.com/simon-weber/Unofficial-Google-Music-API>`_ is
+  needed to access Google Play Music. Install it by running::
    
     pip install gmusicapi
 
