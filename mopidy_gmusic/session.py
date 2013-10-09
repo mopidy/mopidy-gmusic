@@ -55,7 +55,8 @@ class GMusicSession(object):
             return {}
 
     def get_deviceid(self, username, password):
-        logger.warning(u'No mobile device ID configured. Trying to detect one.')
+        logger.warning(u'No mobile device ID configured. ' \
+                           'Trying to detect one.')
         webapi = Webclient(validate=False)
         webapi.login(username, password)
         devices = webapi.get_registered_devices()
@@ -67,7 +68,8 @@ class GMusicSession(object):
                 break
         webapi.logout()
         if deviceid is None:
-            logger.error(u'No valid mobile device ID found. Playing songs will not work.')
+            logger.error(u'No valid mobile device ID found. ' \
+                             'Playing songs will not work.')
         else:
             logger.info(u'Using mobile device ID %s', deviceid)
         return deviceid

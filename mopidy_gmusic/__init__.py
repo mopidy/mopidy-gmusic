@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 
 import os
 
-import mopidy
 from mopidy import config, exceptions, ext
 
 
@@ -28,7 +27,7 @@ class GMusicExtension(ext.Extension):
 
     def validate_environment(self):
         try:
-            import gmusicapi
+            import gmusicapi # noqa
         except ImportError as e:
             raise exceptions.ExtensionError('gmusicapi library not found', e)
         pass
