@@ -1,5 +1,22 @@
+*************
 Mopidy-GMusic
-=============
+*************
+
+.. image:: https://pypip.in/v/Mopidy-GMusic/badge.png
+    :target: https://crate.io/packages/Mopidy-GMusic/
+    :alt: Latest PyPI version
+
+.. image:: https://pypip.in/d/Mopidy-GMusic/badge.png
+    :target: https://crate.io/packages/Mopidy-GMusic/
+    :alt: Number of PyPI downloads
+
+.. image:: https://travis-ci.org/hechtus/mopidy-gmusic.png?branch=master
+    :target: https://travis-ci.org/hechtus/mopidy-gmusic
+    :alt: Travis CI build status
+
+.. image:: https://coveralls.io/repos/hechtus/mopidy-gmusic/badge.png?branch=master
+   :target: https://coveralls.io/r/hechtus/mopidy-gmusic?branch=master
+   :alt: Test coverage
 
 `Mopidy <http://www.mopidy.com/>`_ extension for playing music from
 `Google Play Music <https://play.google.com/music/>`_.

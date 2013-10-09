@@ -26,6 +26,11 @@ setup(
         'Mopidy',
         'gmusicapi',
     ],
+    test_suite='nose.collector',
+    tests_require=[
+        'nose',
+        'mock >= 1.0',
+    ],
     entry_points={
         'mopidy.ext': [
             'gmusic = mopidy_gmusic:GMusicExtension',
