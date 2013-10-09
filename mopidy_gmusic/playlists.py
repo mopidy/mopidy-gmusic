@@ -28,10 +28,10 @@ class GMusicPlaylistsProvider(base.BasePlaylistsProvider):
             tracks = []
             for track in playlist['tracks']:
                 if not track['deleted']:
-                    tracks += self.backend.library.lookup('gmusic:' +
+                    tracks += self.backend.library.lookup('gmusic:track:' +
                                                           track['trackId'])
 
-            playlist = Playlist(uri='gmusic:' + playlist['id'],
+            playlist = Playlist(uri='gmusic:playlist:' + playlist['id'],
                                 name=playlist['name'],
                                 tracks=tracks)
             playlists.append(playlist)

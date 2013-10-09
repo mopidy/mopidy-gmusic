@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import logging
+import hashlib
 
 from mopidy.backends import base
 from mopidy.models import Artist, Album, Track, SearchResult
@@ -51,14 +52,52 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
         return SearchResult(uri='gmusic:search', tracks=result_tracks)
 
     def lookup(self, uri):
+        if uri.startswith('gmusic:track:'):
+            return self._lookup_track(uri)
+        elif uri.startswith('gmusic:album:'):
+            return self._lookup_album(uri)
+        elif uri.startswith('gmusic:artist:'):
+            return self._lookup_artist(uri)
+        else:
+            return []
+
+    def _lookup_track(self, uri):
         try:
             return [self.tracks[uri]]
         except KeyError:
             logger.debug('Failed to lookup %r', uri)
             return []
 
+    def _lookup_album(self, uri):
+        try:
+            album = self.albums[uri]
+        except KeyError:
+            logger.debug('Failed to lookup %r', uri)
+            return []
+        tracks = self.find_exact(
+            dict(album=album.name,
+                 artist=[artist.name for artist in album.artists],
+                 date=album.date)).tracks
+        return sorted(tracks, key=lambda t: (t.disc_no,
+                                             t.track_no))
+
+    def _lookup_artist(self, uri):
+        try:
+            artist = self.artists[uri]
+        except KeyError:
+            logger.debug('Failed to lookup %r', uri)
+            return []
+        tracks = self.find_exact(
+            dict(artist=artist.name)).tracks
+        return sorted(tracks, key=lambda t: (t.album.date,
+                                             t.album.name,
+                                             t.disc_no,
+                                             t.track_no))
+
     def refresh(self, uri=None):
         self.tracks = {}
+        self.albums = {}
+        self.artists = {}
         for song in self.backend.session.get_all_songs():
             self._to_mopidy_track(song)
 
@@ -100,7 +139,16 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
                 else:
                     raise LookupError('Invalid lookup field: %s' % field)
 
-        return SearchResult(uri='gmusic:search', tracks=result_tracks)
+        result_artists = set()
+        result_albums = set()
+        for track in result_tracks:
+            result_artists |= track.artists
+            result_albums.add(track.album)
+
+        return SearchResult(uri='gmusic:search',
+                            tracks=result_tracks,
+                            artists=result_artists,
+                            albums=result_albums)
 
     def _validate_query(self, query):
         for (_, values) in query.iteritems():
@@ -111,26 +159,43 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
                     raise LookupError('Missing query')
 
     def _to_mopidy_track(self, song):
-        uri = 'gmusic:' + song['id']
-        self.tracks[uri] = Track(
+        uri = 'gmusic:track:' + song['id']
+        track = Track(
             uri=uri,
             name=song['title'],
-            artists=[Artist(name=song['artist'])],
+            artists=[self._to_mopidy_artist(song)],
             album=self._to_mopidy_album(song),
             track_no=song.get('trackNumber', 1),
             disc_no=song.get('discNumber', 1),
             date=unicode(song.get('year', 0)),
             length=int(song['durationMillis']),
             bitrate=320)
-        return self.tracks[uri]
+        self.tracks[uri] = track
+        return track
 
     def _to_mopidy_album(self, song):
         artist = song['albumArtist']
         if artist.strip() == '':
             artist = song['artist']
-        return Album(
+        date = unicode(song.get('year', 0))
+        uri = 'gmusic:album:' + self._create_id(artist + song['album'] + date)
+        album = Album(
+            uri=uri,
             name=song['album'],
-            artists=[Artist(name=artist)],
+            artists=[self._to_mopidy_artist(song)],
             num_tracks=song.get('totalTrackCount', 1),
             num_discs=song.get('totalDiscCount', song.get('discNumber', 1)),
-            date=unicode(song.get('year', 0)))
+            date=date)
+        self.albums[uri] = album
+        return album
+
+    def _to_mopidy_artist(self, song):
+        uri = 'gmusic:artist:' + self._create_id(song['artist'])
+        artist = Artist(
+            uri=uri,
+            name=song['artist'])
+        self.artists[uri] = artist
+        return artist
+
+    def _create_id(self, u):
+        return hashlib.md5(u.encode('utf-8')).hexdigest()
