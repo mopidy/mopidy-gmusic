@@ -59,7 +59,7 @@ file::
    
 The mobile device ID is a 16-digit hexadecimal string (without a '0x'
 prefix) identifying the Android device registered for Google Play
-Music. You can obtain this ID by dialing ```*#*#8255#*#*``` on your
+Music. You can obtain this ID by dialing ``*#*#8255#*#*`` on your
 phone (see the aid) or using this `App
 <https://play.google.com/store/apps/details?id=com.evozi.deviceid>`_
 (see the Google Service Framework ID Key). You may also leave this
