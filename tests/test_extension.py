@@ -1,6 +1,6 @@
 import unittest
 
-from mopidy_gmusic import GMusicExtension, backend as backend_lib
+from mopidy_gmusic import GMusicExtension, actor as backend_lib
 
 
 class ExtensionTest(unittest.TestCase):
