@@ -130,7 +130,7 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
             artist = song['artist']
         return Album(
             name=song['album'],
-            artists=[Artist(name = artist)],
+            artists=[Artist(name=artist)],
             num_tracks=song.get('totalTrackCount', 1),
             num_discs=song.get('totalDiscCount', song.get('discNumber', 1)),
             date=unicode(song.get('year', 0)))

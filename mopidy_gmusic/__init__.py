@@ -27,7 +27,7 @@ class GMusicExtension(ext.Extension):
 
     def validate_environment(self):
         try:
-            import gmusicapi # noqa
+            import gmusicapi  # noqa
         except ImportError as e:
             raise exceptions.ExtensionError('gmusicapi library not found', e)
         pass
