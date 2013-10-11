@@ -90,7 +90,7 @@ Project resources
 Changelog
 =========
 
-v0.2 (UNRELEASED)
+v0.2 (2013-10-11)
 -------------------
 
 - Issue #12: Now able to play music from Google All Access
