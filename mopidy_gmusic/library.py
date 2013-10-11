@@ -174,7 +174,7 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
         return track
 
     def _to_mopidy_album(self, song):
-        artist = song['albumArtist']
+        artist = song.get('albumArtist', '')
         if artist.strip() == '':
             artist = song['artist']
         date = unicode(song.get('year', 0))
