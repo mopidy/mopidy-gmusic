@@ -5,7 +5,7 @@ import os
 from mopidy import config, exceptions, ext
 
 
-__version__ = '0.2'
+__version__ = '0.2.1'
 
 
 class GMusicExtension(ext.Extension):

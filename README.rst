@@ -90,6 +90,13 @@ Project resources
 Changelog
 =========
 
+v0.2.1 (2013-10-11)
+-------------------
+
+- Issue #15: Fixed a bug regarding the translation of Google album
+  artists to Mopidy album artists
+
+
 v0.2 (2013-10-11)
 -------------------
 
