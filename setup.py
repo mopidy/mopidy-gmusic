@@ -24,6 +24,7 @@ setup(
     install_requires=[
         'setuptools',
         'Mopidy >= 0.14',
+        'Pykka >= 1.11',
         'gmusicapi',
     ],
     test_suite='nose.collector',
