@@ -174,15 +174,14 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
         return track
 
     def _to_mopidy_album(self, song):
-        artist = song.get('albumArtist', '')
-        if artist.strip() == '':
-            artist = song['artist']
+        name = song['album']
+        artist = self._to_mopidy_album_artist(song)
         date = unicode(song.get('year', 0))
-        uri = 'gmusic:album:' + self._create_id(artist + song['album'] + date)
+        uri = 'gmusic:album:' + self._create_id(artist.name + name + date)
         album = Album(
             uri=uri,
-            name=song['album'],
-            artists=[self._to_mopidy_artist(song)],
+            name=name,
+            artists=[artist],
             num_tracks=song.get('totalTrackCount', 1),
             num_discs=song.get('totalDiscCount', song.get('discNumber', 1)),
             date=date)
@@ -190,10 +189,22 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
         return album
 
     def _to_mopidy_artist(self, song):
-        uri = 'gmusic:artist:' + self._create_id(song['artist'])
+        name = song['artist']
+        uri = 'gmusic:artist:' + self._create_id(name)
         artist = Artist(
             uri=uri,
-            name=song['artist'])
+            name=name)
+        self.artists[uri] = artist
+        return artist
+
+    def _to_mopidy_album_artist(self, song):
+        name = song.get('albumArtist', '')
+        if name.strip() == '':
+            name = song['artist']
+        uri = 'gmusic:artist:' + self._create_id(name)
+        artist = Artist(
+            uri=uri,
+            name=name)
         self.artists[uri] = artist
         return artist
 
