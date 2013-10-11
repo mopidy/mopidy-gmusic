@@ -23,7 +23,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'setuptools',
-        'Mopidy',
+        'Mopidy >= 0.14',
         'gmusicapi',
     ],
     test_suite='nose.collector',
