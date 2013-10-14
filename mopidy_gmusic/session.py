@@ -73,3 +73,17 @@ class GMusicSession(object):
         else:
             logger.info(u'Using mobile device ID %s', deviceid)
         return deviceid
+
+    def get_track_info(self, store_track_id):
+        if self.api.is_authenticated():
+            try:
+                return self.api.get_track_info(store_track_id)
+            except CallFailure as error:
+                logger.error(u'Failed to get All Access track info: %s', error)
+
+    def get_album_info(self, albumid, include_tracks=True):
+        if self.api.is_authenticated():
+            try:
+                return self.api.get_album_info(albumid, include_tracks)
+            except CallFailure as error:
+                logger.error(u'Failed to get All Access album info: %s', error)

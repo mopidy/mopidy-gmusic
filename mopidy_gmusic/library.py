@@ -62,6 +62,11 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
             return []
 
     def _lookup_track(self, uri):
+        if uri.startswith('gmusic:track:T'):
+            song = self.backend.session.get_track_info(uri.split(':')[2])
+            if song is None:
+                return []
+            return [self._aa_to_mopidy_track(song)]
         try:
             return [self.tracks[uri]]
         except KeyError:
@@ -207,6 +212,46 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
             name=name)
         self.artists[uri] = artist
         return artist
+
+    def _aa_to_mopidy_track(self, song):
+        uri = 'gmusic:track:' + song['storeId']
+        album = self._aa_to_mopidy_album(song)
+        artist = self._aa_to_mopidy_artist(song)
+        return Track(
+            uri=uri,
+            name=song['title'],
+            artists=[artist],
+            album=album,
+            track_no=song.get('trackNumber', 1),
+            disc_no=song.get('discNumber', 1),
+            date=album.date,
+            length=int(song['durationMillis']),
+            bitrate=320)
+
+    def _aa_to_mopidy_album(self, song):
+        album_info = self.backend.session.get_album_info(song['albumId'],
+                                                         include_tracks=False)
+        if album_info is None:
+            return None
+        name = album_info['name']
+        artist = self._aa_to_mopidy_album_artist(album_info)
+        date = unicode(album_info.get('year', 0))
+        return Album(
+            name=name,
+            artists=[artist],
+            date=date)
+
+    def _aa_to_mopidy_artist(self, song):
+        name = song['artist']
+        return Artist(
+            name=name)
+
+    def _aa_to_mopidy_album_artist(self, album_info):
+        name = album_info.get('albumArtist', '')
+        if name.strip() == '':
+            name = album_info['artist']
+        return Artist(
+            name=name)
 
     def _create_id(self, u):
         return hashlib.md5(u.encode('utf-8')).hexdigest()
