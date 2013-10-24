@@ -28,7 +28,9 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
                 track_filter = lambda t: q == t.name
                 album_filter = lambda t: q == getattr(t, 'album', Album()).name
                 artist_filter = lambda t: filter(
-                    lambda a: q == a.name, t.artists)
+                    lambda a: q == a.name, t.artists) or filter(
+                    lambda a: q == a.name, getattr(t, 'album',
+                                                   Album()).artists)
                 date_filter = lambda t: q == t.date
                 any_filter = lambda t: (
                     track_filter(t) or album_filter(t) or
@@ -124,7 +126,9 @@ class GMusicLibraryProvider(base.BaseLibraryProvider):
                 album_filter = lambda t: q in getattr(
                     t, 'album', Album()).name.lower()
                 artist_filter = lambda t: filter(
-                    lambda a: q in a.name.lower(), t.artists)
+                    lambda a: q in a.name.lower(), t.artists) or filter(
+                    lambda a: q in a.name, getattr(t, 'album',
+                                                   Album()).artists)
                 date_filter = lambda t: t.date and t.date.startswith(q)
                 any_filter = lambda t: track_filter(t) or album_filter(t) or \
                     artist_filter(t) or uri_filter(t)
