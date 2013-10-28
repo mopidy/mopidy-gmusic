@@ -48,9 +48,8 @@ Install the Mopidy-GMusic extension by running::
 Configuration
 =============
 
-Before starting Mopidy, you just need add your Google username,
-password, and Android mobile device ID to the Mopidy configuration
-file::
+Before starting Mopidy, you must add your Google username, password,
+and Android mobile device ID to your Mopidy configuration file::
 
     [gmusic]
     username = alice
