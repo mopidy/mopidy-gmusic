@@ -50,7 +50,7 @@ class GMusicSession(object):
 
     def get_all_playlist_contents(self):
         if self.api.is_authenticated():
-            return self.api.get_all_playlist_contents()
+            return self.api.get_all_user_playlist_contents()
         else:
             return {}
 
