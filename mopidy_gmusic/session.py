@@ -59,7 +59,7 @@ class GMusicSession(object):
             return self.api.get_shared_playlist_contents(shareToken)
         else:
             return {}
-    
+
     def get_all_playlists(self):
         if self.api.is_authenticated():
             return self.api.get_all_playlists()

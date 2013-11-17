@@ -36,16 +36,17 @@ class GMusicPlaylistsProvider(base.BasePlaylistsProvider):
                                 tracks=tracks)
             playlists.append(playlist)
 
-	for playlist in self.backend.session.get_all_playlists():
-           if playlist.get('type') == 'SHARED':
+        for playlist in self.backend.session.get_all_playlists():
+            if playlist.get('type') == 'SHARED':
                 tracks = []
-                tracklist = self.backend.session.get_shared_playlist_contents(playlist['shareToken'])  
+                tracklist = self.backend.session.get_shared_playlist_contents(
+                    playlist['shareToken'])
                 for track in tracklist:
                         tracks += self.backend.library.lookup('gmusic:track:' +
                                                               track['trackId'])
                 playlist = Playlist(uri='gmusic:playlist:' + playlist['id'],
-                                name=playlist['name'],
-                                tracks=tracks)
+                                    name=playlist['name'],
+                                    tracks=tracks)
                 playlists.append(playlist)
 
         self.playlists = playlists
