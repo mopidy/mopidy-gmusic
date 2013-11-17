@@ -54,6 +54,18 @@ class GMusicSession(object):
         else:
             return {}
 
+    def get_shared_playlist_contents(self, shareToken):
+        if self.api.is_authenticated():
+            return self.api.get_shared_playlist_contents(shareToken)
+        else:
+            return {}
+
+    def get_all_playlists(self):
+        if self.api.is_authenticated():
+            return self.api.get_all_playlists()
+        else:
+            return {}
+
     def get_deviceid(self, username, password):
         logger.warning(u'No mobile device ID configured. '
                        u'Trying to detect one.')
