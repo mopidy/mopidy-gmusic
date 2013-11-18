@@ -24,7 +24,7 @@ class GMusicPlaylistsProvider(base.BasePlaylistsProvider):
     def refresh(self):
         playlists = []
 
-        for playlist in self.backend.session.get_all_playlist_contents():
+        for playlist in self.backend.session.get_all_user_playlist_contents():
             tracks = []
             for track in playlist['tracks']:
                 if not track['deleted']:

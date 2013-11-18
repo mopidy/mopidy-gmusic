@@ -48,7 +48,7 @@ class GMusicSession(object):
             except CallFailure as error:
                 logger.error(u'Failed to lookup "%s": %s', song_id, error)
 
-    def get_all_playlist_contents(self):
+    def get_all_user_playlist_contents(self):
         if self.api.is_authenticated():
             return self.api.get_all_user_playlist_contents()
         else:
