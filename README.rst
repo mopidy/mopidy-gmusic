@@ -3,11 +3,11 @@ Mopidy-GMusic
 *************
 
 .. image:: https://pypip.in/v/Mopidy-GMusic/badge.png
-    :target: https://crate.io/packages/Mopidy-GMusic/
+    :target: https://pypi.python.org/pypi/Mopidy-GMusic/
     :alt: Latest PyPI version
 
 .. image:: https://pypip.in/d/Mopidy-GMusic/badge.png
-    :target: https://crate.io/packages/Mopidy-GMusic/
+    :target: https://pypi.python.org/pypi/Mopidy-GMusic/
     :alt: Number of PyPI downloads
 
 .. image:: https://travis-ci.org/hechtus/mopidy-gmusic.png?branch=master
