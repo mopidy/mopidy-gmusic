@@ -32,9 +32,8 @@ Dependencies
 
 - The `Unofficial Google Music API
   <https://github.com/simon-weber/Unofficial-Google-Music-API>`_ is
-  needed to access Google Play Music. Install it by running::
-   
-    pip install gmusicapi
+  needed to access Google Play Music. It will automatically be installed
+  together with Mopidy-GMusic.
 
 
 Installation
@@ -55,7 +54,7 @@ and Android mobile device ID to your Mopidy configuration file::
     username = alice
     password = secret
     deviceid = 0123456789abcdef
-   
+
 The mobile device ID is a 16-digit hexadecimal string (without a '0x'
 prefix) identifying the Android device registered for Google Play
 Music. You can obtain this ID by dialing ``*#*#8255#*#*`` on your
