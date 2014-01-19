@@ -3,13 +3,13 @@ from __future__ import unicode_literals
 import logging
 import hashlib
 
-from mopidy.backends import base
+from mopidy import backend
 from mopidy.models import Artist, Album, Track, SearchResult
 
 logger = logging.getLogger('mopidy.backends.gmusic')
 
 
-class GMusicLibraryProvider(base.BaseLibraryProvider):
+class GMusicLibraryProvider(backend.LibraryProvider):
 
     def find_exact(self, query=None, uris=None):
         if query is None:

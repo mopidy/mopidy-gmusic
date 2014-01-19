@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import pykka
 
-from mopidy.backends import base
+from mopidy import backend
 
 from .library import GMusicLibraryProvider
 from .playback import GMusicPlaybackProvider
@@ -10,7 +10,7 @@ from .playlists import GMusicPlaylistsProvider
 from .session import GMusicSession
 
 
-class GMusicBackend(pykka.ThreadingActor, base.Backend):
+class GMusicBackend(pykka.ThreadingActor, backend.Backend):
     def __init__(self, config, audio):
         super(GMusicBackend, self).__init__()
 
