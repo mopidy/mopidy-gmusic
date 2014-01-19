@@ -1,3 +1,4 @@
+import mock
 import unittest
 
 from mopidy_gmusic import GMusicExtension, actor as backend_lib
@@ -23,8 +24,10 @@ class ExtensionTest(unittest.TestCase):
         self.assertIn('deviceid', schema)
 
     def test_get_backend_classes(self):
+        registry = mock.Mock()
+
         ext = GMusicExtension()
+        ext.setup(registry)
 
-        backends = ext.get_backend_classes()
-
-        self.assertIn(backend_lib.GMusicBackend, backends)
+        registry.add.assert_called_once_with(
+            'backend', backend_lib.GMusicBackend)
