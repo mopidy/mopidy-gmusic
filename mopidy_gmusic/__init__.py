@@ -25,6 +25,6 @@ class GMusicExtension(ext.Extension):
         schema['deviceid'] = config.String(optional=True)
         return schema
 
-    def get_backend_classes(self):
+    def setup(self, registry):
         from .actor import GMusicBackend
-        return [GMusicBackend]
+        registry.add('backend', GMusicBackend)
