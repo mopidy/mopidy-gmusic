@@ -6,7 +6,7 @@ import hashlib
 from mopidy import backend
 from mopidy.models import Artist, Album, Track, SearchResult
 
-logger = logging.getLogger('mopidy.backends.gmusic')
+logger = logging.getLogger(__name__)
 
 
 class GMusicLibraryProvider(backend.LibraryProvider):

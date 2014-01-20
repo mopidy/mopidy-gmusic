@@ -4,7 +4,7 @@ import logging
 
 from gmusicapi import Mobileclient, Webclient, CallFailure
 
-logger = logging.getLogger('mopidy.backends.gmusic')
+logger = logging.getLogger(__name__)
 
 
 class GMusicSession(object):
