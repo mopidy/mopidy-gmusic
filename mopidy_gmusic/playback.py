@@ -1,9 +1,9 @@
 from __future__ import unicode_literals
 
-from mopidy.backends import base
+from mopidy import backend
 
 
-class GMusicPlaybackProvider(base.BasePlaybackProvider):
+class GMusicPlaybackProvider(backend.PlaybackProvider):
 
     def play(self, track):
         url = self.backend.session.get_stream_url(track.uri.split(':')[2])

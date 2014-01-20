@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import os
 
-from mopidy import config, exceptions, ext
+from mopidy import config, ext
 
 
 __version__ = '0.2.2'
@@ -25,13 +25,6 @@ class GMusicExtension(ext.Extension):
         schema['deviceid'] = config.String(optional=True)
         return schema
 
-    def validate_environment(self):
-        try:
-            import gmusicapi  # noqa
-        except ImportError as e:
-            raise exceptions.ExtensionError('gmusicapi library not found', e)
-        pass
-
-    def get_backend_classes(self):
+    def setup(self, registry):
         from .actor import GMusicBackend
-        return [GMusicBackend]
+        registry.add('backend', GMusicBackend)

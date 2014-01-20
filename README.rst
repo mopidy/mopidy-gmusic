@@ -3,11 +3,11 @@ Mopidy-GMusic
 *************
 
 .. image:: https://pypip.in/v/Mopidy-GMusic/badge.png
-    :target: https://crate.io/packages/Mopidy-GMusic/
+    :target: https://pypi.python.org/pypi/Mopidy-GMusic/
     :alt: Latest PyPI version
 
 .. image:: https://pypip.in/d/Mopidy-GMusic/badge.png
-    :target: https://crate.io/packages/Mopidy-GMusic/
+    :target: https://pypi.python.org/pypi/Mopidy-GMusic/
     :alt: Number of PyPI downloads
 
 .. image:: https://travis-ci.org/hechtus/mopidy-gmusic.png?branch=master
@@ -32,9 +32,8 @@ Dependencies
 
 - The `Unofficial Google Music API
   <https://github.com/simon-weber/Unofficial-Google-Music-API>`_ is
-  needed to access Google Play Music. Install it by running::
-   
-    pip install gmusicapi
+  needed to access Google Play Music. It will automatically be installed
+  together with Mopidy-GMusic.
 
 
 Installation
@@ -55,7 +54,7 @@ and Android mobile device ID to your Mopidy configuration file::
     username = alice
     password = secret
     deviceid = 0123456789abcdef
-   
+
 The mobile device ID is a 16-digit hexadecimal string (without a '0x'
 prefix) identifying the Android device registered for Google Play
 Music. You can obtain this ID by dialing ``*#*#8255#*#*`` on your
@@ -88,6 +87,12 @@ Project resources
 
 Changelog
 =========
+
+v0.3.0 (UNRELEASED)
+-------------------
+
+- Require Mopidy >= 0.18.
+
 
 v0.2.2 (2013-11-11)
 -------------------
