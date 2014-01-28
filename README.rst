@@ -72,8 +72,7 @@ The extension is enabled by default if all dependencies are
 available. You can simply browse through your library and search for
 tracks, albums, and artists. Google Play Music playlists are imported
 as well. You can even add songs from your All Access subscription to
-your library. Mopidy will able to play them. Public playlists are not
-playable yet.
+your library. Mopidy will able to play them.
 
 
 Project resources
@@ -88,9 +87,11 @@ Project resources
 Changelog
 =========
 
-v0.3.0 (UNRELEASED)
+v0.3.0 (2014-01-28)
 -------------------
 
+- Issue #19: Public playlist support
+- Issue #16: All playlist files are playable now
 - Require Mopidy >= 0.18.
 
 
