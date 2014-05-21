@@ -99,3 +99,19 @@ class GMusicSession(object):
                 return self.api.get_album_info(albumid, include_tracks)
             except CallFailure as error:
                 logger.error(u'Failed to get All Access album info: %s', error)
+
+    def get_artist_info(self, artistid, include_albums=True, max_top_tracks=5, max_rel_artist=5):
+        if self.api.is_authenticated():
+            try:
+                return self.api.get_artist_info(artistid, include_albums, max_top_tracks, max_rel_artist)
+            except CallFailure as error:
+                logger.error(u'Failed to get All Access artist info: %s', error)
+
+    def search_all_access(self, query, max_results=50):
+        if self.api.is_authenticated():
+            try:
+                return self.api.search_all_access(query, max_results)
+            except CallFailure as error:
+                logger.error(u'Failed to search All Access: %s', error)
+
+

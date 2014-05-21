@@ -23,6 +23,7 @@ class GMusicExtension(ext.Extension):
         schema['username'] = config.String()
         schema['password'] = config.Secret()
         schema['deviceid'] = config.String(optional=True)
+        schema['all_access'] = config.String(optional=True)
         return schema
 
     def setup(self, registry):
