@@ -27,6 +27,7 @@ class GMusicBackend(pykka.ThreadingActor, backend.Backend):
         self.session.login(self.config['gmusic']['username'],
                            self.config['gmusic']['password'],
                            self.config['gmusic']['deviceid'])
+        self.library.set_all_access(self.config['gmusic']['all_access'])
         self.library.refresh()
         self.playlists.refresh()
 
