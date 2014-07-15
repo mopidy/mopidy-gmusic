@@ -146,6 +146,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
 
                 return tracks, artists, albums
 
+        return [], [], []
+
     def _search_library(self, query=None, uris=None):
         if query is None:
             query = {}
