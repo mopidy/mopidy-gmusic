@@ -24,6 +24,22 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
     def refresh(self):
         playlists = []
 
+        # add thumbs up playlist
+        tracks = []
+        for track in self.backend.session.get_thumbs_up_songs():
+            trackId = None
+            if 'trackId' in track:
+                trackId = track['trackId']
+            elif 'storeId' in track:
+                trackId = track['storeId']
+            if trackId:
+                tracks += self.backend.library.lookup('gmusic:track:' + trackId)
+        if len(tracks) > 0:
+            playlist = Playlist(uri='gmusic:playlist:thumbs_up',
+                                name='Thumbs up',
+                                tracks=tracks)
+            playlists.append(playlist)
+            
         for playlist in self.backend.session.get_all_user_playlist_contents():
             tracks = []
             for track in playlist['tracks']:
@@ -48,22 +64,6 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                                     name=playlist['name'],
                                     tracks=tracks)
                 playlists.append(playlist)
-
-        # add thumbs up playlist
-        tracks = []
-        for track in self.backend.session.get_thumbs_up_songs():
-            trackId = None
-            if 'trackId' in track:
-                trackId = track['trackId']
-            elif 'storeId' in track:
-                trackId = track['storeId']
-            if trackId:
-                tracks += self.backend.library.lookup('gmusic:track:' + trackId)
-        if len(tracks) > 0:
-            playlist = Playlist(uri='gmusic:playlist:thumbs_up',
-                                name='Thumbs up',
-                                tracks=tracks)
-            playlists.append(playlist)
 
         self.playlists = playlists
         backend.BackendListener.send('playlists_loaded')
