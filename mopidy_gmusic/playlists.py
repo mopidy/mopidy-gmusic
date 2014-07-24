@@ -59,10 +59,11 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                 trackId = track['storeId']
             if trackId:
                 tracks += self.backend.library.lookup('gmusic:track:' + trackId)
-        playlist = Playlist(uri='gmusic:playlist:thumbs_up',
-                            name='Thumbs up',
-                            tracks=tracks)
-        playlists.append(playlist)
+        if len(tracks) > 0:
+            playlist = Playlist(uri='gmusic:playlist:thumbs_up',
+                                name='Thumbs up',
+                                tracks=tracks)
+            playlists.append(playlist)
 
         self.playlists = playlists
         backend.BackendListener.send('playlists_loaded')
