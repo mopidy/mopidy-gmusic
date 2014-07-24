@@ -66,6 +66,12 @@ class GMusicSession(object):
         else:
             return {}
 
+    def get_thumbs_up_songs(self):
+        if self.api.is_authenticated():
+            return self.api.get_thumbs_up_songs()
+        else:
+            return {}
+
     def get_deviceid(self, username, password):
         logger.warning(u'No mobile device ID configured. '
                        u'Trying to detect one.')
@@ -113,5 +119,3 @@ class GMusicSession(object):
                 return self.api.search_all_access(query, max_results)
             except CallFailure as error:
                 logger.error(u'Failed to search All Access: %s', error)
-
-
