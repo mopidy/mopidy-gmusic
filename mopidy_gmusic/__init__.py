@@ -24,6 +24,7 @@ class GMusicExtension(ext.Extension):
         schema['password'] = config.Secret()
         schema['deviceid'] = config.String(optional=True)
         schema['all_access'] = config.Boolean(optional=True)
+        schema['refresh_playlists'] = config.Integer(minimum=-1, optional=True)
         return schema
 
     def setup(self, registry):
