@@ -10,6 +10,12 @@ logger = logging.getLogger(__name__)
 
 class GMusicPlaylistsProvider(backend.PlaylistsProvider):
 
+    def __init__(self, *args, **kwargs):
+        super(GMusicPlaylistsProvider, self).__init__(*args, **kwargs)
+        self._show_radio_stations_playlist = self.backend.config['gmusic']['show_radio_stations_playlist']
+        self._max_radio_stations = self.backend.config['gmusic']['max_radio_stations']
+        self._max_radio_tracks = self.backend.config['gmusic']['max_radio_tracks']
+
     def create(self, name):
         pass  # TODO
 
@@ -39,7 +45,8 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                                 name='Thumbs up',
                                 tracks=tracks)
             playlists.append(playlist)
-            
+
+        # load user playlists
         for playlist in self.backend.session.get_all_user_playlist_contents():
             tracks = []
             for track in playlist['tracks']:
@@ -52,6 +59,7 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                                 tracks=tracks)
             playlists.append(playlist)
 
+        # load shared playlists
         for playlist in self.backend.session.get_all_playlists():
             if playlist.get('type') == 'SHARED':
                 tracks = []
@@ -64,6 +72,27 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                                     name=playlist['name'],
                                     tracks=tracks)
                 playlists.append(playlist)
+
+        l = len(playlists)
+        logger.info('Loaded %d playlists from Google Music', len(playlists))
+
+        # load radios as playlists
+        if self._show_radio_stations_playlist:
+            logger.info('Starting to loading radio stations')
+            stations = self.backend.session.get_radio_stations(self._max_radio_stations)
+            for station in stations:
+                tracks = []
+                tracklist = self.backend.session.get_station_tracks(
+                                                        station['id'],
+                                                        self._max_radio_tracks)
+                for track in tracklist:
+                    tracks += self.backend.library.lookup('gmusic:track:' +
+                                                          track['nid'])
+                playlist = Playlist(uri='gmusic:playlist:' + station['id'],
+                                    name=station['name'],
+                                    tracks=tracks)
+                playlists.append(playlist)
+            logger.info('Loaded %d radios from Google Music', len(playlists) - l)
 
         self.playlists = playlists
         backend.BackendListener.send('playlists_loaded')
