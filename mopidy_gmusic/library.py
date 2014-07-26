@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
 
-import logging
 import hashlib
+import logging
 
 from mopidy import backend
-from mopidy.models import Artist, Album, Track, SearchResult
+from mopidy.models import Album, Artist, SearchResult, Track
 
 logger = logging.getLogger(__name__)
 

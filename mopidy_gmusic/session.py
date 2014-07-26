@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import logging
 
-from gmusicapi import Mobileclient, Webclient, CallFailure
+from gmusicapi import CallFailure, Mobileclient, Webclient
 
 logger = logging.getLogger(__name__)
 
