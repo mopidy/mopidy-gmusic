@@ -17,10 +17,10 @@ class GMusicSession(object):
     def login(self, username, password, deviceid):
         if self.api.is_authenticated():
             self.api.logout()
-        try:
-            self.api.login(username, password)
-        except CallFailure as error:
-            logger.error(u'Failed to login as "%s": %s', username, error)
+
+        if not self.api.login(username, password):
+            logger.error(u'Failed to login as "%s"', username)
+
         if self.api.is_authenticated():
             if deviceid is None:
                 self.deviceid = self.get_deviceid(username, password)
