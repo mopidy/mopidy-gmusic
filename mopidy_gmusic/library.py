@@ -1,12 +1,10 @@
 from __future__ import unicode_literals
 
-import logging
 import hashlib
+import logging
 
 from mopidy import backend
 from mopidy.models import Artist, Album, Ref, Track, SearchResult
-
-from .session import GMusicSession
 
 logger = logging.getLogger(__name__)
 
@@ -101,10 +99,12 @@ class GMusicLibraryProvider(backend.LibraryProvider):
     def _lookup_album(self, uri):
         is_all_access = uri.startswith('gmusic:album:B')
         if self.all_access and is_all_access:
-            album = self.backend.session.get_album_info(uri.split(':')[2], include_tracks=True)
+            album = self.backend.session.get_album_info(
+                uri.split(':')[2], include_tracks=True)
             if album['tracks'] is None:
                 return []
-            tracks = [self._aa_to_mopidy_track(track) for track in album['tracks']]
+            tracks = [
+                self._aa_to_mopidy_track(track) for track in album['tracks']]
             return sorted(tracks, key=lambda t: (t.disc_no,
                                                  t.track_no))
         elif not is_all_access:
@@ -131,8 +131,11 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         if self.all_access:
             try:
                 all_access_id = self.aa_artists[uri.split(':')[2]]
-                artist_infos = self.backend.session.get_artist_info(all_access_id, max_top_tracks=0, max_rel_artist=0)
-                tracks = [self._lookup_album('gmusic:album:' + album['albumId']) for album in artist_infos['albums']]
+                artist_infos = self.backend.session.get_artist_info(
+                    all_access_id, max_top_tracks=0, max_rel_artist=0)
+                tracks = [
+                    self._lookup_album('gmusic:album:' + album['albumId'])
+                    for album in artist_infos['albums']]
                 tracks = reduce(lambda a, b: (a + b), tracks)
                 return sorted(tracks, key=sorter)
             except KeyError:
@@ -159,7 +162,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         lib_tracks, lib_artists, lib_albums = self._search_library(query, uris)
 
         if query and self.all_access:
-            aa_tracks, aa_artists, aa_albums = self._search_all_access(query, uris)
+            aa_tracks, aa_artists, aa_albums = self._search_all_access(
+                query, uris)
             for aa_artist in aa_artists:
                 lib_artists.add(aa_artist)
 
@@ -193,13 +197,21 @@ class GMusicLibraryProvider(backend.LibraryProvider):
 
             # Since gmusic does not support search filters, just search for the
             # first 'searchable' filter
-            if field in ['track_name', 'album', 'artist', 'albumartist', 'any']:
+            if field in [
+                    'track_name', 'album', 'artist', 'albumartist', 'any']:
                 print "searching all access for " + values[0]
-                res = self.backend.session.search_all_access(values[0], max_results=50)
+                res = self.backend.session.search_all_access(
+                    values[0], max_results=50)
 
-                albums = [self._aa_search_album_to_mopidy_album(album_res) for album_res in res['album_hits']]
-                artists = [self._aa_search_artist_to_mopidy_artist(artist_res) for artist_res in res['artist_hits']]
-                tracks = [self._aa_search_track_to_mopidy_track(track_res) for track_res in res['song_hits']]
+                albums = [
+                    self._aa_search_album_to_mopidy_album(album_res)
+                    for album_res in res['album_hits']]
+                artists = [
+                    self._aa_search_artist_to_mopidy_artist(artist_res)
+                    for artist_res in res['artist_hits']]
+                tracks = [
+                    self._aa_search_track_to_mopidy_track(track_res)
+                    for track_res in res['song_hits']]
 
                 return tracks, artists, albums
 
@@ -309,7 +321,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 name=name,
                 artists=[artist],
                 num_tracks=song.get('totalTrackCount', 1),
-                num_discs=song.get('totalDiscCount', song.get('discNumber', 1)),
+                num_discs=song.get(
+                    'totalDiscCount', song.get('discNumber', 1)),
                 date=date)
             self.albums[uri] = album
             return album

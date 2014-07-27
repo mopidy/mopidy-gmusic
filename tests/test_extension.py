@@ -1,5 +1,6 @@
-import mock
 import unittest
+
+import mock
 
 from mopidy_gmusic import GMusicExtension, actor as backend_lib
 

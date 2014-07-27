@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
 
-import pykka
-
 from mopidy import backend
+
+import pykka
 
 from .library import GMusicLibraryProvider
 from .playback import GMusicPlaybackProvider

@@ -39,7 +39,8 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
             elif 'storeId' in track:
                 trackId = track['storeId']
             if trackId:
-                tracks += self.backend.library.lookup('gmusic:track:' + trackId)
+                tracks += self.backend.library.lookup(
+                    'gmusic:track:' + trackId)
         if len(tracks) > 0:
             playlist = Playlist(uri='gmusic:playlist:thumbs_up',
                                 name='Thumbs up',
