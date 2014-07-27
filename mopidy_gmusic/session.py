@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import logging
 
-from gmusicapi import Mobileclient, Webclient, CallFailure
+from gmusicapi import CallFailure, Mobileclient, Webclient
 
 logger = logging.getLogger(__name__)
 
@@ -106,12 +106,16 @@ class GMusicSession(object):
             except CallFailure as error:
                 logger.error(u'Failed to get All Access album info: %s', error)
 
-    def get_artist_info(self, artistid, include_albums=True, max_top_tracks=5, max_rel_artist=5):
+    def get_artist_info(
+            self, artistid, include_albums=True, max_top_tracks=5,
+            max_rel_artist=5):
         if self.api.is_authenticated():
             try:
-                return self.api.get_artist_info(artistid, include_albums, max_top_tracks, max_rel_artist)
+                return self.api.get_artist_info(
+                    artistid, include_albums, max_top_tracks, max_rel_artist)
             except CallFailure as error:
-                logger.error(u'Failed to get All Access artist info: %s', error)
+                logger.error(
+                    u'Failed to get All Access artist info: %s', error)
 
     def search_all_access(self, query, max_results=50):
         if self.api.is_authenticated():
