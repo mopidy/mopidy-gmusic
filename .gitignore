@@ -33,3 +33,6 @@ xunit-*.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# PyCharm/IDEA
+.idea
