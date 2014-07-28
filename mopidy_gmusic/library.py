@@ -4,7 +4,7 @@ import hashlib
 import logging
 
 from mopidy import backend
-from mopidy.models import Artist, Album, Ref, Track, SearchResult
+from mopidy.models import Album, Artist, Ref, SearchResult, Track
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         self._root.append(Ref.directory(uri='gmusic:album', name='Albums'))
         self._root.append(Ref.directory(uri='gmusic:artist', name='Artists'))
         # browsing all tracks results in connection timeouts
-        #self._root.append(Ref.directory(uri='gmusic:track', name='Tracks'))
+        # self._root.append(Ref.directory(uri='gmusic:track', name='Tracks'))
 
     def set_all_access(self, all_access):
         self.all_access = all_access
@@ -164,16 +164,19 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         if is_all_access:
             # all access
             artist_infos = self.backend.session.get_artist_info(
-                    artist_id, max_top_tracks=0, max_rel_artist=0)
+                artist_id, max_top_tracks=0, max_rel_artist=0)
             albums = []
             for album in artist_infos['albums']:
-                albums.append(self._aa_search_album_to_mopidy_album({'album':album}))
+                albums.append(
+                    self._aa_search_album_to_mopidy_album({'album': album}))
             return albums
         elif self.all_access and artist_id in self.aa_artists:
-            return self._get_artist_albums('gmusic:track:%s' % self.aa_artists[artist_id])
+            return self._get_artist_albums(
+                'gmusic:track:%s' % self.aa_artists[artist_id])
         elif uri in self.artists:
             artist = self.artists[uri]
-            return [album for album in self.albums.values() if artist in album.artists]
+            return [album for album in self.albums.values()
+                    if artist in album.artists]
         else:
             logger.debug('0 albums available for artist %r', uri)
             return []
@@ -528,9 +531,9 @@ class GMusicLibraryProvider(backend.LibraryProvider):
 
     def _artist_to_ref(self, artist):
         if artist.name:
-            name=artist.name
+            name = artist.name
         else:
-            name='Unknown artist'
+            name = 'Unknown artist'
         return Ref.directory(uri=artist.uri, name=name)
 
     def _track_to_ref(self, track, with_track_no=False):
