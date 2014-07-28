@@ -4,7 +4,7 @@ import hashlib
 import logging
 
 from mopidy import backend
-from mopidy.models import Artist, Album, Ref, Track, SearchResult
+from mopidy.models import Album, Artist, Ref, SearchResult, Track
 
 logger = logging.getLogger(__name__)
 
