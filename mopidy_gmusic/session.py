@@ -135,7 +135,7 @@ class GMusicSession(object):
         # last plaied radio first
         stations.reverse()
         # add IFL radio on top
-        stations.insert(0, {'id': 'IFL', 'name':'I\'m Feeling Lucky'})
+        stations.insert(0, {'id': 'IFL', 'name': 'I\'m Feeling Lucky'})
         if num_stations > 0:
             # limit radio stations
             stations = stations[:num_stations]
