@@ -14,6 +14,11 @@ class GMusicLibraryProvider(backend.LibraryProvider):
 
     def __init__(self, *args, **kwargs):
         super(GMusicLibraryProvider, self).__init__(*args, **kwargs)
+        self.tracks = {}
+        self.albums = {}
+        self.artists = {}
+        self.aa_artists = {}
+        self.all_access = False
         self._root = []
         self._root.append(Ref.directory(uri='gmusic:album', name='Albums'))
         self._root.append(Ref.directory(uri='gmusic:artist', name='Artists'))
@@ -31,16 +36,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         return refs
 
     def _browse_album(self, uri):
-        if not uri in self.albums:
-            logger.warning('Unable to fetch album: %s', str(uri))
-        album = self.albums[uri]
-        tracks = []
-        for track in self.tracks.values():
-            if album == track.album:
-                tracks.append(track)
         refs = []
-        tracks.sort(key=lambda track: track.track_no)
-        for track in tracks:
+        for track in self._lookup_album(uri):
             refs.append(self._track_to_ref(track, True))
         return refs
 
@@ -52,16 +49,12 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         return refs
 
     def _browse_artist(self, uri):
-        if not uri in self.artists:
-            logger.warning('Unable to fetch artist: %s', str(uri))
-        artist = self.artists[uri]
         refs = []
-        for album in self.albums.values():
-            if artist in album.artists:
-                refs.append(self._album_to_ref(album))
-        if len(refs) > 0:
+        for album in self._get_artist_albums(uri):
+            refs.append(self._album_to_ref(album))
             refs.sort(key=lambda ref: ref.name)
-            refs.insert(0, Ref.directory(uri=uri + ':all', name='All tracks'))
+        if len(refs) > 0:
+            refs.insert(0, Ref.directory(uri=uri + ':all', name='All Tracks'))
             return refs
         else:
             # Show all tracks if no album is available
@@ -69,15 +62,10 @@ class GMusicLibraryProvider(backend.LibraryProvider):
 
     def _browse_artist_all_tracks(self, uri):
         artist_uri = ':'.join(uri.split(':')[:3])
-        if not artist_uri in self.artists:
-            logger.warning('Unable to fetch artist: %s', str(artist_uri))
-            return []
-        artist = self.artists[artist_uri]
         refs = []
-        for track in self.tracks.values():
-            if artist in track.artists:
-                refs.append(self._track_to_ref(track))
-        refs.sort(key=lambda ref: ref.name)
+        tracks = self._lookup_artist(artist_uri, True)
+        for track in tracks:
+            refs.append(self._track_to_ref(track))
         return refs
 
     def browse(self, uri):
@@ -169,7 +157,28 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             logger.debug('Failed to lookup %r', uri)
             return []
 
-    def _lookup_artist(self, uri):
+    def _get_artist_albums(self, uri):
+        is_all_access = uri.startswith('gmusic:track:A')
+
+        artist_id = uri.split(':')[2]
+        if is_all_access:
+            # all access
+            artist_infos = self.backend.session.get_artist_info(
+                    artist_id, max_top_tracks=0, max_rel_artist=0)
+            albums = []
+            for album in artist_infos['albums']:
+                albums.append(self._aa_search_album_to_mopidy_album({'album':album}))
+            return albums
+        elif self.all_access and artist_id in self.aa_artists:
+            return self._get_artist_albums('gmusic:track:%s' % self.aa_artists[artist_id])
+        elif uri in self.artists:
+            artist = self.artists[uri]
+            return [album for album in self.albums.values() if artist in album.artists]
+        else:
+            logger.debug('0 albums available for artist %r', uri)
+            return []
+
+    def _lookup_artist(self, uri, exact_match=False):
         sorter = lambda t: (t.album.date,
                             t.album.name,
                             t.disc_no,
@@ -194,6 +203,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
 
         tracks = self.find_exact(
             dict(artist=artist.name)).tracks
+        if exact_match:
+            tracks = filter(lambda t: artist in t.artists, tracks)
         return sorted(tracks, key=sorter)
 
     def refresh(self, uri=None):
