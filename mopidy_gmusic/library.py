@@ -12,6 +12,11 @@ logger = logging.getLogger(__name__)
 class GMusicLibraryProvider(backend.LibraryProvider):
     def __init__(self, *args, **kwargs):
         super(GMusicLibraryProvider, self).__init__(*args, **kwargs)
+        self.tracks = {}
+        self.albums = {}
+        self.artists = {}
+        self.aa_artists = {}
+        self.all_access = False
         self._show_radio_stations_browse = \
             self.backend.config['gmusic']['show_radio_stations_browse']
         self._max_radio_stations = \
@@ -40,8 +45,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         parts = uri.split(':')
 
         # all radio stations
-        # uri == 'gmusic:radio'
-        if len(parts) == 2 and parts[1] == 'radio':
+        if uri == 'gmusic:radio':
             stations = self.backend.session.get_radio_stations(
                 self._max_radio_stations)
             # create Ref objects

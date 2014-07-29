@@ -128,11 +128,11 @@ class GMusicSession(object):
         if self.api.is_authenticated():
             return self.api.get_all_stations()
         else:
-            return {}
+            return []
 
     def get_radio_stations(self, num_stations=0):
         stations = self.get_all_stations()
-        # last plaied radio first
+        # last plaid radio first
         stations.reverse()
         # add IFL radio on top
         stations.insert(0, {'id': 'IFL', 'name': 'I\'m Feeling Lucky'})
