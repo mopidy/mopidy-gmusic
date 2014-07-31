@@ -19,7 +19,7 @@ class ExtensionTest(unittest.TestCase):
         logger.debug('Tick.')
 
     def test_init(self):
-        timer = RepeatingTimer(self._run_by_timer, 0.5, 0)
+        timer = RepeatingTimer(self._run_by_timer, 0.5)
         timer.start()
         self.assertTrue(self._event.wait(1), 'timer was not running')
         self._event.clear()
@@ -27,17 +27,9 @@ class ExtensionTest(unittest.TestCase):
         timer.cancel()
 
     def test_stop(self):
-        timer = RepeatingTimer(self._run_by_timer, 10, 0)
+        timer = RepeatingTimer(self._run_by_timer, 10)
         timer.start()
         self.assertTrue(timer.isAlive(), 'timer is not running')
         timer.cancel()
         timer.join(1)
         self.assertFalse(timer.isAlive(), 'timer is still alive')
-
-    def test_start_after(self):
-        timer = RepeatingTimer(self._run_by_timer, 0.5, 10)
-        timer.start()
-        self.assertFalse(self._event.wait(1), 'timer was run! wtf?')
-        timer.cancel()
-        timer.join(1)
-        self.assertFalse(self._event.wait(0), 'timer should not have run')
