@@ -18,6 +18,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         self.albums = {}
         self.artists = {}
         self.aa_artists = {}
+        self.aa_tracks = LruCache()
+        self.aa_albums = LruCache()
         self.all_access = False
         self._show_radio_stations_browse = \
             self.backend.config['gmusic']['show_radio_stations_browse']
@@ -26,6 +28,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         self._max_radio_tracks = \
             self.backend.config['gmusic']['max_radio_tracks']
         self._root = []
+        print "allo"
         if self._show_radio_stations_browse:
             self._root.append(Ref.directory(uri='gmusic:radio',
                                             name='Radios'))
@@ -33,16 +36,6 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         if len(self._root) > 0:
             GMusicLibraryProvider.root_directory = Ref.directory(
                 uri='gmusic:directory', name='Google Music')
-
-    def __init__(self, backend):
-        super(GMusicLibraryProvider, self).__init__(backend)
-        self.tracks = {}
-        self.albums = {}
-        self.artists = {}
-        self.aa_artists = {}
-        self.aa_tracks = LruCache()
-        self.aa_albums = LruCache()
-        self.all_access = False
 
     def set_all_access(self, all_access):
         self.all_access = all_access
