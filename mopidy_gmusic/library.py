@@ -435,6 +435,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             artist = self._to_mopidy_album_artist(song)
             date = unicode(song.get('year', 0))
             uri = 'gmusic:album:' + self._create_id(artist.name + name + date)
+            images = self._get_images(song)
             album = Album(
                 uri=uri,
                 name=name,
@@ -442,7 +443,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 num_tracks=song.get('totalTrackCount', 1),
                 num_discs=song.get(
                     'totalDiscCount', song.get('discNumber', 1)),
-                date=date)
+                date=date,
+                images=images)
             self.albums[uri] = album
             return album
 
@@ -496,11 +498,13 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         name = song['album']
         artist = self._aa_to_mopidy_album_artist(song)
         date = unicode(song.get('year', 0))
+        images = self._get_images(song)
         return Album(
             uri=uri,
             name=name,
             artists=[artist],
-            date=date)
+            date=date,
+            images=images)
 
     def _aa_to_mopidy_artist(self, song):
         artist_id = self._create_id(song['artist'])
@@ -610,6 +614,12 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             name += ' - '
         name += track.name
         return Ref.track(uri=track.uri, name=name)
+
+    def _get_images(self, song):
+        if 'albumArtRef' in song:
+            return [art_ref['url']
+                    for art_ref in song['albumArtRef']
+                    if 'url' in art_ref]
 
     def _create_id(self, u):
         return hashlib.md5(u.encode('utf-8')).hexdigest()
