@@ -68,6 +68,18 @@ All Access subscribers may enable All Access integration by adding this line::
     [gmusic]
     all_access = true
 
+All Access radios are available as browsable content or playlist::
+
+    [gmusic]
+    # show radio stations in content browser
+    show_radio_stations_browse = true
+    # show radio stations as playlists
+    show_radio_stations_playlist = false
+    # limit the number of radio stations, 0 = unlimited
+    max_radio_stations = 0
+    # limit the number or tracks for each radio station
+    max_radio_tracks = 25
+
 Usage
 =====
 
