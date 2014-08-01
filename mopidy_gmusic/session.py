@@ -123,3 +123,26 @@ class GMusicSession(object):
                 return self.api.search_all_access(query, max_results)
             except CallFailure as error:
                 logger.error(u'Failed to search All Access: %s', error)
+
+    def get_all_stations(self):
+        if self.api.is_authenticated():
+            return self.api.get_all_stations()
+        else:
+            return []
+
+    def get_radio_stations(self, num_stations=0):
+        stations = self.get_all_stations()
+        # last plaid radio first
+        stations.reverse()
+        # add IFL radio on top
+        stations.insert(0, {'id': 'IFL', 'name': 'I\'m Feeling Lucky'})
+        if num_stations > 0:
+            # limit radio stations
+            stations = stations[:num_stations]
+        return stations
+
+    def get_station_tracks(self, station_id, num_tracks=25):
+        if self.api.is_authenticated():
+            return self.api.get_station_tracks(station_id, num_tracks)
+        else:
+            return {}

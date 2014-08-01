@@ -4,7 +4,7 @@ import hashlib
 import logging
 
 from mopidy import backend
-from mopidy.models import Album, Artist, SearchResult, Track
+from mopidy.models import Album, Artist, Ref, SearchResult, Track
 
 from mopidy_gmusic.lru_cache import LruCache
 
@@ -12,9 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class GMusicLibraryProvider(backend.LibraryProvider):
-
-    def __init__(self, backend):
-        super(GMusicLibraryProvider, self).__init__(backend)
+    def __init__(self, *args, **kwargs):
+        super(GMusicLibraryProvider, self).__init__(*args, **kwargs)
         self.tracks = {}
         self.albums = {}
         self.artists = {}
@@ -22,9 +21,64 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         self.aa_tracks = LruCache()
         self.aa_albums = LruCache()
         self.all_access = False
+        self._show_radio_stations_browse = \
+            self.backend.config['gmusic']['show_radio_stations_browse']
+        self._max_radio_stations = \
+            self.backend.config['gmusic']['max_radio_stations']
+        self._max_radio_tracks = \
+            self.backend.config['gmusic']['max_radio_tracks']
+        self._root = []
+        print "allo"
+        if self._show_radio_stations_browse:
+            self._root.append(Ref.directory(uri='gmusic:radio',
+                                            name='Radios'))
+        # show root only if there is something to browse
+        if len(self._root) > 0:
+            GMusicLibraryProvider.root_directory = Ref.directory(
+                uri='gmusic:directory', name='Google Music')
 
     def set_all_access(self, all_access):
         self.all_access = all_access
+
+    def browse(self, uri):
+        logger.debug('browse: %s', str(uri))
+        if not uri:
+            return []
+        if uri == self.root_directory.uri:
+            return self._root
+
+        parts = uri.split(':')
+
+        # all radio stations
+        if uri == 'gmusic:radio':
+            stations = self.backend.session.get_radio_stations(
+                self._max_radio_stations)
+            # create Ref objects
+            refs = []
+            for station in stations:
+                refs.append(Ref.directory(uri='gmusic:radio:' + station['id'],
+                                          name=station['name']))
+            return refs
+
+        # a single radio station
+        # uri == 'gmusic:radio:station_id'
+        if len(parts) == 3 and parts[1] == 'radio':
+            station_id = parts[2]
+            tracks = self.backend.session.get_station_tracks(
+                station_id, self._max_radio_tracks)
+            # create Ref objects
+            refs = []
+            for track in tracks:
+                track_id = track['nid']
+                # some clients request a lookup themself, some don't
+                # we do not want to ask the API for every track twice
+                # we'll fetch some information directly from provided object
+                track_name = '%s - %s' % (track['artist'], track['title'])
+                refs.append(Ref.track(uri='gmusic:track:' + track_id,
+                                      name=track_name))
+            return refs
+
+        return []
 
     def lookup(self, uri):
         if uri.startswith('gmusic:track:'):
@@ -45,6 +99,10 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 return [track]
             song = self.backend.session.get_track_info(uri.split(':')[2])
             if song is None:
+                logger.debug('There is no song %r', uri)
+                return []
+            if 'artistId' not in song:
+                logger.debug('Failed to lookup %r', uri)
                 return []
             return [self._aa_to_mopidy_track(song)]
         elif not is_all_access:
