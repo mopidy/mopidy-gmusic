@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class GMusicLibraryProvider(backend.LibraryProvider):
+    root_directory = Ref.directory(uri='gmusic:directory', name='Google Music')
+
     def __init__(self, *args, **kwargs):
         super(GMusicLibraryProvider, self).__init__(*args, **kwargs)
         self.tracks = {}
@@ -28,7 +30,11 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         self._max_radio_tracks = \
             self.backend.config['gmusic']['max_radio_tracks']
         self._root = []
-        print "allo"
+        self._root.append(Ref.directory(uri='gmusic:album', name='Albums'))
+        self._root.append(Ref.directory(uri='gmusic:artist', name='Artists'))
+        # browsing all tracks results in connection timeouts
+        # self._root.append(Ref.directory(uri='gmusic:track', name='Tracks'))
+
         if self._show_radio_stations_browse:
             self._root.append(Ref.directory(uri='gmusic:radio',
                                             name='Radios'))
@@ -40,6 +46,46 @@ class GMusicLibraryProvider(backend.LibraryProvider):
     def set_all_access(self, all_access):
         self.all_access = all_access
 
+    def _browse_albums(self):
+        refs = []
+        for album in self.albums.values():
+            refs.append(self._album_to_ref(album))
+        refs.sort(key=lambda ref: ref.name)
+        return refs
+
+    def _browse_album(self, uri):
+        refs = []
+        for track in self._lookup_album(uri):
+            refs.append(self._track_to_ref(track, True))
+        return refs
+
+    def _browse_artists(self):
+        refs = []
+        for artist in self.artists.values():
+            refs.append(self._artist_to_ref(artist))
+        refs.sort(key=lambda ref: ref.name)
+        return refs
+
+    def _browse_artist(self, uri):
+        refs = []
+        for album in self._get_artist_albums(uri):
+            refs.append(self._album_to_ref(album))
+            refs.sort(key=lambda ref: ref.name)
+        if len(refs) > 0:
+            refs.insert(0, Ref.directory(uri=uri + ':all', name='All Tracks'))
+            return refs
+        else:
+            # Show all tracks if no album is available
+            return self._browse_artist_all_tracks(uri)
+
+    def _browse_artist_all_tracks(self, uri):
+        artist_uri = ':'.join(uri.split(':')[:3])
+        refs = []
+        tracks = self._lookup_artist(artist_uri, True)
+        for track in tracks:
+            refs.append(self._track_to_ref(track))
+        return refs
+
     def browse(self, uri):
         logger.debug('browse: %s', str(uri))
         if not uri:
@@ -48,6 +94,29 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             return self._root
 
         parts = uri.split(':')
+
+        # albums
+        if uri == 'gmusic:album':
+            return self._browse_albums()
+
+        # a single album
+        # uri == 'gmusic:album:album_id'
+        if len(parts) == 3 and parts[1] == 'album':
+            return self._browse_album(uri)
+
+        # artists
+        if uri == 'gmusic:artist':
+            return self._browse_artists()
+
+        # a single artist
+        # uri == 'gmusic:artist:artist_id'
+        if len(parts) == 3 and parts[1] == 'artist':
+            return self._browse_artist(uri)
+
+        # all tracks of a single artist
+        # uri == 'gmusic:artist:artist_id:all'
+        if len(parts) == 4 and parts[1] == 'artist' and parts[3] == 'all':
+            return self._browse_artist_all_tracks(uri)
 
         # all radio stations
         if uri == 'gmusic:radio':
@@ -77,6 +146,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 refs.append(Ref.track(uri='gmusic:track:' + track_id,
                                       name=track_name))
             return refs
+        
+        logger.debug('Unknown uri for browse request: %s', uri)
 
         return []
 
@@ -145,7 +216,31 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             logger.debug('Failed to lookup %r', uri)
             return []
 
-    def _lookup_artist(self, uri):
+    def _get_artist_albums(self, uri):
+        is_all_access = uri.startswith('gmusic:track:A')
+
+        artist_id = uri.split(':')[2]
+        if is_all_access:
+            # all access
+            artist_infos = self.backend.session.get_artist_info(
+                artist_id, max_top_tracks=0, max_rel_artist=0)
+            albums = []
+            for album in artist_infos['albums']:
+                albums.append(
+                    self._aa_search_album_to_mopidy_album({'album': album}))
+            return albums
+        elif self.all_access and artist_id in self.aa_artists:
+            return self._get_artist_albums(
+                'gmusic:track:%s' % self.aa_artists[artist_id])
+        elif uri in self.artists:
+            artist = self.artists[uri]
+            return [album for album in self.albums.values()
+                    if artist in album.artists]
+        else:
+            logger.debug('0 albums available for artist %r', uri)
+            return []
+
+    def _lookup_artist(self, uri, exact_match=False):
         sorter = lambda t: (t.album.date,
                             t.album.name,
                             t.disc_no,
@@ -170,6 +265,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
 
         tracks = self.find_exact(
             dict(artist=artist.name)).tracks
+        if exact_match:
+            tracks = filter(lambda t: artist in t.artists, tracks)
         return sorted(tracks, key=sorter)
 
     def refresh(self, uri=None):
@@ -478,6 +575,41 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         return Artist(
             uri=uri,
             name=name)
+
+    def _album_to_ref(self, album):
+        name = ''
+        for artist in album.artists:
+            if len(name) > 0:
+                name += ', '
+            name += artist.name
+        if (len(name)) > 0:
+            name += ' - '
+        if album.name:
+            name += album.name
+        else:
+            name += 'Unknown Album'
+        return Ref.directory(uri=album.uri, name=name)
+
+    def _artist_to_ref(self, artist):
+        if artist.name:
+            name = artist.name
+        else:
+            name = 'Unknown artist'
+        return Ref.directory(uri=artist.uri, name=name)
+
+    def _track_to_ref(self, track, with_track_no=False):
+        if with_track_no and track.track_no > 0:
+            name = '%d - ' % track.track_no
+        else:
+            name = ''
+        for artist in track.artists:
+            if len(name) > 0:
+                name += ', '
+            name += artist.name
+        if (len(name)) > 0:
+            name += ' - '
+        name += track.name
+        return Ref.track(uri=track.uri, name=name)
 
     def _create_id(self, u):
         return hashlib.md5(u.encode('utf-8')).hexdigest()
