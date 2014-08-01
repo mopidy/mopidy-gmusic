@@ -6,10 +6,22 @@ import logging
 from mopidy import backend
 from mopidy.models import Album, Artist, SearchResult, Track
 
+from mopidy_gmusic.lru_cache import LruCache
+
 logger = logging.getLogger(__name__)
 
 
 class GMusicLibraryProvider(backend.LibraryProvider):
+
+    def __init__(self, backend):
+        super(GMusicLibraryProvider, self).__init__(backend)
+        self.tracks = {}
+        self.albums = {}
+        self.artists = {}
+        self.aa_artists = {}
+        self.aa_tracks = LruCache()
+        self.aa_albums = LruCache()
+        self.all_access = False
 
     def set_all_access(self, all_access):
         self.all_access = all_access
@@ -28,6 +40,9 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         is_all_access = uri.startswith('gmusic:track:T')
 
         if is_all_access and self.all_access:
+            track = self.aa_tracks.hit(uri)
+            if track:
+                return [track]
             song = self.backend.session.get_track_info(uri.split(':')[2])
             if song is None:
                 return []
@@ -44,12 +59,16 @@ class GMusicLibraryProvider(backend.LibraryProvider):
     def _lookup_album(self, uri):
         is_all_access = uri.startswith('gmusic:album:B')
         if self.all_access and is_all_access:
+            tracks = self.aa_albums.hit(uri)
+            if tracks:
+                return tracks
             album = self.backend.session.get_album_info(
                 uri.split(':')[2], include_tracks=True)
             if album['tracks'] is None:
                 return []
             tracks = [
                 self._aa_to_mopidy_track(track) for track in album['tracks']]
+            self.aa_albums[uri] = tracks
             return sorted(tracks, key=lambda t: (t.disc_no,
                                                  t.track_no))
         elif not is_all_access:
@@ -304,7 +323,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         uri = 'gmusic:track:' + song['storeId']
         album = self._aa_to_mopidy_album(song)
         artist = self._aa_to_mopidy_artist(song)
-        return Track(
+        track = Track(
             uri=uri,
             name=song['title'],
             artists=[artist],
@@ -314,6 +333,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             date=album.date,
             length=int(song['durationMillis']),
             bitrate=320)
+        self.aa_tracks[uri] = track
+        return track
 
     def _aa_to_mopidy_album(self, song):
         uri = 'gmusic:album:' + song['albumId']

@@ -23,6 +23,8 @@ class ExtensionTest(unittest.TestCase):
         self.assertIn('username', schema)
         self.assertIn('password', schema)
         self.assertIn('deviceid', schema)
+        self.assertIn('refresh_library', schema)
+        self.assertIn('refresh_playlists', schema)
 
     def test_get_backend_classes(self):
         registry = mock.Mock()

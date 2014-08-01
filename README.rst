@@ -43,7 +43,6 @@ Install the Mopidy-GMusic extension by running::
 
     pip install mopidy-gmusic
 
-
 Configuration
 =============
 
@@ -64,6 +63,10 @@ phone (see the aid) or using this `App
 field empty. Mopidy will try to find the ID by itself. See the Mopidy
 logs for more information.
 
+All Access subscribers may enable All Access integration by adding this line::
+
+    [gmusic]
+    all_access = true
 
 Usage
 =====
@@ -112,7 +115,7 @@ v0.2.1 (2013-10-11)
 
 
 v0.2 (2013-10-11)
--------------------
+-----------------
 
 - Issue #12: Now able to play music from Google All Access
 - Issue #9: Switched to the Mobileclient API of Google Music API
