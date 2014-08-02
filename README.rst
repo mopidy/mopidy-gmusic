@@ -10,12 +10,12 @@ Mopidy-GMusic
     :target: https://pypi.python.org/pypi/Mopidy-GMusic/
     :alt: Number of PyPI downloads
 
-.. image:: https://travis-ci.org/hechtus/mopidy-gmusic.png?branch=master
+.. image:: https://travis-ci.org/hechtus/mopidy-gmusic.png?branch=develop
     :target: https://travis-ci.org/hechtus/mopidy-gmusic
     :alt: Travis CI build status
 
-.. image:: https://coveralls.io/repos/hechtus/mopidy-gmusic/badge.png?branch=master
-   :target: https://coveralls.io/r/hechtus/mopidy-gmusic?branch=master
+.. image:: https://coveralls.io/repos/hechtus/mopidy-gmusic/badge.png?branch=develop
+   :target: https://coveralls.io/r/hechtus/mopidy-gmusic?branch=develop
    :alt: Test coverage
 
 `Mopidy <http://www.mopidy.com/>`_ extension for playing music from

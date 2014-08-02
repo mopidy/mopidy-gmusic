@@ -18,7 +18,8 @@ class LibraryTest(unittest.TestCase):
         self.backend = backend_lib.GMusicBackend(config, None)
 
         refs = self.backend.library.browse('gmusic:directory')
-        self.assertEqual(refs, [])
+        for ref in refs:
+            self.assertNotEqual(ref.uri, 'gmusic:radio')
 
     def test_browse_none(self):
         refs = self.backend.library.browse(None)

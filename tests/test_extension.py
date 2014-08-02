@@ -15,6 +15,8 @@ class ExtensionTest(unittest.TestCase):
         config['show_radio_stations_playlist'] = False
         config['max_radio_stations'] = 0
         config['max_radio_tracks'] = 25
+        config['refresh_library'] = 1440
+        config['refresh_playlists'] = 60
         return {'gmusic': config}
 
     def test_get_default_config(self):
