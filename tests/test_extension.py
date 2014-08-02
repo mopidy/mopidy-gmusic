@@ -8,8 +8,11 @@ from mopidy_gmusic import GMusicExtension, actor as backend_lib
 class ExtensionTest(unittest.TestCase):
 
     @staticmethod
-    def get_config(ext):
-        config = ext.get_config_schema()
+    def get_config():
+        config = {}
+        config['username'] = 'testuser@gmail.com'
+        config['password'] = 'secret_password'
+        config['deviceid'] = '1234567890'
         config['all_access'] = False
         config['show_radio_stations_browse'] = True
         config['show_radio_stations_playlist'] = False
@@ -57,9 +60,8 @@ class ExtensionTest(unittest.TestCase):
             'backend', backend_lib.GMusicBackend)
 
     def test_init_backend(self):
-        ext = GMusicExtension()
         backend = backend_lib.GMusicBackend(
-            ExtensionTest.get_config(ext), None)
+            ExtensionTest.get_config(), None)
         self.assertIsNotNone(backend)
         backend.on_start()
         backend.on_stop()
