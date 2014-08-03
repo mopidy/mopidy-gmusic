@@ -217,7 +217,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             return []
 
     def _get_artist_albums(self, uri):
-        is_all_access = uri.startswith('gmusic:track:A')
+        is_all_access = uri.startswith('gmusic:artist:A')
 
         artist_id = uri.split(':')[2]
         if is_all_access:
@@ -231,7 +231,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             return albums
         elif self.all_access and artist_id in self.aa_artists:
             return self._get_artist_albums(
-                'gmusic:track:%s' % self.aa_artists[artist_id])
+                'gmusic:artist:%s' % self.aa_artists[artist_id])
         elif uri in self.artists:
             artist = self.artists[uri]
             return [album for album in self.albums.values()
