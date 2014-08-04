@@ -170,10 +170,10 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 return [track]
             song = self.backend.session.get_track_info(uri.split(':')[2])
             if song is None:
-                logger.debug('There is no song %r', uri)
+                logger.warning('There is no song %r', uri)
                 return []
             if 'artistId' not in song:
-                logger.debug('Failed to lookup %r', uri)
+                logger.warning('Failed to lookup %r', uri)
                 return []
             return [self._aa_to_mopidy_track(song)]
         elif not is_all_access:
@@ -193,7 +193,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 return tracks
             album = self.backend.session.get_album_info(
                 uri.split(':')[2], include_tracks=True)
-            if album['tracks'] is None:
+            if not album or not album['tracks']:
+                logger.warning('Failed to lookup %r: %r', uri, album)
                 return []
             tracks = [
                 self._aa_to_mopidy_track(track) for track in album['tracks']]
@@ -250,6 +251,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 all_access_id = self.aa_artists[uri.split(':')[2]]
                 artist_infos = self.backend.session.get_artist_info(
                     all_access_id, max_top_tracks=0, max_rel_artist=0)
+                if not artist_infos or not artist_infos['albums']:
+                    logger.warning('Failed to lookup %r', artist_infos)
                 tracks = [
                     self._lookup_album('gmusic:album:' + album['albumId'])
                     for album in artist_infos['albums']]
@@ -527,7 +530,10 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         track = search_track['track']
 
         aa_artist_id = self._create_id(track['artist'])
-        self.aa_artists[aa_artist_id] = track['artistId'][0]
+        if 'artistId' in track:
+            self.aa_artists[aa_artist_id] = track['artistId'][0]
+        else:
+            logger.warning('No artistId for Track %r', track)
 
         artist = Artist(
             uri='gmusic:artist:' + aa_artist_id,
