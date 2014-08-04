@@ -1,24 +1,24 @@
 import unittest
 
-from mopidy_gmusic import GMusicExtension, actor as backend_lib
+from mopidy_gmusic import actor as backend_lib
+
 from tests.test_extension import ExtensionTest
 
 
 class LibraryTest(unittest.TestCase):
 
     def setUp(self):
-        self.ext = GMusicExtension()
-        config = ExtensionTest.get_config(self.ext)
+        config = ExtensionTest.get_config()
         self.backend = backend_lib.GMusicBackend(config, None)
 
     def test_browse_radio_deactivated(self):
-        self.ext = GMusicExtension()
-        config = ExtensionTest.get_config(self.ext)
+        config = ExtensionTest.get_config()
         config['gmusic']['show_radio_stations_browse'] = False
         self.backend = backend_lib.GMusicBackend(config, None)
 
         refs = self.backend.library.browse('gmusic:directory')
-        self.assertEqual(refs, [])
+        for ref in refs:
+            self.assertNotEqual(ref.uri, 'gmusic:radio')
 
     def test_browse_none(self):
         refs = self.backend.library.browse(None)
@@ -32,10 +32,40 @@ class LibraryTest(unittest.TestCase):
         refs = self.backend.library.browse('gmusic:directory')
         found = False
         for ref in refs:
+            if ref.uri == 'gmusic:album':
+                found = True
+                break
+        self.assertTrue(found, 'ref \'gmusic:album\' not found')
+        found = False
+        for ref in refs:
+            if ref.uri == 'gmusic:artist':
+                found = True
+                break
+        self.assertTrue(found, 'ref \'gmusic:artist\' not found')
+        found = False
+        for ref in refs:
             if ref.uri == 'gmusic:radio':
                 found = True
                 break
         self.assertTrue(found, 'ref \'gmusic:radio\' not found')
+
+    def test_browse_artist(self):
+        refs = self.backend.library.browse('gmusic:artist')
+        self.assertIsNotNone(refs)
+
+    def test_browse_artist_id_invalid(self):
+        refs = self.backend.library.browse('gmusic:artist:artist_id')
+        self.assertIsNotNone(refs)
+        self.assertEqual(refs, [])
+
+    def test_browse_album(self):
+        refs = self.backend.library.browse('gmusic:album')
+        self.assertIsNotNone(refs)
+
+    def test_browse_album_id_invalid(self):
+        refs = self.backend.library.browse('gmusic:album:album_id')
+        self.assertIsNotNone(refs)
+        self.assertEqual(refs, [])
 
     def test_browse_radio(self):
         refs = self.backend.library.browse('gmusic:radio')

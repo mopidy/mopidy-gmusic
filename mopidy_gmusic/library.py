@@ -146,7 +146,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 refs.append(Ref.track(uri='gmusic:track:' + track_id,
                                       name=track_name))
             return refs
-        
+
         logger.debug('Unknown uri for browse request: %s', uri)
 
         return []
