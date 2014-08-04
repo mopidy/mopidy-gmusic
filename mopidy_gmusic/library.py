@@ -218,22 +218,27 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             return []
 
     def _get_artist_albums(self, uri):
-        is_all_access = uri.startswith('gmusic:track:A')
+        is_all_access = uri.startswith('gmusic:artist:A')
 
         artist_id = uri.split(':')[2]
         if is_all_access:
             # all access
             artist_infos = self.backend.session.get_artist_info(
                 artist_id, max_top_tracks=0, max_rel_artist=0)
+            if 'albums' not in artist_infos:
+                return []
             albums = []
             for album in artist_infos['albums']:
                 albums.append(
                     self._aa_search_album_to_mopidy_album({'album': album}))
             return albums
         elif self.all_access and artist_id in self.aa_artists:
-            return self._get_artist_albums(
-                'gmusic:track:%s' % self.aa_artists[artist_id])
-        elif uri in self.artists:
+            albums = self._get_artist_albums(
+                'gmusic:artist:%s' % self.aa_artists[artist_id])
+            if len(albums) > 0:
+                return albums
+            # else fall back to non aa albums
+        if uri in self.artists:
             artist = self.artists[uri]
             return [album for album in self.albums.values()
                     if artist in album.artists]
