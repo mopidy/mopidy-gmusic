@@ -146,3 +146,7 @@ class GMusicSession(object):
             return self.api.get_station_tracks(station_id, num_tracks)
         else:
             return {}
+
+    def increment_song_playcount(self, song_id, plays=1, playtime=None):
+        if self.api.is_authenticated():
+            return self.api.increment_song_playcount(song_id, plays, playtime)
