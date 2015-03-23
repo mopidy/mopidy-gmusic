@@ -28,11 +28,6 @@ setup(
         'Pykka >= 1.1',
         'gmusicapi >= 4.0.0',
     ],
-    test_suite='nose.collector',
-    tests_require=[
-        'nose',
-        'mock >= 1.0',
-    ],
     entry_points={
         'mopidy.ext': [
             'gmusic = mopidy_gmusic:GMusicExtension',
