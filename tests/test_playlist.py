@@ -33,9 +33,12 @@ class PlaylistsTest(unittest.TestCase):
         backend = mock.Mock()
         backend.config = ExtensionTest.get_config()
         p = GMusicPlaylistsProvider(backend)
-        p.playlists = [Playlist(uri='gmusic:playlist:foo',
-                                name='foo',
-                                tracks=[Track(uri='gmusic:track:test_track')])]
+        p._playlists = {
+            'gmusic:playlist:foo': Playlist(
+                uri='gmusic:playlist:foo',
+                name='foo',
+                tracks=[Track(uri='gmusic:track:test_track')]),
+        }
         pl = p.lookup('gmusic:playlist:foo')
         self.assertIsNotNone(pl)
 
@@ -43,8 +46,11 @@ class PlaylistsTest(unittest.TestCase):
         backend = mock.Mock()
         backend.config = ExtensionTest.get_config()
         p = GMusicPlaylistsProvider(backend)
-        p.playlists = [Playlist(uri='gmusic:playlist:foo',
-                                name='foo',
-                                tracks=[Track(uri='gmusic:track:test_track')])]
+        p._playlists = {
+            'gmusic:playlist:foo': Playlist(
+                uri='gmusic:playlist:foo',
+                name='foo',
+                tracks=[Track(uri='gmusic:track:test_track')]),
+        }
         pl = p.lookup('gmusic:playlist:bar')
         self.assertIsNone(pl)
