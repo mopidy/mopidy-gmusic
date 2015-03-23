@@ -11,46 +11,34 @@ from tests.test_extension import ExtensionTest
 
 class PlaylistsTest(unittest.TestCase):
 
-    def test_create(self):
+    def setUp(self):
         backend = mock.Mock()
         backend.config = ExtensionTest.get_config()
-        p = GMusicPlaylistsProvider(backend)
-        p.create('foo')
+        self.provider = GMusicPlaylistsProvider(backend)
+        self.provider._playlists = {
+            'gmusic:playlist:foo': Playlist(
+                uri='gmusic:playlist:foo',
+                name='foo',
+                tracks=[Track(uri='gmusic:track:test_track')]),
+            'gmusic:playlist:boo': Playlist(
+                uri='gmusic:playlist:boo', name='boo', tracks=[]),
+        }
+
+    def test_create(self):
+        self.provider.create('foo')
 
     def test_delete(self):
-        backend = mock.Mock()
-        backend.config = ExtensionTest.get_config()
-        p = GMusicPlaylistsProvider(backend)
-        p.delete('gmusic:playlist:foo')
+        self.provider.delete('gmusic:playlist:foo')
 
     def test_save(self):
-        backend = mock.Mock()
-        backend.config = ExtensionTest.get_config()
-        p = GMusicPlaylistsProvider(backend)
-        p.save(Playlist())
+        self.provider.save(Playlist())
 
     def test_lookup_valid(self):
-        backend = mock.Mock()
-        backend.config = ExtensionTest.get_config()
-        p = GMusicPlaylistsProvider(backend)
-        p._playlists = {
-            'gmusic:playlist:foo': Playlist(
-                uri='gmusic:playlist:foo',
-                name='foo',
-                tracks=[Track(uri='gmusic:track:test_track')]),
-        }
-        pl = p.lookup('gmusic:playlist:foo')
-        self.assertIsNotNone(pl)
+        result = self.provider.lookup('gmusic:playlist:foo')
+
+        self.assertIsNotNone(result)
 
     def test_lookup_invalid(self):
-        backend = mock.Mock()
-        backend.config = ExtensionTest.get_config()
-        p = GMusicPlaylistsProvider(backend)
-        p._playlists = {
-            'gmusic:playlist:foo': Playlist(
-                uri='gmusic:playlist:foo',
-                name='foo',
-                tracks=[Track(uri='gmusic:track:test_track')]),
-        }
-        pl = p.lookup('gmusic:playlist:bar')
-        self.assertIsNone(pl)
+        result = self.provider.lookup('gmusic:playlist:bar')
+
+        self.assertIsNone(result)
