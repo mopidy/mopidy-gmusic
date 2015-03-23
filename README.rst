@@ -2,19 +2,19 @@
 Mopidy-GMusic
 *************
 
-.. image:: https://pypip.in/v/Mopidy-GMusic/badge.png
+.. image:: https://img.shields.io/pypi/v/Mopidy-GMusic.svg?style=flat
     :target: https://pypi.python.org/pypi/Mopidy-GMusic/
     :alt: Latest PyPI version
 
-.. image:: https://pypip.in/d/Mopidy-GMusic/badge.png
+.. image:: https://img.shields.io/pypi/dm/Mopidy-GMusic.svg?style=flat
     :target: https://pypi.python.org/pypi/Mopidy-GMusic/
     :alt: Number of PyPI downloads
 
-.. image:: https://travis-ci.org/hechtus/mopidy-gmusic.png?branch=develop
+.. image:: https://img.shields.io/travis/hechtus/mopidy-gmusic/develop.svg?style=flat
     :target: https://travis-ci.org/hechtus/mopidy-gmusic
     :alt: Travis CI build status
 
-.. image:: https://coveralls.io/repos/hechtus/mopidy-gmusic/badge.png?branch=develop
+.. image:: https://img.shields.io/coveralls/hechtus/mopidy-gmusic/develop.svg?style=flat
    :target: https://coveralls.io/r/hechtus/mopidy-gmusic?branch=develop
    :alt: Test coverage
 
@@ -42,6 +42,7 @@ Installation
 Install the Mopidy-GMusic extension by running::
 
     pip install mopidy-gmusic
+
 
 Configuration
 =============
@@ -79,6 +80,7 @@ All Access radios are available as browsable content or playlist::
     max_radio_stations = 0
     # limit the number or tracks for each radio station
     max_radio_tracks = 25
+
 
 Usage
 =====
