@@ -24,7 +24,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'setuptools',
-        'Mopidy >= 0.18',
+        'Mopidy >= 1.0',
         'Pykka >= 1.1',
         'gmusicapi >= 4.0.0',
     ],
