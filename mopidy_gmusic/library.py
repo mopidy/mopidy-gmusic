@@ -285,7 +285,10 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         for song in self.backend.session.get_all_songs():
             self._to_mopidy_track(song)
 
-    def search(self, query=None, uris=None):
+    def search(self, query=None, uris=None, exact=False):
+        if exact:
+            return self._find_exact(query=query, uris=uris)
+
         lib_tracks, lib_artists, lib_albums = self._search_library(query, uris)
 
         if query and self.all_access:
@@ -307,7 +310,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                             artists=lib_artists,
                             albums=lib_albums)
 
-    def find_exact(self, query=None, uris=None):
+    def _find_exact(self, query=None, uris=None):
         # Find exact can only be done on gmusic library,
         # since one can't filter all access searches
         lib_tracks, lib_artists, lib_albums = self._search_library(query, uris)

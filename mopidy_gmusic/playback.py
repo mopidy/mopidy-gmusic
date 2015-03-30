@@ -15,16 +15,15 @@ class GMusicPlaybackProvider(backend.PlaybackProvider):
         self._track_start = 0
         self._track = None
 
-    def play(self, track):
+    def change_track(self, track):
         logger.debug('play(): %r', track)
         url = self.backend.session.get_stream_url(track.uri.split(':')[2])
         if url is None:
             return False
-        self.audio.prepare_change()
         self.audio.set_uri(url).get()
         self._track_start = time.time()
         self._track = track
-        return self.audio.start_playback().get()
+        return True
 
     def stop(self):
         super(GMusicPlaybackProvider, self).stop()
