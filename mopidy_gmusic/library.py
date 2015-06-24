@@ -207,7 +207,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             except KeyError:
                 logger.debug('Failed to lookup %r', uri)
                 return []
-            tracks = self.find_exact(
+            tracks = self._find_exact(
                 dict(album=album.name,
                      artist=[artist.name for artist in album.artists],
                      date=album.date)).tracks
@@ -271,7 +271,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             logger.debug('Failed to lookup %r', uri)
             return []
 
-        tracks = self.find_exact(
+        tracks = self._find_exact(
             dict(artist=artist.name)).tracks
         if exact_match:
             tracks = filter(lambda t: artist in t.artists, tracks)
