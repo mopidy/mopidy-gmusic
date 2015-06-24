@@ -18,7 +18,7 @@ class GMusicSession(object):
         if self.api.is_authenticated():
             self.api.logout()
 
-        if not self.api.login(username, password):
+        if not self.api.login(username, password, deviceid):
             logger.error(u'Failed to login as "%s"', username)
 
         if self.api.is_authenticated():
