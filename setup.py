@@ -6,9 +6,10 @@ from setuptools import find_packages, setup
 
 
 def get_version(filename):
-    content = open(filename).read()
-    metadata = dict(re.findall("__([a-z]+)__ = '([^']+)'", content))
-    return metadata['version']
+    with open(filename) as fh:
+        metadata = dict(re.findall("__([a-z]+)__ = '([^']+)'", fh.read()))
+        return metadata['version']
+
 
 setup(
     name='Mopidy-GMusic',
@@ -27,11 +28,6 @@ setup(
         'Mopidy >= 1.0',
         'Pykka >= 1.1',
         'gmusicapi >= 6.0.0',
-    ],
-    test_suite='nose.collector',
-    tests_require=[
-        'nose',
-        'mock >= 1.0',
     ],
     entry_points={
         'mopidy.ext': [
