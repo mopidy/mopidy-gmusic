@@ -14,11 +14,11 @@ def get_version(filename):
 setup(
     name='Mopidy-GMusic',
     version=get_version('mopidy_gmusic/__init__.py'),
-    url='http://github.com/hechtus/mopidy-gmusic/',
+    url='https://github.com/mopidy/mopidy-gmusic',
     license='Apache License, Version 2.0',
     author='Ronald Hecht',
     author_email='ronald.hecht@gmx.de',
-    description='Google Play Music extension for Mopidy',
+    description='Mopidy extension for playing music from Google Play Music',
     long_description=open('README.rst').read(),
     packages=find_packages(exclude=['tests', 'tests.*']),
     zip_safe=False,

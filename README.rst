@@ -10,12 +10,12 @@ Mopidy-GMusic
     :target: https://pypi.python.org/pypi/Mopidy-GMusic/
     :alt: Number of PyPI downloads
 
-.. image:: https://img.shields.io/travis/hechtus/mopidy-gmusic/develop.svg?style=flat
-    :target: https://travis-ci.org/hechtus/mopidy-gmusic
+.. image:: https://img.shields.io/travis/mopidy/mopidy-gmusic/develop.svg?style=flat
+    :target: https://travis-ci.org/mopidy/mopidy-gmusic
     :alt: Travis CI build status
 
-.. image:: https://img.shields.io/coveralls/hechtus/mopidy-gmusic/develop.svg?style=flat
-   :target: https://coveralls.io/r/hechtus/mopidy-gmusic?branch=develop
+.. image:: https://img.shields.io/coveralls/mopidy/mopidy-gmusic/develop.svg?style=flat
+   :target: https://coveralls.io/r/mopidy/mopidy-gmusic
    :alt: Test coverage
 
 `Mopidy <http://www.mopidy.com/>`_ extension for playing music from
@@ -95,10 +95,8 @@ your library. Mopidy will able to play them.
 Project resources
 =================
 
-- `Source code <https://github.com/hechtus/mopidy-gmusic>`_
-- `Issue tracker <https://github.com/hechtus/mopidy-gmusic/issues>`_
-- `Download development snapshot
-  <https://github.com/hechtus/mopidy-gmusic/archive/develop.zip>`_
+- `Source code <https://github.com/mopidy/mopidy-gmusic>`_
+- `Issue tracker <https://github.com/mopidy/mopidy-gmusic/issues>`_
 
 
 Changelog
