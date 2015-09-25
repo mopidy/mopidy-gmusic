@@ -442,7 +442,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             album = self._aa_to_mopidy_album(song)
             return album
         except KeyError:
-            name = song['album']
+            name = song.get('album', '')
             artist = self._to_mopidy_album_artist(song)
             date = unicode(song.get('year', 0))
             uri = 'gmusic:album:' + self._create_id(artist.name + name + date)
@@ -460,7 +460,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             return album
 
     def _to_mopidy_artist(self, song):
-        name = song['artist']
+        name = song.get('artist', '')
         uri = 'gmusic:artist:' + self._create_id(name)
 
         # First try to process the artist as an aa artist
@@ -479,7 +479,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
     def _to_mopidy_album_artist(self, song):
         name = song.get('albumArtist', '')
         if name.strip() == '':
-            name = song['artist']
+            name = song.get('artist', '')
         uri = 'gmusic:artist:' + self._create_id(name)
         artist = Artist(
             uri=uri,
@@ -518,12 +518,13 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             images=images)
 
     def _aa_to_mopidy_artist(self, song):
-        artist_id = self._create_id(song['artist'])
+        name = song.get('artist', '')
+        artist_id = self._create_id(name)
         uri = 'gmusic:artist:' + artist_id
         self.aa_artists[artist_id] = song['artistId'][0]
         return Artist(
             uri=uri,
-            name=song['artist'])
+            name=name)
 
     def _aa_to_mopidy_album_artist(self, song):
         name = song.get('albumArtist', '')
@@ -588,7 +589,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
     def _aa_search_artist_album_to_mopidy_artist_album(self, album):
         name = album.get('albumArtist', '')
         if name.strip() == '':
-            name = album['artist']
+            name = album.get('artist', '')
         uri = 'gmusic:artist:' + self._create_id(name)
         return Artist(
             uri=uri,
