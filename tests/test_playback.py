@@ -64,7 +64,8 @@ class PlaybackTest(unittest.TestCase):
         playback.change_track(self._track)
         playback.play()
 
-        playback.backend.session.get_stream_url.assert_called_once()
+        playback.backend.session.get_stream_url.assert_called_once_with(
+            'test_track')
         playback.audio.start_playback.assert_called_once_with()
         self.assertEqual(
             playback.backend.session.increment_song_playcount.call_count,
