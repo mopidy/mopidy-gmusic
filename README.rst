@@ -105,10 +105,23 @@ Changelog
 v1.0.0 (UNRELEASED)
 -------------------
 
-- Require Mopidy v1.0
-- Update to work with new playback API in Mopidy 1.0
-- Update to work with new search API in Mopidy 1.0
-- (a number of other changes, not yet added to the changelog)
+- Require Mopidy >= 1.0.
+- Require gmusicapi >= 6.0.
+- Update to work with new playback API in Mopidy 1.0. (PR: #75)
+- Update to work with new search API in Mopidy 1.0.
+- Fix crash when tracks lack album or artist information. (Fixes: #74, PR: #24,
+  also thanks to PRs #27, #64)
+- Log error on login failure instead of swallowing the error. (PR: #36)
+- Add support for All Access search and lookup (PR: #34)
+- Add dynamic playlist based on top rated tracks.
+- Add support for radio stations in browser and/or as playlists.
+- Add support for browsing artists and albums in the cached library.
+- Add cover art to ``Album.images`` model field.
+- Add background refreshing of library and playlists. (Fixes: #21)
+- Fix authentication issues. (Fixes: #82, #87)
+- Add LRU cache for All Access albums and tracks.
+- Increment Google's play count when 2/3 of the track has been played. (PR:
+  #51)
 
 
 v0.3.0 (2014-01-28)
