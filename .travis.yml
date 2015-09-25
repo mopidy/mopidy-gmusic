@@ -26,9 +26,9 @@ after_success:
   - "if [ $TOX_ENV == 'py27' ]; then pip install coveralls; coveralls; fi"
 
 notifications:
-  email:
-    recipients:
-      - ronald.hecht@gmx.de
+  irc:
+    channels:
+      - "irc.freenode.org#mopidy"
     on_success: change
     on_failure: change
     use_notice: true
