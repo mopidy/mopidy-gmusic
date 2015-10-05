@@ -11,7 +11,6 @@ class GMusicSession(object):
 
     def __init__(self):
         super(GMusicSession, self).__init__()
-        logger.info('Mopidy uses Google Music')
         self.api = Mobileclient()
 
     def login(self, username, password, deviceid):
