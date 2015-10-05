@@ -122,6 +122,7 @@ v1.0.0 (UNRELEASED)
 - Add LRU cache for All Access albums and tracks.
 - Increment Google's play count when 2/3 of the track has been played. (PR:
   #51)
+- Let gmusicapi use the device's MAC address as device ID by default.
 
 
 v0.3.0 (2014-01-28)

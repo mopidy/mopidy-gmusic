@@ -13,20 +13,20 @@ class GMusicSession(object):
         super(GMusicSession, self).__init__()
         self.api = gmusicapi.Mobileclient()
 
-    def login(self, username, password, deviceid):
+    def login(self, username, password, device_id):
         if self.api.is_authenticated():
             self.api.logout()
 
-        if not self.api.login(username, password, deviceid):
-            logger.error(u'Failed to login as "%s"', username)
+        if device_id is None:
+            device_id = gmusicapi.Mobileclient.FROM_MAC_ADDRESS
 
-        if self.api.is_authenticated():
-            if deviceid is None:
-                self.deviceid = self.get_deviceid(username, password)
-            else:
-                self.deviceid = deviceid
+        authenticated = self.api.login(username, password, device_id)
+
+        if authenticated:
+            logger.info('Logged in to Google Music')
         else:
-            return False
+            logger.error('Failed to login to Google Music as "%s"', username)
+        return authenticated
 
     def logout(self):
         if self.api.is_authenticated():
@@ -43,7 +43,7 @@ class GMusicSession(object):
     def get_stream_url(self, song_id):
         if self.api.is_authenticated():
             try:
-                return self.api.get_stream_url(song_id, self.deviceid)
+                return self.api.get_stream_url(song_id)
             except gmusicapi.CallFailure as error:
                 logger.error(u'Failed to lookup "%s": %s', song_id, error)
 
@@ -70,26 +70,6 @@ class GMusicSession(object):
             return self.api.get_promoted_songs()
         else:
             return {}
-
-    def get_deviceid(self, username, password):
-        logger.warning(u'No mobile device ID configured. '
-                       u'Trying to detect one.')
-        webapi = gmusicapi.Webclient(validate=False)
-        webapi.login(username, password)
-        devices = webapi.get_registered_devices()
-        deviceid = None
-        for device in devices:
-            if device['type'] == 'PHONE' and device['id'][0:2] == u'0x':
-                # Omit the '0x' prefix
-                deviceid = device['id'][2:]
-                break
-        webapi.logout()
-        if deviceid is None:
-            logger.error(u'No valid mobile device ID found. '
-                         u'Playing songs will not work.')
-        else:
-            logger.info(u'Using mobile device ID %s', deviceid)
-        return deviceid
 
     def get_track_info(self, store_track_id):
         if self.api.is_authenticated():
