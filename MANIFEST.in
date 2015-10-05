@@ -1,4 +1,4 @@
-include .coveragerc
+include .mailmap
 include .travis.yml
 include LICENSE
 include MANIFEST.in
