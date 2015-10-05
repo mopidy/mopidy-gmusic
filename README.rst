@@ -25,15 +25,11 @@ Mopidy-GMusic
 Dependencies
 ============
 
-- You must have a Google account and some music and playlists in your
-  library.
+You must have a Google account, and either:
 
-- You must have an Android device registered for Google Play Music.
+- have some music uploaded to your Google Play Music library, or
 
-- The `Unofficial Google Music API
-  <https://github.com/simon-weber/Unofficial-Google-Music-API>`_ is
-  needed to access Google Play Music. It will automatically be installed
-  together with Mopidy-GMusic.
+- have a subscription for Google Play Music All Access.
 
 
 Installation
@@ -47,29 +43,26 @@ Install the Mopidy-GMusic extension by running::
 Configuration
 =============
 
-Before starting Mopidy, you must add your Google username, password,
-and Android mobile device ID to your Mopidy configuration file::
+Before starting Mopidy, you must add your Google username and password to your
+Mopidy configuration file::
 
     [gmusic]
     username = alice
     password = secret
-    deviceid = 0123456789abcdef
 
-The mobile device ID is a 16-digit hexadecimal string (without a '0x'
-prefix) identifying the Android device registered for Google Play
-Music. You can obtain this ID by dialing ``*#*#8255#*#*`` on your
-phone (see the aid) or using this `App
-<https://play.google.com/store/apps/details?id=com.evozi.deviceid>`_
-(see the Google Service Framework ID Key). You may also leave this
-field empty. Mopidy will try to find the ID by itself. See the Mopidy
-logs for more information.
+If you use 2-step verification to access your Google account, which you should,
+you must create an application password in your Google account for
+Mopidy-GMusic. See Google's docs on `how to make an app password
+<https://support.google.com/accounts/answer/185833>`_ if you're not already
+familiar with this.
 
 All Access subscribers may enable All Access integration by adding this line::
 
     [gmusic]
     all_access = true
 
-All Access radios are available as browsable content or playlist::
+All Access radios are available as browsable content or playlist. The following
+are the default config values::
 
     [gmusic]
     # show radio stations in content browser
@@ -80,6 +73,25 @@ All Access radios are available as browsable content or playlist::
     max_radio_stations = 0
     # limit the number or tracks for each radio station
     max_radio_tracks = 25
+
+Google Play Music requires all clients to provide a device ID. By default,
+Mopidy-GMusic will use your system's MAC address as the device ID. As Google
+`puts some limits <https://support.google.com/googleplay/answer/3139562>`_ on
+how many different devices you can associate with an account, you might want to
+control what device ID is used. You can set the ``gmusic/deviceid`` config to
+e.g. the device ID from your phone where you also use Google Play Music::
+
+    [gmusic]
+    deviceid = 0123456789abcdef
+
+The Android device ID is a 16 character long string identifying the Android
+device registered for Google Play Music, excluding the ``0x`` prefix. You can
+obtain this ID by dialing ``*#*#8255#*#*`` on your phone (see the aid) or using
+this `app <https://play.google.com/store/apps/details?id=com.evozi.deviceid>`_
+(see the Google Service Framework ID Key).
+
+On iOS the device ID is an UUID with the ``ios:`` prefix included. (TODO:
+Include instructions on how to retrieve this.)
 
 
 Usage
