@@ -13,12 +13,15 @@ from .library import GMusicLibraryProvider
 from .playback import GMusicPlaybackProvider
 from .playlists import GMusicPlaylistsProvider
 from .repeating_timer import RepeatingTimer
+from .scrobbler_frontend import GMusicScrobblerListener
 from .session import GMusicSession
 
 logger = logging.getLogger(__name__)
 
 
-class GMusicBackend(pykka.ThreadingActor, backend.Backend):
+class GMusicBackend(
+        pykka.ThreadingActor, backend.Backend, GMusicScrobblerListener):
+
     def __init__(self, config, audio):
         super(GMusicBackend, self).__init__()
 
@@ -69,6 +72,10 @@ class GMusicBackend(pykka.ThreadingActor, backend.Backend):
             self._refresh_playlists_timer.cancel()
             self._refresh_playlists_timer = None
         self.session.logout()
+
+    def increment_song_playcount(self, track_id):
+        # Called through GMusicScrobblerListener
+        self.session.increment_song_playcount(track_id)
 
     def _refresh_library(self):
         with self._refresh_lock:

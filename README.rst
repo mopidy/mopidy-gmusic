@@ -132,9 +132,11 @@ v1.0.0 (UNRELEASED)
 - Add background refreshing of library and playlists. (Fixes: #21)
 - Fix authentication issues. (Fixes: #82, #87)
 - Add LRU cache for All Access albums and tracks.
-- Increment Google's play count when 2/3 of the track has been played. (PR:
-  #51)
+- Increment Google's play count if 50% or 240s of the track has been played.
+  (PR: #51, and later changes)
 - Let gmusicapi use the device's MAC address as device ID by default.
+- Fix increasing of play counts in Google Play Music. (Fixes: #96)
+- Fix scrobbling of tracks to Last.fm through Mopidy-Scrobbler. (Fixes: #60)
 
 
 v0.3.0 (2014-01-28)

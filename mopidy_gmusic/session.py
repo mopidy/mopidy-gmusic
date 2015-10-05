@@ -4,6 +4,7 @@ import logging
 
 import gmusicapi
 
+
 logger = logging.getLogger(__name__)
 
 

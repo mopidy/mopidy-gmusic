@@ -34,4 +34,6 @@ class GMusicExtension(ext.Extension):
 
     def setup(self, registry):
         from .actor import GMusicBackend
+        from .scrobbler_frontend import GMusicScrobblerFrontend
         registry.add('backend', GMusicBackend)
+        registry.add('frontend', GMusicScrobblerFrontend)

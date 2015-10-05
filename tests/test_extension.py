@@ -2,7 +2,8 @@ import unittest
 
 import mock
 
-from mopidy_gmusic import GMusicExtension, actor as backend_lib
+from mopidy_gmusic import (
+    GMusicExtension, actor as backend_lib, scrobbler_frontend)
 
 
 class ExtensionTest(unittest.TestCase):
@@ -56,8 +57,12 @@ class ExtensionTest(unittest.TestCase):
         ext = GMusicExtension()
         ext.setup(registry)
 
-        registry.add.assert_called_once_with(
-            'backend', backend_lib.GMusicBackend)
+        self.assertIn(
+            mock.call('backend', backend_lib.GMusicBackend),
+            registry.add.mock_calls)
+        self.assertIn(
+            mock.call('frontend', scrobbler_frontend.GMusicScrobblerFrontend),
+            registry.add.mock_calls)
 
     def test_init_backend(self):
         backend = backend_lib.GMusicBackend(

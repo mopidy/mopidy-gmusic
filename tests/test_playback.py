@@ -1,98 +1,27 @@
+from __future__ import unicode_literals
+
 import logging
-
-import time
-
-import unittest
 
 import mock
 
-from mopidy.models import Track
-
-from mopidy_gmusic.playback import GMusicPlaybackProvider
-
-from mopidy_gmusic.session import GMusicSession
+from mopidy_gmusic import playback
 
 
 logger = logging.getLogger(__name__)
 
 
-class PlaybackTest(unittest.TestCase):
+def test_translate_invalid_uri():
+    backend = mock.Mock()
+    backend.session.get_stream_url.return_value = None
+    provider = playback.GMusicPlaybackProvider(audio=None, backend=backend)
 
-    _track = Track(
-        uri='gmusic:track:test_track',
-        name='Test Track',
-        length=1000  # 1s track length
-    )
+    assert provider.translate_uri('gmusic:track:invalid_uri') is None
 
-    def test_init(self):
-        audio = mock.Mock()
-        backend = mock.Mock()
-        p = GMusicPlaybackProvider(audio, backend)
-        self.assertIsNotNone(p)
 
-    def test_change_track_invalid(self):
-        audio = mock.Mock()
-        backend = mock.Mock()
-        backend.session = GMusicSession()
-        p = GMusicPlaybackProvider(audio, backend)
-        self.assertFalse(p.change_track(Track(uri='gmusic:track:invalid_uri')))
-        self.assertEqual(p.audio.prepare_change.call_count, 0)
-        self.assertEqual(p.audio.set_uri.call_count, 0)
-        self.assertEqual(p.audio.start_playback.call_count, 0)
+def test_change_track_valid():
+    stream_url = 'http://stream.example.com/foo.mp3'
+    backend = mock.Mock()
+    backend.session.get_stream_url.return_value = stream_url
+    provider = playback.GMusicPlaybackProvider(audio=None, backend=backend)
 
-    def test_change_track_valid(self):
-        audio = mock.Mock()
-        backend = mock.Mock()
-        backend.session.get_stream_url = mock.Mock(
-            return_value='http://stream.example.com/foo.mp3')
-        p = GMusicPlaybackProvider(audio, backend)
-        self.assertTrue(p.change_track(Track(uri='gmusic:track:valid_uri')))
-        self.assertEqual(p.audio.prepare_change.call_count, 0)
-        self.assertEqual(p.audio.set_uri.call_count, 1)
-        self.assertEqual(p.audio.start_playback.call_count, 0)
-
-    def _setup_player(self):
-        audio = mock.Mock()
-        ext = mock.Mock()
-        ext.session = mock.Mock()
-
-        playback = GMusicPlaybackProvider(audio, ext)
-        return playback
-
-    def test_playback(self):
-        playback = self._setup_player()
-        playback.change_track(self._track)
-        playback.play()
-
-        playback.backend.session.get_stream_url.assert_called_once_with(
-            'test_track')
-        playback.audio.start_playback.assert_called_once_with()
-        self.assertEqual(
-            playback.backend.session.increment_song_playcount.call_count,
-            0,
-            'increment_song_playcount() was called')
-
-    def test_stop_full_track(self):
-        playback = self._setup_player()
-        playback.change_track(self._track)
-        playback.play()
-        # sleep for track length
-        time.sleep(0.8)
-        playback.stop()
-        logger.debug(
-            'call count: %d',
-            playback.backend.session.increment_song_playcount.call_count)
-        playback.backend.session.increment_song_playcount\
-            .assert_called_once_with(u'test_track')
-
-    def test_stop_skip(self):
-        playback = self._setup_player()
-        playback.change_track(self._track)
-        playback.play()
-        # sleep for 1/3 of track length
-        time.sleep(0.3)
-        playback.stop()
-        self.assertEqual(
-            playback.backend.session.increment_song_playcount.call_count,
-            0,
-            'increment_song_playcount() was called')
+    assert provider.translate_uri('gmusic:track:valid_uri') == stream_url
