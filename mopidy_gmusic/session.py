@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import logging
 
-from gmusicapi import CallFailure, Mobileclient, Webclient
+import gmusicapi
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +11,7 @@ class GMusicSession(object):
 
     def __init__(self):
         super(GMusicSession, self).__init__()
-        self.api = Mobileclient()
+        self.api = gmusicapi.Mobileclient()
 
     def login(self, username, password, deviceid):
         if self.api.is_authenticated():
@@ -44,7 +44,7 @@ class GMusicSession(object):
         if self.api.is_authenticated():
             try:
                 return self.api.get_stream_url(song_id, self.deviceid)
-            except CallFailure as error:
+            except gmusicapi.CallFailure as error:
                 logger.error(u'Failed to lookup "%s": %s', song_id, error)
 
     def get_all_user_playlist_contents(self):
@@ -74,7 +74,7 @@ class GMusicSession(object):
     def get_deviceid(self, username, password):
         logger.warning(u'No mobile device ID configured. '
                        u'Trying to detect one.')
-        webapi = Webclient(validate=False)
+        webapi = gmusicapi.Webclient(validate=False)
         webapi.login(username, password)
         devices = webapi.get_registered_devices()
         deviceid = None
@@ -95,14 +95,14 @@ class GMusicSession(object):
         if self.api.is_authenticated():
             try:
                 return self.api.get_track_info(store_track_id)
-            except CallFailure as error:
+            except gmusicapi.CallFailure as error:
                 logger.error(u'Failed to get All Access track info: %s', error)
 
     def get_album_info(self, albumid, include_tracks=True):
         if self.api.is_authenticated():
             try:
                 return self.api.get_album_info(albumid, include_tracks)
-            except CallFailure as error:
+            except gmusicapi.CallFailure as error:
                 logger.error(u'Failed to get All Access album info: %s', error)
 
     def get_artist_info(
@@ -112,7 +112,7 @@ class GMusicSession(object):
             try:
                 return self.api.get_artist_info(
                     artistid, include_albums, max_top_tracks, max_rel_artist)
-            except CallFailure as error:
+            except gmusicapi.CallFailure as error:
                 logger.error(
                     u'Failed to get All Access artist info: %s', error)
 
@@ -120,7 +120,7 @@ class GMusicSession(object):
         if self.api.is_authenticated():
             try:
                 return self.api.search_all_access(query, max_results)
-            except CallFailure as error:
+            except gmusicapi.CallFailure as error:
                 logger.error(u'Failed to search All Access: %s', error)
 
     def get_all_stations(self):
