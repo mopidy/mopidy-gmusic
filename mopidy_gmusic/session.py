@@ -117,7 +117,8 @@ class GMusicSession(object):
         stations.reverse()
 
         # Add IFL radio on top
-        stations.insert(0, {'id': 'IFL', 'name': 'I\'m Feeling Lucky'})
+        # XXX This causes a crash. See simon-weber/gmusicapi#365
+        # stations.insert(0, {'id': 'IFL', 'name': 'I\'m Feeling Lucky'})
 
         if num_stations is not None and num_stations > 0:
             # Limit radio stations

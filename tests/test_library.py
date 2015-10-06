@@ -9,12 +9,12 @@ class LibraryTest(unittest.TestCase):
 
     def setUp(self):
         config = ExtensionTest.get_config()
-        self.backend = backend_lib.GMusicBackend(config, None)
+        self.backend = backend_lib.GMusicBackend(config=config, audio=None)
 
     def test_browse_radio_deactivated(self):
         config = ExtensionTest.get_config()
         config['gmusic']['show_radio_stations_browse'] = False
-        self.backend = backend_lib.GMusicBackend(config, None)
+        self.backend = backend_lib.GMusicBackend(config=config, audio=None)
 
         refs = self.backend.library.browse('gmusic:directory')
         for ref in refs:
@@ -70,14 +70,8 @@ class LibraryTest(unittest.TestCase):
     def test_browse_radio(self):
         refs = self.backend.library.browse('gmusic:radio')
         # tests should be unable to fetch stations :(
-        # at least IFL radio should be available
-        self.assertEqual(len(refs), 1)
-        found = False
-        for ref in refs:
-            if ref.uri == 'gmusic:radio:IFL':
-                found = True
-                break
-        self.assertTrue(found, 'ref \'gmusic:radio:IFL\' not found')
+        self.assertIsNotNone(refs)
+        self.assertEqual(refs, [])
 
     def test_browse_station(self):
         refs = self.backend.library.browse('gmusic:radio:invalid_stations_id')
