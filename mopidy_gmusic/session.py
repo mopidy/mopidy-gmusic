@@ -110,15 +110,19 @@ class GMusicSession(object):
         else:
             return []
 
-    def get_radio_stations(self, num_stations=0):
+    def get_radio_stations(self, num_stations=None):
         stations = self.get_all_stations()
-        # last plaid radio first
+
+        # Last played radio first
         stations.reverse()
-        # add IFL radio on top
+
+        # Add IFL radio on top
         stations.insert(0, {'id': 'IFL', 'name': 'I\'m Feeling Lucky'})
-        if num_stations > 0:
-            # limit radio stations
+
+        if num_stations is not None and num_stations > 0:
+            # Limit radio stations
             stations = stations[:num_stations]
+
         return stations
 
     def get_station_tracks(self, station_id, num_tracks=25):

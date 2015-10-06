@@ -65,13 +65,13 @@ All Access radios are available as browsable content or playlist. The following
 are the default config values::
 
     [gmusic]
-    # show radio stations in content browser
+    # Show radio stations in content browser
     show_radio_stations_browse = true
-    # show radio stations as playlists
+    # Show radio stations as playlists
     show_radio_stations_playlist = false
-    # limit the number of radio stations, 0 = unlimited
-    max_radio_stations = 0
-    # limit the number or tracks for each radio station
+    # Limit the number of radio stations, unlimited if unset
+    max_radio_stations =
+    # Limit the number or tracks for each radio station
     max_radio_tracks = 25
 
 Google Play Music requires all clients to provide a device ID. By default,

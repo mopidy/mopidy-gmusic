@@ -32,7 +32,7 @@ class ExtensionTest(unittest.TestCase):
         self.assertIn('enabled = true', config)
         self.assertIn('all_access = false', config)
         self.assertIn('show_radio_stations_browse = true', config)
-        self.assertIn('max_radio_stations = 0', config)
+        self.assertIn('max_radio_stations =', config)
         self.assertIn('max_radio_tracks = 25', config)
 
     def test_get_config_schema(self):
