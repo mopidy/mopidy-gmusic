@@ -329,7 +329,9 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             # first 'searchable' filter
             if field in [
                     'track_name', 'album', 'artist', 'albumartist', 'any']:
-                print "searching all access for " + values[0]
+                logger.info(
+                    'Searching Google Play Music All Access for: %s',
+                    values[0])
                 res = self.backend.session.search_all_access(
                     values[0], max_results=50)
 
