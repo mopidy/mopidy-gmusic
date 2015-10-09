@@ -10,9 +10,11 @@ logger = logging.getLogger(__name__)
 
 class GMusicSession(object):
 
-    def __init__(self):
-        super(GMusicSession, self).__init__()
-        self.api = gmusicapi.Mobileclient()
+    def __init__(self, api=None):
+        if api is None:
+            self.api = gmusicapi.Mobileclient()
+        else:
+            self.api = api
 
     def login(self, username, password, device_id):
         if self.api.is_authenticated():
@@ -46,7 +48,14 @@ class GMusicSession(object):
             try:
                 return self.api.get_stream_url(song_id)
             except gmusicapi.CallFailure as error:
-                logger.error(u'Failed to lookup "%s": %s', song_id, error)
+                logger.warning(
+                    'Google Music failed to lookup "%s": %s', song_id, error)
+
+    def get_all_playlists(self):
+        if self.api.is_authenticated():
+            return self.api.get_all_playlists()
+        else:
+            return {}
 
     def get_all_user_playlist_contents(self):
         if self.api.is_authenticated():
@@ -54,15 +63,9 @@ class GMusicSession(object):
         else:
             return {}
 
-    def get_shared_playlist_contents(self, shareToken):
+    def get_shared_playlist_contents(self, share_token):
         if self.api.is_authenticated():
-            return self.api.get_shared_playlist_contents(shareToken)
-        else:
-            return {}
-
-    def get_all_playlists(self):
-        if self.api.is_authenticated():
-            return self.api.get_all_playlists()
+            return self.api.get_shared_playlist_contents(share_token)
         else:
             return {}
 
@@ -77,32 +80,43 @@ class GMusicSession(object):
             try:
                 return self.api.get_track_info(store_track_id)
             except gmusicapi.CallFailure as error:
-                logger.error(u'Failed to get All Access track info: %s', error)
+                logger.warning(
+                    'Failed to get Google Music All Access track info: %s',
+                    error)
 
-    def get_album_info(self, albumid, include_tracks=True):
+    def get_album_info(self, album_id, include_tracks=True):
         if self.api.is_authenticated():
             try:
-                return self.api.get_album_info(albumid, include_tracks)
+                return self.api.get_album_info(
+                    album_id, include_tracks=include_tracks)
             except gmusicapi.CallFailure as error:
-                logger.error(u'Failed to get All Access album info: %s', error)
+                logger.warning(
+                    'Failed to get Google Music All Access album info: %s',
+                    error)
 
     def get_artist_info(
-            self, artistid, include_albums=True, max_top_tracks=5,
+            self, artist_id, include_albums=True, max_top_tracks=5,
             max_rel_artist=5):
         if self.api.is_authenticated():
             try:
                 return self.api.get_artist_info(
-                    artistid, include_albums, max_top_tracks, max_rel_artist)
+                    artist_id,
+                    include_albums=include_albums,
+                    max_top_tracks=max_top_tracks,
+                    max_rel_artist=max_rel_artist)
             except gmusicapi.CallFailure as error:
-                logger.error(
-                    u'Failed to get All Access artist info: %s', error)
+                logger.warning(
+                    'Failed to get Google Music All Access artist info: %s',
+                    error)
 
     def search_all_access(self, query, max_results=50):
         if self.api.is_authenticated():
             try:
-                return self.api.search_all_access(query, max_results)
+                return self.api.search_all_access(
+                    query, max_results=max_results)
             except gmusicapi.CallFailure as error:
-                logger.error(u'Failed to search All Access: %s', error)
+                logger.error(
+                    'Failed to search Google Music All Access: %s', error)
 
     def get_all_stations(self):
         if self.api.is_authenticated():
@@ -128,10 +142,12 @@ class GMusicSession(object):
 
     def get_station_tracks(self, station_id, num_tracks=25):
         if self.api.is_authenticated():
-            return self.api.get_station_tracks(station_id, num_tracks)
+            return self.api.get_station_tracks(
+                station_id, num_tracks=num_tracks)
         else:
             return {}
 
     def increment_song_playcount(self, song_id, plays=1, playtime=None):
         if self.api.is_authenticated():
-            return self.api.increment_song_playcount(song_id, plays, playtime)
+            return self.api.increment_song_playcount(
+                song_id, plays=plays, playtime=playtime)
