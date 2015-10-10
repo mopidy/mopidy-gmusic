@@ -13,7 +13,7 @@ class LibraryTest(unittest.TestCase):
 
     def test_browse_radio_deactivated(self):
         config = ExtensionTest.get_config()
-        config['gmusic']['show_radio_stations_browse'] = False
+        config['gmusic']['radio_stations_in_browse'] = False
         self.backend = backend_lib.GMusicBackend(config=config, audio=None)
 
         refs = self.backend.library.browse('gmusic:directory')

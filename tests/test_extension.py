@@ -15,10 +15,10 @@ class ExtensionTest(unittest.TestCase):
         config['password'] = 'secret_password'
         config['deviceid'] = '1234567890'
         config['all_access'] = False
-        config['show_radio_stations_browse'] = True
-        config['show_radio_stations_playlist'] = False
-        config['max_radio_stations'] = 0
-        config['max_radio_tracks'] = 25
+        config['radio_stations_in_browse'] = True
+        config['radio_stations_as_playlists'] = False
+        config['radio_stations_count'] = 0
+        config['radio_tracks_count'] = 25
         config['refresh_library'] = 1440
         config['refresh_playlists'] = 60
         return {'gmusic': config}
@@ -31,9 +31,9 @@ class ExtensionTest(unittest.TestCase):
         self.assertIn('[gmusic]', config)
         self.assertIn('enabled = true', config)
         self.assertIn('all_access = false', config)
-        self.assertIn('show_radio_stations_browse = true', config)
-        self.assertIn('max_radio_stations =', config)
-        self.assertIn('max_radio_tracks = 25', config)
+        self.assertIn('radio_stations_in_browse = true', config)
+        self.assertIn('radio_stations_count =', config)
+        self.assertIn('radio_tracks_count = 25', config)
 
     def test_get_config_schema(self):
         ext = GMusicExtension()
@@ -46,10 +46,10 @@ class ExtensionTest(unittest.TestCase):
         self.assertIn('refresh_library', schema)
         self.assertIn('refresh_playlists', schema)
         self.assertIn('all_access', schema)
-        self.assertIn('show_radio_stations_browse', schema)
-        self.assertIn('show_radio_stations_playlist', schema)
-        self.assertIn('max_radio_stations', schema)
-        self.assertIn('max_radio_tracks', schema)
+        self.assertIn('radio_stations_in_browse', schema)
+        self.assertIn('radio_stations_as_playlists', schema)
+        self.assertIn('radio_stations_count', schema)
+        self.assertIn('radio_tracks_count', schema)
 
     def test_get_backend_classes(self):
         registry = mock.Mock()

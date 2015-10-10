@@ -23,19 +23,19 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         self.aa_tracks = LruCache()
         self.aa_albums = LruCache()
         self.all_access = False
-        self._show_radio_stations_browse = \
-            self.backend.config['gmusic']['show_radio_stations_browse']
-        self._max_radio_stations = \
-            self.backend.config['gmusic']['max_radio_stations']
-        self._max_radio_tracks = \
-            self.backend.config['gmusic']['max_radio_tracks']
+        self._radio_stations_in_browse = (
+            self.backend.config['gmusic']['radio_stations_in_browse'])
+        self._radio_stations_count = (
+            self.backend.config['gmusic']['radio_stations_count'])
+        self._radio_tracks_count = (
+            self.backend.config['gmusic']['radio_tracks_count'])
         self._root = []
         self._root.append(Ref.directory(uri='gmusic:album', name='Albums'))
         self._root.append(Ref.directory(uri='gmusic:artist', name='Artists'))
         # browsing all tracks results in connection timeouts
         # self._root.append(Ref.directory(uri='gmusic:track', name='Tracks'))
 
-        if self._show_radio_stations_browse:
+        if self._radio_stations_in_browse:
             self._root.append(Ref.directory(uri='gmusic:radio',
                                             name='Radios'))
         # show root only if there is something to browse
@@ -121,7 +121,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         # all radio stations
         if uri == 'gmusic:radio':
             stations = self.backend.session.get_radio_stations(
-                self._max_radio_stations)
+                self._radio_stations_count)
             # create Ref objects
             refs = []
             for station in stations:
@@ -134,7 +134,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         if len(parts) == 3 and parts[1] == 'radio':
             station_id = parts[2]
             tracks = self.backend.session.get_station_tracks(
-                station_id, self._max_radio_tracks)
+                station_id, self._radio_tracks_count)
             # create Ref objects
             refs = []
             for track in tracks:

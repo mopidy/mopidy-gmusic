@@ -66,13 +66,13 @@ are the default config values::
 
     [gmusic]
     # Show radio stations in content browser
-    show_radio_stations_browse = true
+    radio_stations_in_browse = true
     # Show radio stations as playlists
-    show_radio_stations_playlist = false
+    radio_stations_as_playlists = false
     # Limit the number of radio stations, unlimited if unset
-    max_radio_stations =
+    radio_stations_count =
     # Limit the number or tracks for each radio station
-    max_radio_tracks = 25
+    radio_tracks_count = 25
 
 Google Play Music requires all clients to provide a device ID. By default,
 Mopidy-GMusic will use your system's MAC address as the device ID. As Google
