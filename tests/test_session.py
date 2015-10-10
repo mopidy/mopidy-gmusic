@@ -44,7 +44,7 @@ class TestLogout(object):
 class TestGetAllSongs(object):
 
     def test_when_offline(self, offline_session):
-        assert offline_session.get_all_songs() == {}
+        assert offline_session.get_all_songs() == []
 
     def test_when_online(self, online_session):
         online_session.api.get_all_songs.return_value = mock.sentinel.rv
@@ -77,7 +77,7 @@ class TestGetStreamUrl(object):
 class TestGetAllPlaylists(object):
 
     def test_when_offline(self, offline_session):
-        assert offline_session.get_all_playlists() == {}
+        assert offline_session.get_all_playlists() == []
 
     def test_when_online(self, online_session):
         online_session.api.get_all_playlists.return_value = (
@@ -91,7 +91,7 @@ class TestGetAllPlaylists(object):
 class TestGetAllUserPlaylistContents(object):
 
     def test_when_offline(self, offline_session):
-        assert offline_session.get_all_user_playlist_contents() == {}
+        assert offline_session.get_all_user_playlist_contents() == []
 
     def test_when_online(self, online_session):
         online_session.api.get_all_user_playlist_contents.return_value = (
@@ -108,7 +108,7 @@ class TestGetAllUserPlaylistContents(object):
 class TestGetSharedPlaylistContents(object):
 
     def test_when_offline(self, offline_session):
-        assert offline_session.get_shared_playlist_contents('token') == {}
+        assert offline_session.get_shared_playlist_contents('token') == []
 
     def test_when_online(self, online_session):
         online_session.api.get_shared_playlist_contents.return_value = (
@@ -125,7 +125,7 @@ class TestGetSharedPlaylistContents(object):
 class TestGetPromotedSongs(object):
 
     def test_when_offline(self, offline_session):
-        assert offline_session.get_promoted_songs() == {}
+        assert offline_session.get_promoted_songs() == []
 
     def test_when_online(self, online_session):
         online_session.api.get_promoted_songs.return_value = (
@@ -247,7 +247,7 @@ class TestGetAllStations(object):
 class TestGetStationTracks(object):
 
     def test_when_offline(self, offline_session):
-        assert offline_session.get_station_tracks('IFL') == {}
+        assert offline_session.get_station_tracks('IFL') == []
 
     def test_when_online(self, online_session):
         online_session.api.get_station_tracks.return_value = mock.sentinel.rv

@@ -48,7 +48,7 @@ class GMusicSession(object):
     def logout(self):
         return self.api.logout()
 
-    @endpoint(default=dict)
+    @endpoint(default=list)
     def get_all_songs(self):
         return self.api.get_all_songs()
 
@@ -60,19 +60,19 @@ class GMusicSession(object):
             logger.warning(
                 'Google Music failed to lookup "%s": %s', song_id, error)
 
-    @endpoint(default=dict)
+    @endpoint(default=list)
     def get_all_playlists(self):
         return self.api.get_all_playlists()
 
-    @endpoint(default=dict)
+    @endpoint(default=list)
     def get_all_user_playlist_contents(self):
         return self.api.get_all_user_playlist_contents()
 
-    @endpoint(default=dict)
+    @endpoint(default=list)
     def get_shared_playlist_contents(self, share_token):
         return self.api.get_shared_playlist_contents(share_token)
 
-    @endpoint(default=dict)
+    @endpoint(default=list)
     def get_promoted_songs(self):
         return self.api.get_promoted_songs()
 
@@ -139,7 +139,7 @@ class GMusicSession(object):
 
         return stations
 
-    @endpoint(default=dict)
+    @endpoint(default=list)
     def get_station_tracks(self, station_id, num_tracks=25):
         return self.api.get_station_tracks(
             station_id, num_tracks=num_tracks)

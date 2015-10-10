@@ -193,7 +193,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 return tracks
             album = self.backend.session.get_album_info(
                 uri.split(':')[2], include_tracks=True)
-            if not album or not album['tracks']:
+            if album is None or not album['tracks']:
                 logger.warning('Failed to lookup %r: %r', uri, album)
                 return []
             tracks = [
@@ -225,7 +225,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             # all access
             artist_infos = self.backend.session.get_artist_info(
                 artist_id, max_top_tracks=0, max_rel_artist=0)
-            if 'albums' not in artist_infos:
+            if artist_infos is None or 'albums' not in artist_infos:
                 return []
             albums = []
             for album in artist_infos['albums']:
@@ -334,6 +334,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                     values[0])
                 res = self.backend.session.search_all_access(
                     values[0], max_results=50)
+                if res is None:
+                    return [], [], []
 
                 albums = [
                     self._aa_search_album_to_mopidy_album(album_res)
