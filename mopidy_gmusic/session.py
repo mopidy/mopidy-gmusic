@@ -10,18 +10,29 @@ logger = logging.getLogger(__name__)
 
 
 def endpoint(default=None, require_all_access=False):
+    default = default() if callable(default) else default
+
     def outer_wrapper(func):
+
         @functools.wraps(func)
         def inner_wrapper(self, *args, **kwargs):
             if require_all_access and not self.all_access:
                 logger.warning(
                     'Google Play Music All Access is required for %s()',
                     func.__name__)
-                return default() if callable(default) else default
+                return default
+
             if not self.api.is_authenticated():
-                return default() if callable(default) else default
-            return func(self, *args, **kwargs)
+                return default
+
+            try:
+                return func(self, *args, **kwargs)
+            except gmusicapi.CallFailure:
+                logger.exception('Call to Google Music failed')
+                return default
+
         return inner_wrapper
+
     return outer_wrapper
 
 
@@ -49,7 +60,7 @@ class GMusicSession(object):
             logger.error('Failed to login to Google Music as "%s"', username)
         return authenticated
 
-    @endpoint(default=True)
+    @endpoint(default=None)
     def logout(self):
         return self.api.logout()
 
@@ -59,11 +70,7 @@ class GMusicSession(object):
 
     @endpoint(default=None)
     def get_stream_url(self, song_id):
-        try:
-            return self.api.get_stream_url(song_id)
-        except gmusicapi.CallFailure as error:
-            logger.warning(
-                'Google Music failed to lookup "%s": %s', song_id, error)
+        return self.api.get_stream_url(song_id)
 
     @endpoint(default=list)
     def get_all_playlists(self):
@@ -83,46 +90,26 @@ class GMusicSession(object):
 
     @endpoint(default=None, require_all_access=True)
     def get_track_info(self, store_track_id):
-        try:
-            return self.api.get_track_info(store_track_id)
-        except gmusicapi.CallFailure as error:
-            logger.warning(
-                'Failed to get Google Music All Access track info: %s',
-                error)
+        return self.api.get_track_info(store_track_id)
 
     @endpoint(default=None, require_all_access=True)
     def get_album_info(self, album_id, include_tracks=True):
-        try:
-            return self.api.get_album_info(
-                album_id, include_tracks=include_tracks)
-        except gmusicapi.CallFailure as error:
-            logger.warning(
-                'Failed to get Google Music All Access album info: %s',
-                error)
+        return self.api.get_album_info(
+            album_id, include_tracks=include_tracks)
 
     @endpoint(default=None, require_all_access=True)
     def get_artist_info(
             self, artist_id, include_albums=True, max_top_tracks=5,
             max_rel_artist=5):
-        try:
-            return self.api.get_artist_info(
-                artist_id,
-                include_albums=include_albums,
-                max_top_tracks=max_top_tracks,
-                max_rel_artist=max_rel_artist)
-        except gmusicapi.CallFailure as error:
-            logger.warning(
-                'Failed to get Google Music All Access artist info: %s',
-                error)
+        return self.api.get_artist_info(
+            artist_id,
+            include_albums=include_albums,
+            max_top_tracks=max_top_tracks,
+            max_rel_artist=max_rel_artist)
 
     @endpoint(default=None, require_all_access=True)
     def search_all_access(self, query, max_results=50):
-        try:
-            return self.api.search_all_access(
-                query, max_results=max_results)
-        except gmusicapi.CallFailure as error:
-            logger.error(
-                'Failed to search Google Music All Access: %s', error)
+        return self.api.search_all_access(query, max_results=max_results)
 
     @endpoint(default=list)
     def get_all_stations(self):

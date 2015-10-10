@@ -29,7 +29,7 @@ def online_session():
 class TestLogout(object):
 
     def test_when_offline(self, offline_session):
-        assert offline_session.logout() is True
+        assert offline_session.logout() is None
 
         assert offline_session.api.logout.call_count == 0
 
@@ -39,6 +39,13 @@ class TestLogout(object):
         assert online_session.logout() is mock.sentinel.rv
 
         online_session.api.logout.assert_called_once_with()
+
+    def test_when_call_failure(self, online_session, caplog):
+        online_session.api.logout.side_effect = gmusicapi.CallFailure(
+            'foo', 'bar')
+
+        assert online_session.logout() is None
+        assert 'Call to Google Music failed' in caplog.text()
 
 
 class TestGetAllSongs(object):
@@ -65,13 +72,6 @@ class TestGetStreamUrl(object):
         assert online_session.get_stream_url('abc') is mock.sentinel.rv
 
         online_session.api.get_stream_url.assert_called_once_with('abc')
-
-    def test_when_call_failure(self, online_session, caplog):
-        online_session.api.get_stream_url.side_effect = gmusicapi.CallFailure(
-            'foo', 'bar')
-
-        assert online_session.get_stream_url('abc') is None
-        assert 'Google Music failed to lookup' in caplog.text()
 
 
 class TestGetAllPlaylists(object):
@@ -156,15 +156,6 @@ class TestGetTrackInfo(object):
             'Google Play Music All Access is required for get_track_info()'
             in caplog.text())
 
-    def test_when_call_failure(self, online_session, caplog):
-        online_session.api.get_track_info.side_effect = gmusicapi.CallFailure(
-            'foo', 'bar')
-
-        assert online_session.get_track_info('id') is None
-        assert (
-            'Failed to get Google Music All Access track info'
-            in caplog.text())
-
 
 class TestGetAlbumInfo(object):
 
@@ -186,15 +177,6 @@ class TestGetAlbumInfo(object):
         assert online_session.get_album_info('id') is None
         assert (
             'Google Play Music All Access is required for get_album_info()'
-            in caplog.text())
-
-    def test_when_call_failure(self, online_session, caplog):
-        online_session.api.get_album_info.side_effect = gmusicapi.CallFailure(
-            'foo', 'bar')
-
-        assert online_session.get_album_info('id') is None
-        assert (
-            'Failed to get Google Music All Access album info'
             in caplog.text())
 
 
@@ -221,15 +203,6 @@ class TestGetArtistInfo(object):
             'Google Play Music All Access is required for get_artist_info()'
             in caplog.text())
 
-    def test_when_call_failure(self, online_session, caplog):
-        online_session.api.get_artist_info.side_effect = gmusicapi.CallFailure(
-            'foo', 'bar')
-
-        assert online_session.get_artist_info('id') is None
-        assert (
-            'Failed to get Google Music All Access artist info'
-            in caplog.text())
-
 
 class TestSearchAllAccess(object):
 
@@ -251,15 +224,6 @@ class TestSearchAllAccess(object):
         assert online_session.search_all_access('abba') is None
         assert (
             'Google Play Music All Access is required for search_all_access()'
-            in caplog.text())
-
-    def test_when_call_failure(self, online_session, caplog):
-        online_session.api.search_all_access.side_effect = (
-            gmusicapi.CallFailure('foo', 'bar'))
-
-        assert online_session.search_all_access('abba') is None
-        assert (
-            'Failed to search Google Music All Access'
             in caplog.text())
 
 
