@@ -41,7 +41,7 @@ class GMusicBackend(
         self.library = GMusicLibraryProvider(backend=self)
         self.playback = GMusicPlaybackProvider(audio=audio, backend=self)
         self.playlists = GMusicPlaylistsProvider(backend=self)
-        self.session = GMusicSession()
+        self.session = GMusicSession(all_access=config['gmusic']['all_access'])
 
         self.uri_schemes = ['gmusic']
 

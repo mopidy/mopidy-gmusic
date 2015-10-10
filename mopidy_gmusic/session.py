@@ -9,21 +9,26 @@ import gmusicapi
 logger = logging.getLogger(__name__)
 
 
-def endpoint(default=None):
+def endpoint(default=None, require_all_access=False):
     def outer_wrapper(func):
         @functools.wraps(func)
         def inner_wrapper(self, *args, **kwargs):
-            if self.api.is_authenticated():
-                return func(self, *args, **kwargs)
-            else:
+            if require_all_access and not self.all_access:
+                logger.warning(
+                    'Google Play Music All Access is required for %s()',
+                    func.__name__)
                 return default() if callable(default) else default
+            if not self.api.is_authenticated():
+                return default() if callable(default) else default
+            return func(self, *args, **kwargs)
         return inner_wrapper
     return outer_wrapper
 
 
 class GMusicSession(object):
 
-    def __init__(self, api=None):
+    def __init__(self, all_access, api=None):
+        self.all_access = all_access
         if api is None:
             self.api = gmusicapi.Mobileclient()
         else:
@@ -76,7 +81,7 @@ class GMusicSession(object):
     def get_promoted_songs(self):
         return self.api.get_promoted_songs()
 
-    @endpoint(default=None)
+    @endpoint(default=None, require_all_access=True)
     def get_track_info(self, store_track_id):
         try:
             return self.api.get_track_info(store_track_id)
@@ -85,7 +90,7 @@ class GMusicSession(object):
                 'Failed to get Google Music All Access track info: %s',
                 error)
 
-    @endpoint(default=None)
+    @endpoint(default=None, require_all_access=True)
     def get_album_info(self, album_id, include_tracks=True):
         try:
             return self.api.get_album_info(
@@ -95,7 +100,7 @@ class GMusicSession(object):
                 'Failed to get Google Music All Access album info: %s',
                 error)
 
-    @endpoint(default=None)
+    @endpoint(default=None, require_all_access=True)
     def get_artist_info(
             self, artist_id, include_albums=True, max_top_tracks=5,
             max_rel_artist=5):
@@ -110,7 +115,7 @@ class GMusicSession(object):
                 'Failed to get Google Music All Access artist info: %s',
                 error)
 
-    @endpoint(default=None)
+    @endpoint(default=None, require_all_access=True)
     def search_all_access(self, query, max_results=50):
         try:
             return self.api.search_all_access(
@@ -139,7 +144,7 @@ class GMusicSession(object):
 
         return stations
 
-    @endpoint(default=list)
+    @endpoint(default=list, require_all_access=True)
     def get_station_tracks(self, station_id, num_tracks=25):
         return self.api.get_station_tracks(
             station_id, num_tracks=num_tracks)

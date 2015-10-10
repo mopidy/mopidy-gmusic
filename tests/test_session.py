@@ -13,14 +13,14 @@ from mopidy_gmusic import session as session_lib
 def offline_session():
     api_mock = mock.Mock(spec=gmusicapi.Mobileclient)
     api_mock.is_authenticated.return_value = False
-    return session_lib.GMusicSession(api=api_mock)
+    return session_lib.GMusicSession(all_access=True, api=api_mock)
 
 
 @pytest.fixture
 def online_session():
     api_mock = mock.Mock(spec=gmusicapi.Mobileclient)
     api_mock.is_authenticated.return_value = True
-    return session_lib.GMusicSession(api=api_mock)
+    return session_lib.GMusicSession(all_access=True, api=api_mock)
 
 
 # TODO login
@@ -148,6 +148,14 @@ class TestGetTrackInfo(object):
 
         online_session.api.get_track_info.assert_called_once_with('id')
 
+    def test_without_all_access(self, online_session, caplog):
+        online_session.all_access = False
+
+        assert online_session.get_track_info('id') is None
+        assert (
+            'Google Play Music All Access is required for get_track_info()'
+            in caplog.text())
+
     def test_when_call_failure(self, online_session, caplog):
         online_session.api.get_track_info.side_effect = gmusicapi.CallFailure(
             'foo', 'bar')
@@ -171,6 +179,14 @@ class TestGetAlbumInfo(object):
         assert result is mock.sentinel.rv
         online_session.api.get_album_info.assert_called_once_with(
             'id', include_tracks=False)
+
+    def test_without_all_access(self, online_session, caplog):
+        online_session.all_access = False
+
+        assert online_session.get_album_info('id') is None
+        assert (
+            'Google Play Music All Access is required for get_album_info()'
+            in caplog.text())
 
     def test_when_call_failure(self, online_session, caplog):
         online_session.api.get_album_info.side_effect = gmusicapi.CallFailure(
@@ -197,6 +213,14 @@ class TestGetArtistInfo(object):
         online_session.api.get_artist_info.assert_called_once_with(
             'id', include_albums=False, max_rel_artist=3, max_top_tracks=4)
 
+    def test_without_all_access(self, online_session, caplog):
+        online_session.all_access = False
+
+        assert online_session.get_artist_info('id') is None
+        assert (
+            'Google Play Music All Access is required for get_artist_info()'
+            in caplog.text())
+
     def test_when_call_failure(self, online_session, caplog):
         online_session.api.get_artist_info.side_effect = gmusicapi.CallFailure(
             'foo', 'bar')
@@ -220,6 +244,14 @@ class TestSearchAllAccess(object):
         assert result is mock.sentinel.rv
         online_session.api.search_all_access.assert_called_once_with(
             'abba', max_results=10)
+
+    def test_without_all_access(self, online_session, caplog):
+        online_session.all_access = False
+
+        assert online_session.search_all_access('abba') is None
+        assert (
+            'Google Play Music All Access is required for search_all_access()'
+            in caplog.text())
 
     def test_when_call_failure(self, online_session, caplog):
         online_session.api.search_all_access.side_effect = (
@@ -257,6 +289,14 @@ class TestGetStationTracks(object):
         assert result is mock.sentinel.rv
         online_session.api.get_station_tracks.assert_called_once_with(
             'IFL', num_tracks=5)
+
+    def test_without_all_access(self, online_session, caplog):
+        online_session.all_access = False
+
+        assert online_session.get_station_tracks('IFL') == []
+        assert (
+            'Google Play Music All Access is required for get_station_tracks()'
+            in caplog.text())
 
 
 class TestIncrementSongPlayCount(object):
