@@ -5,6 +5,8 @@ import logging
 
 import gmusicapi
 
+import requests
+
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +31,9 @@ def endpoint(default=None, require_all_access=False):
                 return func(self, *args, **kwargs)
             except gmusicapi.CallFailure:
                 logger.exception('Call to Google Music failed')
+                return default
+            except requests.exceptions.RequestException:
+                logger.exception('HTTP request to Google Music failed')
                 return default
 
         return inner_wrapper

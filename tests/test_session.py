@@ -6,6 +6,8 @@ import mock
 
 import pytest
 
+import requests
+
 from mopidy_gmusic import session as session_lib
 
 
@@ -46,6 +48,13 @@ class TestLogout(object):
 
         assert online_session.logout() is None
         assert 'Call to Google Music failed' in caplog.text()
+
+    def test_when_connection_error(self, online_session, caplog):
+        online_session.api.logout.side_effect = (
+            requests.exceptions.ConnectionError)
+
+        assert online_session.logout() is None
+        assert 'HTTP request to Google Music failed' in caplog.text()
 
 
 class TestGetAllSongs(object):

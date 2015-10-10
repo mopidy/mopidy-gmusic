@@ -137,6 +137,7 @@ v1.0.0 (UNRELEASED)
 - Let gmusicapi use the device's MAC address as device ID by default.
 - Fix increasing of play counts in Google Play Music. (Fixes: #96)
 - Fix scrobbling of tracks to Last.fm through Mopidy-Scrobbler. (Fixes: #60)
+- Fix unhandled crashes on network connectivity issues. (Fixes: #85)
 
 
 v0.3.0 (2014-01-28)
