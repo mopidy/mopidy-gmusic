@@ -74,8 +74,8 @@ class GMusicSession(object):
         return self.api.get_all_songs()
 
     @endpoint(default=None)
-    def get_stream_url(self, song_id):
-        return self.api.get_stream_url(song_id)
+    def get_stream_url(self, song_id, quality='hi'):
+        return self.api.get_stream_url(song_id, quality=quality)
 
     @endpoint(default=list)
     def get_all_playlists(self):

@@ -80,7 +80,8 @@ class TestGetStreamUrl(object):
 
         assert online_session.get_stream_url('abc') is mock.sentinel.rv
 
-        online_session.api.get_stream_url.assert_called_once_with('abc')
+        online_session.api.get_stream_url.assert_called_once_with(
+            'abc', quality='hi')
 
 
 class TestGetAllPlaylists(object):

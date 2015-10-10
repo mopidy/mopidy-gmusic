@@ -61,6 +61,12 @@ All Access subscribers may enable All Access integration by adding this line::
     [gmusic]
     all_access = true
 
+By default, the bitrate is set to 160 kbps. You can change this to either 128
+or 320 kbps by setting::
+
+    [gmusic]
+    bitrate = 320
+
 All Access radios are available as browsable content or playlist. The following
 are the default config values::
 
@@ -138,6 +144,7 @@ v1.0.0 (UNRELEASED)
 - Fix increasing of play counts in Google Play Music. (Fixes: #96)
 - Fix scrobbling of tracks to Last.fm through Mopidy-Scrobbler. (Fixes: #60)
 - Fix unhandled crashes on network connectivity issues. (Fixes: #85)
+- Add ``gmusic/bitrate`` config to select streaming bitrate.
 
 
 v0.3.0 (2014-01-28)
