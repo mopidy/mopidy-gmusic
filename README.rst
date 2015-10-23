@@ -2,38 +2,55 @@
 Mopidy-GMusic
 *************
 
-.. image:: https://pypip.in/v/Mopidy-GMusic/badge.png
+.. image:: https://img.shields.io/pypi/v/Mopidy-GMusic.svg?style=flat
     :target: https://pypi.python.org/pypi/Mopidy-GMusic/
     :alt: Latest PyPI version
 
-.. image:: https://pypip.in/d/Mopidy-GMusic/badge.png
+.. image:: https://img.shields.io/pypi/dm/Mopidy-GMusic.svg?style=flat
     :target: https://pypi.python.org/pypi/Mopidy-GMusic/
     :alt: Number of PyPI downloads
 
-.. image:: https://travis-ci.org/hechtus/mopidy-gmusic.png?branch=master
-    :target: https://travis-ci.org/hechtus/mopidy-gmusic
+.. image:: https://img.shields.io/travis/mopidy/mopidy-gmusic/develop.svg?style=flat
+    :target: https://travis-ci.org/mopidy/mopidy-gmusic
     :alt: Travis CI build status
 
-.. image:: https://coveralls.io/repos/hechtus/mopidy-gmusic/badge.png?branch=master
-   :target: https://coveralls.io/r/hechtus/mopidy-gmusic?branch=master
+.. image:: https://img.shields.io/coveralls/mopidy/mopidy-gmusic/develop.svg?style=flat
+   :target: https://coveralls.io/r/mopidy/mopidy-gmusic
    :alt: Test coverage
 
 `Mopidy <http://www.mopidy.com/>`_ extension for playing music from
 `Google Play Music <https://play.google.com/music/>`_.
 
 
+Maintainer wanted
+=================
+
+Mopidy-GMusic is currently kept on life support by the Mopidy core developers.
+It is in need of a more dedicated maintainer.
+
+If you want to be the maintainer of Mopidy-GMusic, please:
+
+1. Make 2-3 good pull requests improving any part of the project.
+
+2. Read and get familiar with all of the project's open issues.
+
+3. Send a pull request removing this section and adding yourself as the
+   "Current maintainer" in the "Credits" section below. In the pull request
+   description, please refer to the previous pull requests and state that
+   you've familiarized yourself with the open issues.
+
+As a maintainer, you'll be given push access to the repo and the authority to
+make releases to PyPI when you see fit.
+
+
 Dependencies
 ============
 
-- You must have a Google account and some music and playlists in your
-  library.
+You must have a Google account, and either:
 
-- You must have an Android device registered for Google Play Music.
+- have some music uploaded to your Google Play Music library, or
 
-- The `Unofficial Google Music API
-  <https://github.com/simon-weber/Unofficial-Google-Music-API>`_ is
-  needed to access Google Play Music. It will automatically be installed
-  together with Mopidy-GMusic.
+- have a subscription for Google Play Music All Access.
 
 
 Installation
@@ -47,22 +64,61 @@ Install the Mopidy-GMusic extension by running::
 Configuration
 =============
 
-Before starting Mopidy, you must add your Google username, password,
-and Android mobile device ID to your Mopidy configuration file::
+Before starting Mopidy, you must add your Google username and password to your
+Mopidy configuration file::
 
     [gmusic]
     username = alice
     password = secret
+
+If you use 2-step verification to access your Google account, which you should,
+you must create an application password in your Google account for
+Mopidy-GMusic. See Google's docs on `how to make an app password
+<https://support.google.com/accounts/answer/185833>`_ if you're not already
+familiar with this.
+
+All Access subscribers may enable All Access integration by adding this line::
+
+    [gmusic]
+    all_access = true
+
+By default, the bitrate is set to 160 kbps. You can change this to either 128
+or 320 kbps by setting::
+
+    [gmusic]
+    bitrate = 320
+
+All Access radios are available as browsable content or playlist. The following
+are the default config values::
+
+    [gmusic]
+    # Show radio stations in content browser
+    radio_stations_in_browse = true
+    # Show radio stations as playlists
+    radio_stations_as_playlists = false
+    # Limit the number of radio stations, unlimited if unset
+    radio_stations_count =
+    # Limit the number or tracks for each radio station
+    radio_tracks_count = 25
+
+Google Play Music requires all clients to provide a device ID. By default,
+Mopidy-GMusic will use your system's MAC address as the device ID. As Google
+`puts some limits <https://support.google.com/googleplay/answer/3139562>`_ on
+how many different devices you can associate with an account, you might want to
+control what device ID is used. You can set the ``gmusic/deviceid`` config to
+e.g. the device ID from your phone where you also use Google Play Music::
+
+    [gmusic]
     deviceid = 0123456789abcdef
 
-The mobile device ID is a 16-digit hexadecimal string (without a '0x'
-prefix) identifying the Android device registered for Google Play
-Music. You can obtain this ID by dialing ``*#*#8255#*#*`` on your
-phone (see the aid) or using this `App
-<https://play.google.com/store/apps/details?id=com.evozi.deviceid>`_
-(see the Google Service Framework ID Key). You may also leave this
-field empty. Mopidy will try to find the ID by itself. See the Mopidy
-logs for more information.
+The Android device ID is a 16 character long string identifying the Android
+device registered for Google Play Music, excluding the ``0x`` prefix. You can
+obtain this ID by dialing ``*#*#8255#*#*`` on your phone (see the aid) or using
+this `app <https://play.google.com/store/apps/details?id=com.evozi.deviceid>`_
+(see the Google Service Framework ID Key).
+
+On iOS the device ID is an UUID with the ``ios:`` prefix included. (TODO:
+Include instructions on how to retrieve this.)
 
 
 Usage
@@ -78,14 +134,47 @@ your library. Mopidy will able to play them.
 Project resources
 =================
 
-- `Source code <https://github.com/hechtus/mopidy-gmusic>`_
-- `Issue tracker <https://github.com/hechtus/mopidy-gmusic/issues>`_
-- `Download development snapshot
-  <https://github.com/hechtus/mopidy-gmusic/archive/develop.zip>`_
+- `Source code <https://github.com/mopidy/mopidy-gmusic>`_
+- `Issue tracker <https://github.com/mopidy/mopidy-gmusic/issues>`_
+
+
+Credits
+=======
+
+- Original author: `Ronald Hecht <https://github.com/hechtus>`_
+- Current maintainer: None. Maintainer wanted, see section above.
+- `Contributors <https://github.com/mopidy/mopidy-gmusic/graphs/contributors>`_
 
 
 Changelog
 =========
+
+v1.0.0 (2015-10-23)
+-------------------
+
+- Require Mopidy >= 1.0.
+- Require gmusicapi >= 6.0.
+- Update to work with new playback API in Mopidy 1.0. (PR: #75)
+- Update to work with new search API in Mopidy 1.0.
+- Fix crash when tracks lack album or artist information. (Fixes: #74, PR: #24,
+  also thanks to PRs #27, #64)
+- Log error on login failure instead of swallowing the error. (PR: #36)
+- Add support for All Access search and lookup (PR: #34)
+- Add dynamic playlist based on top rated tracks.
+- Add support for radio stations in browser and/or as playlists.
+- Add support for browsing artists and albums in the cached library.
+- Add cover art to ``Album.images`` model field.
+- Add background refreshing of library and playlists. (Fixes: #21)
+- Fix authentication issues. (Fixes: #82, #87)
+- Add LRU cache for All Access albums and tracks.
+- Increment Google's play count if 50% or 240s of the track has been played.
+  (PR: #51, and later changes)
+- Let gmusicapi use the device's MAC address as device ID by default.
+- Fix increasing of play counts in Google Play Music. (Fixes: #96)
+- Fix scrobbling of tracks to Last.fm through Mopidy-Scrobbler. (Fixes: #60)
+- Fix unhandled crashes on network connectivity issues. (Fixes: #85)
+- Add ``gmusic/bitrate`` config to select streaming bitrate.
+
 
 v0.3.0 (2014-01-28)
 -------------------
@@ -112,7 +201,7 @@ v0.2.1 (2013-10-11)
 
 
 v0.2 (2013-10-11)
--------------------
+-----------------
 
 - Issue #12: Now able to play music from Google All Access
 - Issue #9: Switched to the Mobileclient API of Google Music API

@@ -1,14 +1,27 @@
 from __future__ import unicode_literals
 
+import logging
+
 from mopidy import backend
+
+logger = logging.getLogger(__name__)
+
+
+BITRATES = {
+    128: 'low',
+    160: 'med',
+    320: 'hi',
+}
 
 
 class GMusicPlaybackProvider(backend.PlaybackProvider):
+    def translate_uri(self, uri):
+        track_id = uri.rsplit(':')[-1]
 
-    def play(self, track):
-        url = self.backend.session.get_stream_url(track.uri.split(':')[2])
-        if url is None:
-            return False
-        self.audio.prepare_change()
-        self.audio.set_uri(url).get()
-        return self.audio.start_playback().get()
+        # TODO Support medium and low bitrate
+        quality = BITRATES[self.backend.config['gmusic']['bitrate']]
+        stream_uri = self.backend.session.get_stream_url(
+            track_id, quality=quality)
+
+        logger.debug('Translated: %s -> %s', uri, stream_uri)
+        return stream_uri

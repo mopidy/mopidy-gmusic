@@ -1,26 +1,34 @@
+sudo: false
+
 language: python
 
-install:
-  - "wget -O - http://apt.mopidy.com/mopidy.gpg | sudo apt-key add -"
-  - "sudo wget -O /etc/apt/sources.list.d/mopidy.list http://apt.mopidy.com/mopidy.list"
-  - "sudo apt-get update || true"
-  - "sudo apt-get install mopidy"
-  - "pip install --allow-unverified=mopidy coveralls flake8 mopidy==dev gmusicapi"
+python:
+  - "2.7_with_system_site_packages"
 
-before_script:
-  - "rm $VIRTUAL_ENV/lib/python$TRAVIS_PYTHON_VERSION/no-global-site-packages.txt"
+addons:
+  apt:
+    sources:
+      - mopidy-stable
+    packages:
+      - mopidy
+
+env:
+  - TOX_ENV=py27
+  - TOX_ENV=flake8
+
+install:
+  - "pip install tox"
 
 script:
-  - "flake8 $(find . -iname '*.py')"
-  - "nosetests --with-coverage --cover-package=mopidy_gmusic"
+  - "tox -e $TOX_ENV"
 
 after_success:
-  - "coveralls"
+  - "if [ $TOX_ENV == 'py27' ]; then pip install coveralls; coveralls; fi"
 
 notifications:
-  email:
-    recipients:
-      - ronald.hecht@gmx.de
+  irc:
+    channels:
+      - "irc.freenode.org#mopidy"
     on_success: change
     on_failure: change
     use_notice: true

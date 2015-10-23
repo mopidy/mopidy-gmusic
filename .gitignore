@@ -22,9 +22,10 @@ lib64
 pip-log.txt
 
 # Unit test / coverage reports
+.cache
 .coverage
 .tox
-nosetests.xml
+xunit-*.xml
 
 # Translations
 *.mo
@@ -33,3 +34,6 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# PyCharm/IDEA
+.idea

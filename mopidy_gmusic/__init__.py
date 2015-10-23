@@ -5,7 +5,7 @@ import os
 from mopidy import config, ext
 
 
-__version__ = '0.3.0'
+__version__ = '1.0.0'
 
 
 class GMusicExtension(ext.Extension):
@@ -20,11 +20,29 @@ class GMusicExtension(ext.Extension):
 
     def get_config_schema(self):
         schema = super(GMusicExtension, self).get_config_schema()
+
         schema['username'] = config.String()
         schema['password'] = config.Secret()
+
+        schema['bitrate'] = config.Integer(choices=(128, 160, 320))
+
         schema['deviceid'] = config.String(optional=True)
+
+        schema['all_access'] = config.Boolean(optional=True)
+
+        schema['refresh_library'] = config.Integer(minimum=-1, optional=True)
+        schema['refresh_playlists'] = config.Integer(minimum=-1, optional=True)
+
+        schema['radio_stations_in_browse'] = config.Boolean(optional=True)
+        schema['radio_stations_as_playlists'] = config.Boolean(optional=True)
+        schema['radio_stations_count'] = config.Integer(
+            minimum=1, optional=True)
+        schema['radio_tracks_count'] = config.Integer(minimum=1, optional=True)
+
         return schema
 
     def setup(self, registry):
         from .actor import GMusicBackend
+        from .scrobbler_frontend import GMusicScrobblerFrontend
         registry.add('backend', GMusicBackend)
+        registry.add('frontend', GMusicScrobblerFrontend)
