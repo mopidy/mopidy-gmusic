@@ -22,6 +22,23 @@ Mopidy-GMusic
 `Google Play Music <https://play.google.com/music/>`_.
 
 
+Maintainer wanted
+=================
+
+Mopidy-GMusic is currently kept on life support by the Mopidy core developers.
+It is in dire need of a more dedicated maintainer.
+
+If you want to be the maintainer of Mopidy-GMusic, please:
+
+1. Make a few good pull requests improving any part of the project. Feel free
+   to state in the PRs that you intend to become the new maintainer.
+
+2. Review and cleanup all of the project's open issues.
+
+3. Send a pull request removing this section and adding yourself as the
+   "Current maintainer" in the "Credits" section below.
+
+
 Dependencies
 ============
 
@@ -115,6 +132,14 @@ Project resources
 
 - `Source code <https://github.com/mopidy/mopidy-gmusic>`_
 - `Issue tracker <https://github.com/mopidy/mopidy-gmusic/issues>`_
+
+
+Credits
+=======
+
+- Original author: `Ronald Hecht <https://github.com/hechtus>`_
+- Current maintainer: None. Maintainer wanted, see section above.
+- `Contributors <https://github.com/mopidy/mopidy-gmusic/graphs/contributors>`_
 
 
 Changelog
