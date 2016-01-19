@@ -247,10 +247,14 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             return []
 
     def _lookup_artist(self, uri, exact_match=False):
-        sorter = lambda t: (t.album.date,
-                            t.album.name,
-                            t.disc_no,
-                            t.track_no)
+        def sorter(track):
+            return (
+                track.album.date,
+                track.album.name,
+                track.disc_no,
+                track.track_no,
+            )
+
         if self.all_access:
             try:
                 all_access_id = self.aa_artists[uri.split(':')[2]]
@@ -367,27 +371,39 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 else:
                     q = value.strip().lower()
 
-                uri_filter = lambda t: q in t.uri.lower()
-                track_name_filter = lambda t: q in t.name.lower()
-                album_filter = lambda t: q in getattr(
-                    t, 'album', Album()).name.lower()
-                artist_filter = lambda t: filter(
-                    lambda a: q in a.name.lower(), t.artists) or filter(
-                    lambda a: q in a.name, getattr(t, 'album',
-                                                   Album()).artists)
+                def uri_filter(track):
+                    return q in track.uri.lower()
 
-                albumartist_filter = lambda t: any([
-                    q in a.name.lower()
-                    for a in getattr(t.album, 'artists', [])])
-                track_no_filter = lambda t: q == t.track_no
-                date_filter = lambda t: t.date and t.date.startswith(q)
-                any_filter = lambda t: (
-                    uri_filter(t) or
-                    track_name_filter(t) or
-                    album_filter(t) or
-                    artist_filter(t) or
-                    albumartist_filter(t) or
-                    date_filter(t))
+                def track_name_filter(track):
+                    return q in track.name.lower()
+
+                def album_filter(track):
+                    return q in getattr(track, 'album', Album()).name.lower()
+
+                def artist_filter(track):
+                    return (
+                        any(q in a.name.lower() for a in track.artists) or
+                        albumartist_filter(track))
+
+                def albumartist_filter(track):
+                    album_artists = getattr(track, 'album', Album()).artists
+                    return any(q in a.name.lower() for a in album_artists)
+
+                def track_no_filter(track):
+                    return track.track_no == q
+
+                def date_filter(track):
+                    return track.date and track.date.startswith(q)
+
+                def any_filter(track):
+                    return any([
+                        uri_filter(track),
+                        track_name_filter(track),
+                        album_filter(track),
+                        artist_filter(track),
+                        albumartist_filter(track),
+                        date_filter(track),
+                    ])
 
                 if field == 'uri':
                     result_tracks = filter(uri_filter, result_tracks)
