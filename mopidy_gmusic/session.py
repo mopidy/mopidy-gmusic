@@ -114,7 +114,7 @@ class GMusicSession(object):
 
     @endpoint(default=None, require_all_access=True)
     def search_all_access(self, query, max_results=50):
-        return self.api.search_all_access(query, max_results=max_results)
+        return self.api.search(query, max_results=max_results)
 
     @endpoint(default=list)
     def get_all_stations(self):

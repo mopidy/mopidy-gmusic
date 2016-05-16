@@ -220,12 +220,12 @@ class TestSearchAllAccess(object):
         assert offline_session.search_all_access('abba') is None
 
     def test_when_online(self, online_session):
-        online_session.api.search_all_access.return_value = mock.sentinel.rv
+        online_session.api.search.return_value = mock.sentinel.rv
 
         result = online_session.search_all_access('abba', max_results=10)
 
         assert result is mock.sentinel.rv
-        online_session.api.search_all_access.assert_called_once_with(
+        online_session.api.search.assert_called_once_with(
             'abba', max_results=10)
 
     def test_without_all_access(self, online_session, caplog):
