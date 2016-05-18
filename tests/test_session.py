@@ -217,12 +217,12 @@ class TestGetArtistInfo(object):
 class TestSearchAllAccess(object):
 
     def test_when_offline(self, offline_session):
-        assert offline_session.search_all_access('abba') is None
+        assert offline_session.search('abba') is None
 
     def test_when_online(self, online_session):
         online_session.api.search.return_value = mock.sentinel.rv
 
-        result = online_session.search_all_access('abba', max_results=10)
+        result = online_session.search('abba', max_results=10)
 
         assert result is mock.sentinel.rv
         online_session.api.search.assert_called_once_with(
@@ -233,7 +233,7 @@ class TestSearchAllAccess(object):
 
         online_session.api.search.return_value = mock.sentinel.rv
 
-        assert online_session.search_all_access('abba') is mock.sentinel.rv
+        assert online_session.search('abba') is mock.sentinel.rv
         assert (
             'Google Play Music All Access is required for'
             not in caplog.text())
