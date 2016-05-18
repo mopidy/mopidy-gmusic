@@ -112,7 +112,7 @@ class GMusicSession(object):
             max_top_tracks=max_top_tracks,
             max_rel_artist=max_rel_artist)
 
-    @endpoint(default=None, require_all_access=True)
+    @endpoint(default=None, require_all_access=False)
     def search_all_access(self, query, max_results=50):
         return self.api.search(query, max_results=max_results)
 

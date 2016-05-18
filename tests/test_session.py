@@ -231,10 +231,12 @@ class TestSearchAllAccess(object):
     def test_without_all_access(self, online_session, caplog):
         online_session.all_access = False
 
-        assert online_session.search_all_access('abba') is None
+        online_session.api.search.return_value = mock.sentinel.rv
+
+        assert online_session.search_all_access('abba') is mock.sentinel.rv
         assert (
-            'Google Play Music All Access is required for search_all_access()'
-            in caplog.text())
+            'Google Play Music All Access is required for'
+            not in caplog.text())
 
 
 class TestGetAllStations(object):
