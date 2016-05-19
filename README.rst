@@ -152,6 +152,7 @@ Changelog
 v1.1.0 (UNRELEASED)
 -------------------
 
+- Require gmusicapi >= 10.0.
 - Make search work for gmusicapi >= 10.0. (Fixes: #116, PR: #117)
 - Enable search for accounts without All Access. (PR: #117)
 
