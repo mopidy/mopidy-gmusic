@@ -149,6 +149,13 @@ Credits
 Changelog
 =========
 
+v1.1.0 (UNRELEASED)
+-------------------
+
+- Make search work for gmusicapi >= 10.0. (Fixes: #116, PR: #117)
+- Enable search for accounts without All Access. (PR: #117)
+
+
 v1.0.0 (2015-10-23)
 -------------------
 

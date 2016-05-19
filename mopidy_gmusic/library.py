@@ -296,8 +296,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         lib_tracks, lib_artists, lib_albums = self._search_library(query, uris)
 
         if query:
-            aa_tracks, aa_artists, aa_albums = self._search(
-                query, uris)
+            aa_tracks, aa_artists, aa_albums = self._search(query, uris)
             for aa_artist in aa_artists:
                 lib_artists.add(aa_artist)
 
@@ -336,8 +335,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 logger.info(
                     'Searching Google Play Music for: %s',
                     values[0])
-                res = self.backend.session.search(
-                    values[0], max_results=50)
+                res = self.backend.session.search(values[0], max_results=50)
                 if res is None:
                     return [], [], []
 
