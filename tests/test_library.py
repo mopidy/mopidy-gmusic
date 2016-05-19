@@ -97,3 +97,7 @@ class LibraryTest(unittest.TestCase):
         refs = self.backend.library.lookup('gmusic:track:invalid_uri')
         # tests should be unable to fetch any content :(
         self.assertEqual(refs, [])
+
+    def test_search(self):
+        refs = self.backend.library.search({'artist': ['abba']})
+        self.assertIsNotNone(refs)

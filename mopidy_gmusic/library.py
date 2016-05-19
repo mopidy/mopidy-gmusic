@@ -295,8 +295,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
 
         lib_tracks, lib_artists, lib_albums = self._search_library(query, uris)
 
-        if query and self.all_access:
-            aa_tracks, aa_artists, aa_albums = self._search_all_access(
+        if query:
+            aa_tracks, aa_artists, aa_albums = self._search(
                 query, uris)
             for aa_artist in aa_artists:
                 lib_artists.add(aa_artist)
@@ -324,7 +324,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                             artists=lib_artists,
                             albums=lib_albums)
 
-    def _search_all_access(self, query=None, uris=None):
+    def _search(self, query=None, uris=None):
         for (field, values) in query.iteritems():
             if not hasattr(values, '__iter__'):
                 values = [values]
@@ -334,9 +334,9 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             if field in [
                     'track_name', 'album', 'artist', 'albumartist', 'any']:
                 logger.info(
-                    'Searching Google Play Music All Access for: %s',
+                    'Searching Google Play Music for: %s',
                     values[0])
-                res = self.backend.session.search_all_access(
+                res = self.backend.session.search(
                     values[0], max_results=50)
                 if res is None:
                     return [], [], []
