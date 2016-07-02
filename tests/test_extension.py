@@ -30,7 +30,7 @@ class ExtensionTest(unittest.TestCase):
 
         self.assertIn('[gmusic]', config)
         self.assertIn('enabled = true', config)
-        self.assertIn('all_access = false', config)
+        self.assertIn('all_access =', config)
         self.assertIn('radio_stations_in_browse = true', config)
         self.assertIn('radio_stations_count =', config)
         self.assertIn('radio_tracks_count = 25', config)

@@ -44,7 +44,7 @@ def endpoint(default=None, require_all_access=False):
 class GMusicSession(object):
 
     def __init__(self, all_access, api=None):
-        self.all_access = all_access
+        self._all_access = all_access
         if api is None:
             self.api = gmusicapi.Mobileclient()
         else:
@@ -64,6 +64,13 @@ class GMusicSession(object):
         else:
             logger.error('Failed to login to Google Music as "%s"', username)
         return authenticated
+
+    @property
+    def all_access(self):
+        if self._all_access is None:
+            return self.api.is_subscribed
+
+        return self._all_access
 
     @endpoint(default=None)
     def logout(self):

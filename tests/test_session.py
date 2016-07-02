@@ -159,7 +159,7 @@ class TestGetTrackInfo(object):
         online_session.api.get_track_info.assert_called_once_with('id')
 
     def test_without_all_access(self, online_session, caplog):
-        online_session.all_access = False
+        online_session._all_access = False
 
         assert online_session.get_track_info('id') is None
         assert (
@@ -182,7 +182,7 @@ class TestGetAlbumInfo(object):
             'id', include_tracks=False)
 
     def test_without_all_access(self, online_session, caplog):
-        online_session.all_access = False
+        online_session._all_access = False
 
         assert online_session.get_album_info('id') is None
         assert (
@@ -206,7 +206,7 @@ class TestGetArtistInfo(object):
             'id', include_albums=False, max_rel_artist=3, max_top_tracks=4)
 
     def test_without_all_access(self, online_session, caplog):
-        online_session.all_access = False
+        online_session._all_access = False
 
         assert online_session.get_artist_info('id') is None
         assert (
@@ -229,7 +229,7 @@ class TestSearchAllAccess(object):
             'abba', max_results=10)
 
     def test_without_all_access(self, online_session, caplog):
-        online_session.all_access = False
+        online_session._all_access = False
 
         online_session.api.search.return_value = mock.sentinel.rv
 
@@ -267,7 +267,7 @@ class TestGetStationTracks(object):
             'IFL', num_tracks=5)
 
     def test_without_all_access(self, online_session, caplog):
-        online_session.all_access = False
+        online_session._all_access = False
 
         assert online_session.get_station_tracks('IFL') == []
         assert (
