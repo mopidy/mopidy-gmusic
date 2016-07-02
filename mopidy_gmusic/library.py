@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-import hashlib
 import logging
 
 from cachetools import LRUCache
@@ -8,6 +7,8 @@ from cachetools import LRUCache
 from mopidy import backend
 from mopidy.models import Album, Artist, Ref, SearchResult, Track
 
+from mopidy_gmusic.utils import album_to_ref, artist_to_ref, track_to_ref
+from mopidy_gmusic.utils import create_id, get_images
 
 logger = logging.getLogger(__name__)
 
@@ -50,27 +51,27 @@ class GMusicLibraryProvider(backend.LibraryProvider):
     def _browse_albums(self):
         refs = []
         for album in self.albums.values():
-            refs.append(self._album_to_ref(album))
+            refs.append(album_to_ref(album))
         refs.sort(key=lambda ref: ref.name)
         return refs
 
     def _browse_album(self, uri):
         refs = []
         for track in self._lookup_album(uri):
-            refs.append(self._track_to_ref(track, True))
+            refs.append(track_to_ref(track, True))
         return refs
 
     def _browse_artists(self):
         refs = []
         for artist in self.artists.values():
-            refs.append(self._artist_to_ref(artist))
+            refs.append(artist_to_ref(artist))
         refs.sort(key=lambda ref: ref.name)
         return refs
 
     def _browse_artist(self, uri):
         refs = []
         for album in self._get_artist_albums(uri):
-            refs.append(self._album_to_ref(album))
+            refs.append(album_to_ref(album))
             refs.sort(key=lambda ref: ref.name)
         if len(refs) > 0:
             refs.insert(0, Ref.directory(uri=uri + ':all', name='All Tracks'))
@@ -84,7 +85,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         refs = []
         tracks = self._lookup_artist(artist_uri, True)
         for track in tracks:
-            refs.append(self._track_to_ref(track))
+            refs.append(track_to_ref(track))
         return refs
 
     def browse(self, uri):
@@ -464,8 +465,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             name = song.get('album', '')
             artist = self._to_mopidy_album_artist(song)
             date = unicode(song.get('year', 0))
-            uri = 'gmusic:album:' + self._create_id(artist.name + name + date)
-            images = self._get_images(song)
+            uri = 'gmusic:album:' + create_id(artist.name + name + date)
+            images = get_images(song)
             album = Album(
                 uri=uri,
                 name=name,
@@ -480,7 +481,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
 
     def _to_mopidy_artist(self, song):
         name = song.get('artist', '')
-        uri = 'gmusic:artist:' + self._create_id(name)
+        uri = 'gmusic:artist:' + create_id(name)
 
         # First try to process the artist as an aa artist
         # (Difference being that non aa artists don't have artistId)
@@ -499,7 +500,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         name = song.get('albumArtist', '')
         if name.strip() == '':
             name = song.get('artist', '')
-        uri = 'gmusic:artist:' + self._create_id(name)
+        uri = 'gmusic:artist:' + create_id(name)
         artist = Artist(
             uri=uri,
             name=name)
@@ -528,7 +529,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         name = song['album']
         artist = self._aa_to_mopidy_album_artist(song)
         date = unicode(song.get('year', 0))
-        images = self._get_images(song)
+        images = get_images(song)
         return Album(
             uri=uri,
             name=name,
@@ -538,7 +539,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
 
     def _aa_to_mopidy_artist(self, song):
         name = song.get('artist', '')
-        artist_id = self._create_id(name)
+        artist_id = create_id(name)
         uri = 'gmusic:artist:' + artist_id
         self.aa_artists[artist_id] = song['artistId'][0]
         return Artist(
@@ -549,7 +550,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         name = song.get('albumArtist', '')
         if name.strip() == '':
             name = song['artist']
-        uri = 'gmusic:artist:' + self._create_id(name)
+        uri = 'gmusic:artist:' + create_id(name)
         return Artist(
             uri=uri,
             name=name)
@@ -557,7 +558,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
     def _aa_search_track_to_mopidy_track(self, search_track):
         track = search_track['track']
 
-        aa_artist_id = self._create_id(track['artist'])
+        aa_artist_id = create_id(track['artist'])
         if 'artistId' in track:
             self.aa_artists[aa_artist_id] = track['artistId'][0]
         else:
@@ -586,7 +587,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
 
     def _aa_search_artist_to_mopidy_artist(self, search_artist):
         artist = search_artist['artist']
-        artist_id = self._create_id(artist['name'])
+        artist_id = create_id(artist['name'])
         uri = 'gmusic:artist:' + artist_id
         self.aa_artists[artist_id] = artist['artistId']
         return Artist(
@@ -609,54 +610,10 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         name = album.get('albumArtist', '')
         if name.strip() == '':
             name = album.get('artist', '')
-        uri = 'gmusic:artist:' + self._create_id(name)
+        uri = 'gmusic:artist:' + create_id(name)
         return Artist(
             uri=uri,
             name=name)
-
-    def _album_to_ref(self, album):
-        name = ''
-        for artist in album.artists:
-            if len(name) > 0:
-                name += ', '
-            name += artist.name
-        if (len(name)) > 0:
-            name += ' - '
-        if album.name:
-            name += album.name
-        else:
-            name += 'Unknown Album'
-        return Ref.directory(uri=album.uri, name=name)
-
-    def _artist_to_ref(self, artist):
-        if artist.name:
-            name = artist.name
-        else:
-            name = 'Unknown artist'
-        return Ref.directory(uri=artist.uri, name=name)
-
-    def _track_to_ref(self, track, with_track_no=False):
-        if with_track_no and track.track_no > 0:
-            name = '%d - ' % track.track_no
-        else:
-            name = ''
-        for artist in track.artists:
-            if len(name) > 0:
-                name += ', '
-            name += artist.name
-        if (len(name)) > 0:
-            name += ' - '
-        name += track.name
-        return Ref.track(uri=track.uri, name=name)
-
-    def _get_images(self, song):
-        if 'albumArtRef' in song:
-            return [art_ref['url']
-                    for art_ref in song['albumArtRef']
-                    if 'url' in art_ref]
-
-    def _create_id(self, u):
-        return hashlib.md5(u.encode('utf-8')).hexdigest()
 
     def _convert_to_int(self, string):
         try:
