@@ -29,6 +29,7 @@ setup(
         'Pykka >= 1.1',
         'gmusicapi >= 10.0',
         'requests >= 2.0',
+        'cachetools >= 1.0',
     ],
     entry_points={
         'mopidy.ext': [

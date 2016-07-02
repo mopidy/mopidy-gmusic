@@ -3,10 +3,11 @@ from __future__ import unicode_literals
 import hashlib
 import logging
 
+from cachetools import LRUCache
+
 from mopidy import backend
 from mopidy.models import Album, Artist, Ref, SearchResult, Track
 
-from mopidy_gmusic.lru_cache import LruCache
 
 logger = logging.getLogger(__name__)
 
@@ -20,8 +21,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         self.albums = {}
         self.artists = {}
         self.aa_artists = {}
-        self.aa_tracks = LruCache()
-        self.aa_albums = LruCache()
+        self.aa_tracks = LRUCache(1024)
+        self.aa_albums = LRUCache(1024)
         self.all_access = False
         self._radio_stations_in_browse = (
             self.backend.config['gmusic']['radio_stations_in_browse'])
@@ -165,7 +166,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         is_all_access = uri.startswith('gmusic:track:T')
 
         if is_all_access and self.all_access:
-            track = self.aa_tracks.hit(uri)
+            track = self.aa_tracks.get(uri)
             if track:
                 return [track]
             song = self.backend.session.get_track_info(uri.split(':')[2])
@@ -188,7 +189,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
     def _lookup_album(self, uri):
         is_all_access = uri.startswith('gmusic:album:B')
         if self.all_access and is_all_access:
-            tracks = self.aa_albums.hit(uri)
+            tracks = self.aa_albums.get(uri)
             if tracks:
                 return tracks
             album = self.backend.session.get_album_info(
