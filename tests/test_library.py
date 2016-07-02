@@ -1,6 +1,6 @@
 import unittest
 
-from mopidy_gmusic import actor as backend_lib
+from mopidy_gmusic import backend as backend_lib
 
 from tests.test_extension import ExtensionTest
 

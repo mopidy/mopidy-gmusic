@@ -3,7 +3,7 @@ import unittest
 import mock
 
 from mopidy_gmusic import (
-    GMusicExtension, actor as backend_lib, scrobbler_frontend)
+    GMusicExtension, backend as backend_lib, scrobbler_frontend)
 
 
 class ExtensionTest(unittest.TestCase):

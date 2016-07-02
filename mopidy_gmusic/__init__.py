@@ -42,7 +42,7 @@ class GMusicExtension(ext.Extension):
         return schema
 
     def setup(self, registry):
-        from .actor import GMusicBackend
+        from .backend import GMusicBackend
         from .scrobbler_frontend import GMusicScrobblerFrontend
         registry.add('backend', GMusicBackend)
         registry.add('frontend', GMusicScrobblerFrontend)
