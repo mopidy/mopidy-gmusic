@@ -24,7 +24,6 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         self.aa_artists = {}
         self.aa_tracks = LRUCache(1024)
         self.aa_albums = LRUCache(1024)
-        self.all_access = False
         self._radio_stations_in_browse = (
             self.backend.config['gmusic']['radio_stations_in_browse'])
         self._radio_stations_count = (
@@ -45,8 +44,9 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             GMusicLibraryProvider.root_directory = Ref.directory(
                 uri='gmusic:directory', name='Google Music')
 
-    def set_all_access(self, all_access):
-        self.all_access = all_access
+    @property
+    def all_access(self):
+        return self.backend.session.all_access
 
     def _browse_albums(self):
         refs = []

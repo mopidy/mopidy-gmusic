@@ -77,7 +77,8 @@ Mopidy-GMusic. See Google's docs on `how to make an app password
 <https://support.google.com/accounts/answer/185833>`_ if you're not already
 familiar with this.
 
-All Access subscribers may enable All Access integration by adding this line::
+By default, All Access will be enabled automatically if you subscribe. You may
+force enable or disable it by using the all_access option::
 
     [gmusic]
     all_access = true

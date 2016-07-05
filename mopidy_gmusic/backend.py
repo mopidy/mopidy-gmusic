@@ -49,7 +49,6 @@ class GMusicBackend(
         self.session.login(self.config['gmusic']['username'],
                            self.config['gmusic']['password'],
                            self.config['gmusic']['deviceid'])
-        self.library.set_all_access(self.config['gmusic']['all_access'])
 
         # wait a few seconds to let mopidy settle
         # then refresh google music content asynchronously
