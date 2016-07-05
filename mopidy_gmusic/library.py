@@ -33,8 +33,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         self._root = []
         self._root.append(Ref.directory(uri='gmusic:album', name='Albums'))
         self._root.append(Ref.directory(uri='gmusic:artist', name='Artists'))
-        # browsing all tracks results in connection timeouts
-        # self._root.append(Ref.directory(uri='gmusic:track', name='Tracks'))
+        self._root.append(Ref.directory(uri='gmusic:track', name='Tracks'))
 
         if self._radio_stations_in_browse:
             self._root.append(Ref.directory(uri='gmusic:radio',
@@ -76,6 +75,14 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         artist -- a mopidy artist to cache
         """
         self.aa_artists[artist.uri] = artist
+
+    def _browse_tracks(self):
+        tracks = list(self.tracks.values())
+        tracks.sort(key=lambda ref: ref.name)
+        refs = []
+        for track in tracks:
+            refs.append(track_to_ref(track))
+        return refs
 
     def _browse_albums(self):
         refs = []
@@ -125,6 +132,10 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             return self._root
 
         parts = uri.split(':')
+
+        # tracks
+        if uri == 'gmusic:track':
+            return self._browse_tracks()
 
         # albums
         if uri == 'gmusic:album':
