@@ -4,6 +4,7 @@ import functools
 import logging
 
 import gmusicapi
+from gmusicapi.exceptions import NotLoggedIn
 
 import requests
 
@@ -68,7 +69,10 @@ class GMusicSession(object):
     @property
     def all_access(self):
         if self._all_access is None:
-            return self.api.is_subscribed
+            try:
+                return self.api.is_subscribed
+            except NotLoggedIn:
+                return False
 
         return self._all_access
 
