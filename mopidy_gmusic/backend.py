@@ -34,6 +34,7 @@ class GMusicBackend(
         self._refresh_library_timer = None
         self._refresh_playlists_timer = None
         self._refresh_lock = Lock()
+        self._playlist_lock = Lock()
         self._refresh_last = 0
         # do not run playlist refresh around library refresh
         self._refresh_threshold = self._refresh_playlists_rate * 0.3
@@ -81,32 +82,13 @@ class GMusicBackend(
             t0 = round(time.time())
             logger.info('Start refreshing Google Music library')
             self.library.refresh()
-            self.playlists.refresh()
             t = round(time.time()) - t0
-            logger.info('Finished refreshing Google Music content in %ds', t)
-            self._refresh_last = t0
+            logger.info('Finished refreshing Google Music library in %ds', t)
 
     def _refresh_playlists(self):
-        if not self._refresh_lock.acquire(False):
-            # skip, if library is already loading
-            logger.debug('Skip refresh playlist: library refresh is running.')
-            return
-        t0 = round(time.time())
-        if 0 < self._refresh_library_rate \
-             < self._refresh_threshold + t0 - self._refresh_last:
-            # skip, upcoming library refresh
-            logger.debug('Skip refresh playlist: ' +
-                         'library refresh is around the corner')
-            self._refresh_lock.release()
-            return
-        if self._refresh_last > t0 - self._refresh_threshold:
-            # skip, library was just updated
-            logger.debug('Skip refresh playlist: ' +
-                         'library just finished')
-            self._refresh_lock.release()
-            return
-        logger.info('Start refreshing Google Music playlists')
-        self.playlists.refresh()
-        t = round(time.time()) - t0
-        logger.info('Finished refreshing Google Music playlists in %ds', t)
-        self._refresh_lock.release()
+        with self._playlist_lock:
+            t0 = round(time.time())
+            logger.info('Start refreshing Google Music playlists')
+            self.playlists.refresh()
+            t = round(time.time()) - t0
+            logger.info('Finished refreshing Google Music playlists in %ds', t)
