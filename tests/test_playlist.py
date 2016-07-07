@@ -46,13 +46,16 @@ class PlaylistsTest(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_create(self):
-        self.provider.create('foo')
+        with self.assertRaises(NotImplementedError):
+            self.provider.create('foo')
 
     def test_delete(self):
-        self.provider.delete('gmusic:playlist:foo')
+        with self.assertRaises(NotImplementedError):
+            self.provider.delete('gmusic:playlist:foo')
 
     def test_save(self):
-        self.provider.save(Playlist())
+        with self.assertRaises(NotImplementedError):
+            self.provider.save(Playlist())
 
     def test_lookup_valid(self):
         result = self.provider.lookup('gmusic:playlist:foo')
