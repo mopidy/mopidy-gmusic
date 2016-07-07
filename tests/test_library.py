@@ -44,10 +44,20 @@ class LibraryTest(unittest.TestCase):
         self.assertTrue(found, 'ref \'gmusic:artist\' not found')
         found = False
         for ref in refs:
+            if ref.uri == 'gmusic:track':
+                found = True
+                break
+        self.assertTrue(found, 'ref \'gmusic:track\' not found')
+        found = False
+        for ref in refs:
             if ref.uri == 'gmusic:radio':
                 found = True
                 break
         self.assertTrue(found, 'ref \'gmusic:radio\' not found')
+
+    def test_browse_tracks(self):
+        refs = self.backend.library.browse('gmusic:track')
+        self.assertIsNotNone(refs)
 
     def test_browse_artist(self):
         refs = self.backend.library.browse('gmusic:artist')
