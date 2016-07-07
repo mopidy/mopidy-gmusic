@@ -108,5 +108,5 @@ class GMusicBackend(
         logger.info('Start refreshing Google Music playlists')
         self.playlists.refresh()
         t = round(time.time()) - t0
-        logger.info('Finished refreshing Google Music content in %ds', t)
+        logger.info('Finished refreshing Google Music playlists in %ds', t)
         self._refresh_lock.release()

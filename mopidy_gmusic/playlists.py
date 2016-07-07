@@ -33,29 +33,29 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
             return None
         return [Ref.track(uri=t.uri, name=t.name) for t in playlist.tracks]
 
-    def create(self, name):
-        pass  # TODO
-
-    def delete(self, uri):
-        pass  # TODO
-
     def lookup(self, uri):
         return self._playlists.get(uri)
 
     def refresh(self):
         playlists = {}
 
+        # We need to grab all the songs for later. All access metadata
+        # will be included with the playlist entry, but uploaded music
+        # will not.
+        library_tracks = {}
+        for track in self.backend.session.get_all_songs():
+            if 'storeId' in track:
+                mopidy_track = self.backend.library._aa_to_mopidy_track(track)
+            else:
+                mopidy_track = self.backend.library._to_mopidy_track(track)
+
+            library_tracks[track['id']] = mopidy_track
+
         # add thumbs up playlist
         tracks = []
         for track in self.backend.session.get_promoted_songs():
-            trackId = None
-            if 'trackId' in track:
-                trackId = track['trackId']
-            elif 'storeId' in track:
-                trackId = track['storeId']
-            if trackId:
-                tracks += self.backend.library.lookup(
-                    'gmusic:track:' + trackId)
+            tracks.append(self.backend.library._aa_to_mopidy_track(track))
+
         if len(tracks) > 0:
             uri = 'gmusic:playlist:promoted'
             playlists[uri] = Playlist(uri=uri, name='Promoted', tracks=tracks)
@@ -63,10 +63,15 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
         # load user playlists
         for playlist in self.backend.session.get_all_user_playlist_contents():
             tracks = []
-            for track in playlist['tracks']:
-                if not track['deleted']:
-                    tracks += self.backend.library.lookup('gmusic:track:' +
-                                                          track['trackId'])
+            for entry in playlist['tracks']:
+                if entry['deleted']:
+                    continue
+
+                if entry['source'] == u'1':
+                    tracks.append(library_tracks[entry['trackId']])
+                else:
+                    tracks.append(self.backend.library._aa_to_mopidy_track(
+                        entry['track']))
 
             uri = 'gmusic:playlist:' + playlist['id']
             playlists[uri] = Playlist(uri=uri,
@@ -79,9 +84,12 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                 tracks = []
                 tracklist = self.backend.session.get_shared_playlist_contents(
                     playlist['shareToken'])
-                for track in tracklist:
-                        tracks += self.backend.library.lookup('gmusic:track:' +
-                                                              track['trackId'])
+                for entry in tracklist:
+                    if entry['source'] == u'1':
+                        tracks.append(library_tracks[entry['trackId']])
+                    else:
+                        tracks.append(self.backend.library._aa_to_mopidy_track(
+                            entry['track']))
                 uri = 'gmusic:playlist:' + playlist['id']
                 playlists[uri] = Playlist(uri=uri,
                                           name=playlist['name'],
@@ -100,8 +108,8 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                 tracklist = self.backend.session.get_station_tracks(
                     station['id'], self._radio_tracks_count)
                 for track in tracklist:
-                    tracks += self.backend.library.lookup('gmusic:track:' +
-                                                          track['nid'])
+                    tracks.append(
+                        self.backend.library._aa_to_mopidy_track(track))
                 uri = 'gmusic:playlist:' + station['id']
                 playlists[uri] = Playlist(uri=uri,
                                           name=station['name'],
@@ -112,5 +120,11 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
         self._playlists = playlists
         backend.BackendListener.send('playlists_loaded')
 
+    def create(self, name):
+        raise NotImplementedError
+
+    def delete(self, uri):
+        raise NotImplementedError
+
     def save(self, playlist):
-        pass  # TODO
+        raise NotImplementedError
