@@ -44,17 +44,13 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
         # will not.
         library_tracks = {}
         for track in self.backend.session.get_all_songs():
-            if 'storeId' in track:
-                mopidy_track = self.backend.library._aa_to_mopidy_track(track)
-            else:
-                mopidy_track = self.backend.library._to_mopidy_track(track)
-
+            mopidy_track = self.backend.library._to_mopidy_track(track)
             library_tracks[track['id']] = mopidy_track
 
         # add thumbs up playlist
         tracks = []
         for track in self.backend.session.get_promoted_songs():
-            tracks.append(self.backend.library._aa_to_mopidy_track(track))
+            tracks.append(self.backend.library._to_mopidy_track(track))
 
         if len(tracks) > 0:
             uri = 'gmusic:playlist:promoted'
@@ -70,7 +66,7 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                 if entry['source'] == u'1':
                     tracks.append(library_tracks[entry['trackId']])
                 else:
-                    tracks.append(self.backend.library._aa_to_mopidy_track(
+                    tracks.append(self.backend.library._to_mopidy_track(
                         entry['track']))
 
             uri = 'gmusic:playlist:' + playlist['id']
@@ -88,7 +84,7 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                     if entry['source'] == u'1':
                         tracks.append(library_tracks[entry['trackId']])
                     else:
-                        tracks.append(self.backend.library._aa_to_mopidy_track(
+                        tracks.append(self.backend.library._to_mopidy_track(
                             entry['track']))
                 uri = 'gmusic:playlist:' + playlist['id']
                 playlists[uri] = Playlist(uri=uri,
@@ -109,7 +105,7 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                     station['id'], self._radio_tracks_count)
                 for track in tracklist:
                     tracks.append(
-                        self.backend.library._aa_to_mopidy_track(track))
+                        self.backend.library._to_mopidy_track(track))
                 uri = 'gmusic:playlist:' + station['id']
                 playlists[uri] = Playlist(uri=uri,
                                           name=station['name'],
