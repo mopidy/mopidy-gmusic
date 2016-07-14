@@ -4,7 +4,7 @@ import functools
 import logging
 
 import gmusicapi
-from gmusicapi.exceptions import NotLoggedIn
+from gmusicapi.exceptions import CallFailure, NotLoggedIn
 
 import requests
 
@@ -86,7 +86,12 @@ class GMusicSession(object):
 
     @endpoint(default=None)
     def get_stream_url(self, song_id, quality='hi'):
-        return self.api.get_stream_url(song_id, quality=quality)
+        try:
+            return self.api.get_stream_url(song_id, quality=quality)
+        except CallFailure:
+            logger.warn("Failed to get stream url for %s.", song_id)
+            logger.warn("Please ensure your deviceid is set correctly.")
+            raise
 
     @endpoint(default=list)
     def get_all_playlists(self):
