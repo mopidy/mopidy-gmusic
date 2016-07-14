@@ -1,5 +1,7 @@
 import unittest
 
+from mopidy.models import Ref
+
 from mopidy_gmusic import backend as backend_lib
 
 from tests.test_extension import ExtensionTest
@@ -81,7 +83,8 @@ class LibraryTest(unittest.TestCase):
         refs = self.backend.library.browse('gmusic:radio')
         # tests should be unable to fetch stations :(
         self.assertIsNotNone(refs)
-        self.assertEqual(refs, [])
+        self.assertEqual(refs, [Ref.directory(uri='gmusic:radio:IFL',
+                                              name="I'm Feeling Lucky")])
 
     def test_browse_station(self):
         refs = self.backend.library.browse('gmusic:radio:invalid_stations_id')
