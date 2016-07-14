@@ -101,6 +101,29 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             refs.append(track_to_ref(track))
         return refs
 
+    def _browse_radio_stations(self, uri):
+        stations = self.backend.session.get_radio_stations(
+            self._radio_stations_count)
+        # create Ref objects
+        refs = []
+        for station in stations:
+            refs.append(Ref.directory(uri='gmusic:radio:' + station['id'],
+                                      name=station['name']))
+        return refs
+
+    def _browse_radio_station(self, uri):
+        station_id = uri.split(':')[2]
+        tracks = self.backend.session.get_station_tracks(
+            station_id, self._radio_tracks_count)
+
+        # create Ref objects
+        refs = []
+        for track in tracks:
+            mopidy_track = self._to_mopidy_track(track)
+            self.aa_tracks[mopidy_track.uri] = mopidy_track
+            refs.append(track_to_ref(mopidy_track))
+        return refs
+
     def browse(self, uri):
         logger.debug('browse: %s', str(uri))
         if not uri:
@@ -139,32 +162,12 @@ class GMusicLibraryProvider(backend.LibraryProvider):
 
         # all radio stations
         if uri == 'gmusic:radio':
-            stations = self.backend.session.get_radio_stations(
-                self._radio_stations_count)
-            # create Ref objects
-            refs = []
-            for station in stations:
-                refs.append(Ref.directory(uri='gmusic:radio:' + station['id'],
-                                          name=station['name']))
-            return refs
+            return self._browse_radio_stations(uri)
 
         # a single radio station
         # uri == 'gmusic:radio:station_id'
         if len(parts) == 3 and parts[1] == 'radio':
-            station_id = parts[2]
-            tracks = self.backend.session.get_station_tracks(
-                station_id, self._radio_tracks_count)
-            # create Ref objects
-            refs = []
-            for track in tracks:
-                track_id = track['nid']
-                # some clients request a lookup themself, some don't
-                # we do not want to ask the API for every track twice
-                # we'll fetch some information directly from provided object
-                track_name = '%s - %s' % (track['artist'], track['title'])
-                refs.append(Ref.track(uri='gmusic:track:' + track_id,
-                                      name=track_name))
-            return refs
+            return self._browse_radio_station(uri)
 
         logger.debug('Unknown uri for browse request: %s', uri)
 
