@@ -141,6 +141,7 @@ v2.0.0 (UNRELEASED)
 - General refactoring. (PR: #120, #121)
 - Much faster playlist loading. (PR: #130)
 - Library browse rewrite. (PR: #131)
+- Add IFL playlist and improve radio caching. (PR: #135)
 
 
 v1.0.0 (2015-10-23)
