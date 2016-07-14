@@ -139,6 +139,8 @@ v2.0.0 (UNRELEASED)
 - Caching should be more consistent. (Fixes: #63, PR: #122)
 - Autodetect All Access if not specified in config. (PR: #123)
 - General refactoring. (PR: #120, #121)
+- Much faster playlist loading. (PR: #130)
+- Library browse rewrite. (PR: #131)
 
 
 v1.0.0 (2015-10-23)
