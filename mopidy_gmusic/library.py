@@ -225,7 +225,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 self.aa_albums[uri] = tracks
                 return sorted(tracks, key=lambda t: (t.disc_no, t.track_no))
 
-            logger.warning('Failed to lookup all access track %r: %r',
+            logger.warning('Failed to lookup all access album %r: %r',
                            uri, album)
 
         # Even if the album has an all access ID, we need to look it
