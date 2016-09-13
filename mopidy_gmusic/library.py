@@ -492,7 +492,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                     raise LookupError('Missing query')
 
     def _to_mopidy_track(self, song):
-        track_id = song.get('storeId', song.get('id', song.get('nid')))
+        track_id = song.get('id', song.get('nid'))
         if track_id is None:
             raise ValueError
         return Track(
