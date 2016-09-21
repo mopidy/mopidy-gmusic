@@ -66,6 +66,7 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                 if entry['source'] == u'1':
                     tracks.append(library_tracks[entry['trackId']])
                 else:
+                    entry['track']['id'] = entry['trackId']
                     tracks.append(self.backend.library._to_mopidy_track(
                         entry['track']))
 
@@ -84,8 +85,10 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                     if entry['source'] == u'1':
                         tracks.append(library_tracks[entry['trackId']])
                     else:
+                        entry['track']['id'] = entry['trackId']
                         tracks.append(self.backend.library._to_mopidy_track(
                             entry['track']))
+
                 uri = 'gmusic:playlist:' + playlist['id']
                 playlists[uri] = Playlist(uri=uri,
                                           name=playlist['name'],
