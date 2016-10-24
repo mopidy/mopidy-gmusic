@@ -6,10 +6,6 @@ Mopidy-GMusic
     :target: https://pypi.python.org/pypi/Mopidy-GMusic/
     :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/pypi/dm/Mopidy-GMusic.svg?style=flat
-    :target: https://pypi.python.org/pypi/Mopidy-GMusic/
-    :alt: Number of PyPI downloads
-
 .. image:: https://img.shields.io/travis/mopidy/mopidy-gmusic/develop.svg?style=flat
     :target: https://travis-ci.org/mopidy/mopidy-gmusic
     :alt: Travis CI build status
