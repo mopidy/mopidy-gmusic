@@ -145,10 +145,10 @@ Credits
 Changelog
 =========
 
-v2.0.0 (UNRELEASED)
+v2.0.0 (2016-11-2)
 -------------------
 
-- Require gmusicapi >= 10.0.
+- Require gmusicapi >= 10.1.
 - Make search work for gmusicapi >= 10.0. (Fixes: #116, PR: #117)
 - Enable search for accounts without All Access. (PR: #117)
 - Require cachetools. (PR: #119)
