@@ -222,8 +222,9 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                           for track in album['tracks']]
                 for track in tracks:
                     self.aa_tracks[track.uri] = track
-                self.aa_albums[uri] = sorted(tracks, key=lambda t: (t.disc_no, t.track_no))
-                return self.aa_albums[uri]
+                tracks = sorted(tracks, key=lambda t: (t.disc_no, t.track_no))
+                self.aa_albums[uri] = tracks
+                return tracks
 
             logger.warning('Failed to lookup all access album %r: %r',
                            uri, album)
