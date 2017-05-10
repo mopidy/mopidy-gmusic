@@ -137,6 +137,13 @@ Project resources
 Credits
 =======
 
+We are currently looking for a co-maintainer. Preferably someone who is familiar
+with the codebase, familiar with python development, and uses the uploaded music
+feature. If you're interested, please take a look at the code base and work on
+submitting a pull request or two (to show you understand how everything works
+together). If you need help getting a development environment set up, don't
+hesitate to ping belak in the #mopidy channel on the Freenode IRC network.
+
 - Original author: `Ronald Hecht <https://github.com/hechtus>`_
 - Current maintainer: `Kaleb Elwert <https://github.com/belak>`_
 - `Contributors <https://github.com/mopidy/mopidy-gmusic/graphs/contributors>`_
