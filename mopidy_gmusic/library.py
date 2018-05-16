@@ -496,7 +496,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         track_id = song.get('id', song.get('nid'))
         if track_id is None:
             raise ValueError
-        if track_id[0] != "T":
+        if track_id[0] != "T" and "-" not in track_id:
             track_id = "T"+track_id
         return Track(
             uri='gmusic:track:' + track_id,
