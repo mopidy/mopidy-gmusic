@@ -148,6 +148,13 @@ hesitate to ping belak in the #mopidy channel on the Freenode IRC network.
 Changelog
 =========
 
+v3.0.0 (2018-06-27)
+-------------------
+
+- Add Top Tracks to Artists
+- Work around broken track IDs returned by Google
+- Require Device ID to be set in the config
+
 v2.0.0 (2016-11-2)
 -------------------
 
