@@ -132,18 +132,18 @@ class TestGetSharedPlaylistContents(object):
          .assert_called_once_with('token'))
 
 
-class TestGetPromotedSongs(object):
+class TestGetTopSongs(object):
 
     def test_when_offline(self, offline_session):
-        assert offline_session.get_promoted_songs() == []
+        assert offline_session.get_top_songs() == []
 
     def test_when_online(self, online_session):
-        online_session.api.get_promoted_songs.return_value = (
+        online_session.api.get_top_songs.return_value = (
             mock.sentinel.rv)
 
-        assert online_session.get_promoted_songs() is mock.sentinel.rv
+        assert online_session.get_top_songs() is mock.sentinel.rv
 
-        online_session.api.get_promoted_songs.assert_called_once_with()
+        online_session.api.get_top_songs.assert_called_once_with()
 
 
 class TestGetTrackInfo(object):

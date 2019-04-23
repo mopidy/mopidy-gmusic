@@ -47,23 +47,9 @@ class GMusicBackend(
         self.uri_schemes = ['gmusic']
 
     def on_start(self):
-        self.session.login(self.config['gmusic']['username'],
-                           self.config['gmusic']['password'],
+        self.session.login(self.config['gmusic']['initial_code'],
+                           self.config['gmusic']['refresh_token'],
                            self.config['gmusic']['deviceid'])
-
-        if not self.config['gmusic']['deviceid']:
-            logger.error('There is no gmusic deviceid set. '
-                         'Registered devices are listed below.')
-            for device in self.session.api.get_registered_devices():
-                deviceid = device['id']
-                if deviceid.startswith('ios:'):
-                    deviceid = deviceid[4:]
-                elif deviceid.startswith('0x'):
-                    deviceid = deviceid[2:]
-                logger.error('Name: %s, ID: %s',
-                            device.get('friendlyName', 'Unknown Device'),
-                            deviceid)
-            raise exceptions.BackendError("No deviceid configured")
 
         # wait a few seconds to let mopidy settle
         # then refresh google music content asynchronously

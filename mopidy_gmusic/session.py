@@ -3,8 +3,11 @@ from __future__ import unicode_literals
 import functools
 import logging
 
+from oauth2client.client import OAuth2WebServerFlow
+
 import gmusicapi
 from gmusicapi.exceptions import CallFailure, NotLoggedIn
+from gmusicapi.session import credentials_from_refresh_token, OAuthInfo
 
 import requests
 
@@ -48,22 +51,38 @@ class GMusicSession(object):
         self._all_access = all_access
         if api is None:
             self.api = gmusicapi.Mobileclient()
+            self.api._authtype = 'oauth'
         else:
             self.api = api
 
-    def login(self, username, password, device_id):
+    def login(self, initial_code, refresh_token, device_id):
         if self.api.is_authenticated():
             self.api.logout()
 
         if device_id is None or device_id == "mac":
             device_id = gmusicapi.Mobileclient.FROM_MAC_ADDRESS
 
-        authenticated = self.api.login(username, password, device_id)
+        oauth_info = gmusicapi.Mobileclient._session_class.oauth
+
+        if not refresh_token:
+            flow = OAuth2WebServerFlow(**oauth_info._asdict())
+
+            if not initial_code:
+                logger.error('Please provide the initial code from the following URL: %s', flow.step1_get_authorize_url())
+
+            credentials = flow.step2_exchange(initial_code)
+            refresh_token = credentials.refresh_token
+            logger.info('Please update your config to include the following refresh_token: %s', refresh_token)
+
+        authenticated = self.api.oauth_login(
+            device_id,
+            oauth_credentials=credentials_from_refresh_token(refresh_token, oauth_info))
 
         if authenticated:
             logger.info('Logged in to Google Music')
         else:
-            logger.error('Failed to login to Google Music as "%s"', username)
+            logger.error('Failed to login to Google Music')
+
         return authenticated
 
     @property
@@ -106,8 +125,8 @@ class GMusicSession(object):
         return self.api.get_shared_playlist_contents(share_token)
 
     @endpoint(default=list)
-    def get_promoted_songs(self):
-        return self.api.get_promoted_songs()
+    def get_top_songs(self):
+        return self.api.get_top_songs()
 
     @endpoint(default=None, require_all_access=True)
     def get_track_info(self, store_track_id):

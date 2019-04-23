@@ -49,12 +49,12 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
 
         # add thumbs up playlist
         tracks = []
-        for track in self.backend.session.get_promoted_songs():
+        for track in self.backend.session.get_top_songs():
             tracks.append(self.backend.library._to_mopidy_track(track))
 
         if len(tracks) > 0:
-            uri = 'gmusic:playlist:promoted'
-            playlists[uri] = Playlist(uri=uri, name='Promoted', tracks=tracks)
+            uri = 'gmusic:playlist:top'
+            playlists[uri] = Playlist(uri=uri, name='Top', tracks=tracks)
 
         # load user playlists
         for playlist in self.backend.session.get_all_user_playlist_contents():

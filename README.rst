@@ -39,19 +39,11 @@ Install the Mopidy-GMusic extension by running::
 Configuration
 =============
 
-Before starting Mopidy, you must add your Google username, password and device
-ID to your Mopidy configuration file::
-
-    [gmusic]
-    username = alice
-    password = secret
-    deviceid = 0123456789abcdef
-
-If you use 2-step verification to access your Google account, which you should,
-you must create an application password in your Google account for
-Mopidy-GMusic. See Google's docs on `how to make an app password
-<https://support.google.com/accounts/answer/185833>`_ if you're not already
-familiar with this.
+When you first start mopidy, you will see an error along with a URL to visit.
+Once you've logged in to Google through that URL, simply copy the given value
+into the "initial_code" value of the configuration file. On the next run,
+mopidy will get a refresh token for the given code and output it to the
+console. This must then be copied into the config file as the refresh_token.
 
 Google Play Music now requires all clients to provide a device ID. In the past,
 mopidy-gmusic generated one automatically from your MAC address, but Google
@@ -147,6 +139,13 @@ hesitate to ping belak in the #mopidy channel on the Freenode IRC network.
 
 Changelog
 =========
+
+v4.0.0 (In Progress)
+--------------------
+
+- Require gmusicapi >= 12.1
+- Switch from username/password to oauth flow
+- Change name of the "Promoted" playlist to "Top"
 
 v3.0.0 (2018-06-27)
 -------------------

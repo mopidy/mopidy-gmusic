@@ -27,7 +27,7 @@ setup(
         'setuptools',
         'Mopidy >= 1.0',
         'Pykka >= 1.1',
-        'gmusicapi >= 10.1',
+        'gmusicapi >= 12.1',
         'requests >= 2.0',
         'cachetools >= 1.0',
     ],

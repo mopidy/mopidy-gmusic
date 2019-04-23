@@ -5,7 +5,7 @@ import os
 from mopidy import config, ext
 
 
-__version__ = '3.0.0'
+__version__ = '4.0.0'
 
 
 class GMusicExtension(ext.Extension):
@@ -21,8 +21,8 @@ class GMusicExtension(ext.Extension):
     def get_config_schema(self):
         schema = super(GMusicExtension, self).get_config_schema()
 
-        schema['username'] = config.String()
-        schema['password'] = config.Secret()
+        schema['initial_code'] = config.Secret(optional=True)
+        schema['refresh_token'] = config.Secret(optional=True)
 
         schema['bitrate'] = config.Integer(choices=(128, 160, 320))
 
