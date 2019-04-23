@@ -84,6 +84,13 @@ are the default config values::
     # Limit the number or tracks for each radio station
     radio_tracks_count = 25
 
+The library and playlists are automatically refresh at regular intervals. Refreshing can be CPU-intensive on very low-powered machines (eg Raspberry Pi Zero). The intervals can be configured::
+
+    [gmusic]
+    # How often to refresh the library, in minutes
+    refresh_library = 1440
+    # How often to refresh playlists, in minutes
+    refresh_playlists = 60
 
 Usage
 =====
