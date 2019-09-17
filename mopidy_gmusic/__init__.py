@@ -21,7 +21,6 @@ class GMusicExtension(ext.Extension):
     def get_config_schema(self):
         schema = super(GMusicExtension, self).get_config_schema()
 
-        schema['initial_code'] = config.Secret(optional=True)
         schema['refresh_token'] = config.Secret(optional=True)
 
         schema['bitrate'] = config.Integer(choices=(128, 160, 320))
@@ -48,3 +47,7 @@ class GMusicExtension(ext.Extension):
         from .scrobbler_frontend import GMusicScrobblerFrontend
         registry.add('backend', GMusicBackend)
         registry.add('frontend', GMusicScrobblerFrontend)
+
+    def get_command(self):
+        from .commands import GMusicCommand
+        return GMusicCommand()

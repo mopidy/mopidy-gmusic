@@ -3,11 +3,9 @@ from __future__ import unicode_literals
 import functools
 import logging
 
-from oauth2client.client import OAuth2WebServerFlow
-
 import gmusicapi
 from gmusicapi.exceptions import CallFailure, NotLoggedIn
-from gmusicapi.session import credentials_from_refresh_token, OAuthInfo
+from gmusicapi.session import credentials_from_refresh_token
 
 import requests
 
@@ -55,7 +53,7 @@ class GMusicSession(object):
         else:
             self.api = api
 
-    def login(self, initial_code, refresh_token, device_id):
+    def login(self, refresh_token, device_id):
         if self.api.is_authenticated():
             self.api.logout()
 
@@ -65,18 +63,14 @@ class GMusicSession(object):
         oauth_info = gmusicapi.Mobileclient._session_class.oauth
 
         if not refresh_token:
-            flow = OAuth2WebServerFlow(**oauth_info._asdict())
-
-            if not initial_code:
-                logger.error('Please provide the initial code from the following URL: %s', flow.step1_get_authorize_url())
-
-            credentials = flow.step2_exchange(initial_code)
-            refresh_token = credentials.refresh_token
-            logger.info('Please update your config to include the following refresh_token: %s', refresh_token)
+            logger.error('No refresh_token in gmusic config. Please run ' +
+                         '`mopidy gmusic login`.')
+            return False
 
         authenticated = self.api.oauth_login(
             device_id,
-            oauth_credentials=credentials_from_refresh_token(refresh_token, oauth_info))
+            oauth_credentials=credentials_from_refresh_token(refresh_token,
+                                                             oauth_info))
 
         if authenticated:
             logger.info('Logged in to Google Music')
