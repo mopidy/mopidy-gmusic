@@ -1,6 +1,5 @@
 import unittest
-
-import mock
+from unittest import mock
 
 from mopidy_gmusic import Extension
 from mopidy_gmusic import backend as backend_lib

@@ -1,6 +1,5 @@
 import unittest
-
-import mock
+from unittest import mock
 
 from mopidy.models import Playlist, Ref, Track
 from mopidy_gmusic.playlists import GMusicPlaylistsProvider
