@@ -8,7 +8,7 @@ from mopidy import commands
 class GMusicCommand(commands.Command):
     def __init__(self):
         super().__init__()
-        self.add_child('login', LoginCommand())
+        self.add_child("login", LoginCommand())
 
 
 class LoginCommand(commands.Command):
@@ -16,18 +16,21 @@ class LoginCommand(commands.Command):
         oauth_info = gmusicapi.Mobileclient._session_class.oauth
         flow = OAuth2WebServerFlow(**oauth_info._asdict())
         print()
-        print('Go to the following URL to get an initial auth code, then ' +
-              'provide it below: ' + flow.step1_get_authorize_url())
+        print(
+            "Go to the following URL to get an initial auth code, then "
+            + "provide it below: "
+            + flow.step1_get_authorize_url()
+        )
         print()
         try:
-            initial_code = raw_input('code: ')
+            initial_code = raw_input("code: ")
         except NameError:
             # Python 3
-            initial_code = input('code: ')
+            initial_code = input("code: ")
         credentials = flow.step2_exchange(initial_code)
         refresh_token = credentials.refresh_token
-        print('\nPlease update your config to include the following:')
+        print("\nPlease update your config to include the following:")
         print()
-        print('[gmusic]')
-        print('refresh_token =', refresh_token)
+        print("[gmusic]")
+        print("refresh_token =", refresh_token)
         print()

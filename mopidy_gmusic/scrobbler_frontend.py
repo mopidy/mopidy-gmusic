@@ -20,14 +20,17 @@ class GMusicScrobblerFrontend(pykka.ThreadingActor, core.CoreListener):
 
         if time_position < duration // 2 and time_position < 240:
             logger.debug(
-                'Track not played long enough too scrobble. (50% or 240s)')
+                "Track not played long enough too scrobble. (50% or 240s)"
+            )
             return
 
-        track_id = track.uri.rsplit(':')[-1]
-        logger.debug('Increasing play count: %s', track_id)
+        track_id = track.uri.rsplit(":")[-1]
+        logger.debug("Increasing play count: %s", track_id)
         listener.send(
             GMusicScrobblerListener,
-            'increment_song_playcount', track_id=track_id)
+            "increment_song_playcount",
+            track_id=track_id,
+        )
 
 
 class GMusicScrobblerListener(listener.Listener):
