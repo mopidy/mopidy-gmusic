@@ -1,8 +1,6 @@
-from oauth2client.client import OAuth2WebServerFlow
-
 import gmusicapi
-
 from mopidy import commands
+from oauth2client.client import OAuth2WebServerFlow
 
 
 class GMusicCommand(commands.Command):

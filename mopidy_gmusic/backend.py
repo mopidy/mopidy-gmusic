@@ -1,11 +1,10 @@
 import logging
 import time
-
 from threading import Lock
 
-from mopidy import backend
-
 import pykka
+
+from mopidy import backend
 
 from .library import GMusicLibraryProvider
 from .playback import GMusicPlaybackProvider

@@ -1,9 +1,8 @@
 import logging
 
-from mopidy import core, listener
-
 import pykka
 
+from mopidy import core, listener
 
 logger = logging.getLogger(__name__)
 

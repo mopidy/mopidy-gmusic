@@ -1,7 +1,5 @@
 import logging
-
 import unittest
-
 from threading import Event
 
 from mopidy_gmusic.repeating_timer import RepeatingTimer

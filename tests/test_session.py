@@ -1,11 +1,8 @@
-import gmusicapi
-
 import mock
-
 import pytest
-
 import requests
 
+import gmusicapi
 from mopidy_gmusic import session as session_lib
 
 

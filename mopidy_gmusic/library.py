@@ -1,12 +1,15 @@
 import logging
 
 from cachetools import LRUCache
-
 from mopidy import backend
 from mopidy.models import Album, Artist, Ref, SearchResult, Track
-
-from mopidy_gmusic.translator import album_to_ref, artist_to_ref, track_to_ref
-from mopidy_gmusic.translator import create_id, get_images
+from mopidy_gmusic.translator import (
+    album_to_ref,
+    artist_to_ref,
+    create_id,
+    get_images,
+    track_to_ref,
+)
 
 logger = logging.getLogger(__name__)
 

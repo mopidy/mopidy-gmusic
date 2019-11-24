@@ -1,12 +1,11 @@
 import functools
 import logging
 
+import requests
+
 import gmusicapi
 from gmusicapi.exceptions import CallFailure, NotLoggedIn
 from gmusicapi.session import credentials_from_refresh_token
-
-import requests
-
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,6 @@
 import unittest
 
 from mopidy.models import Ref
-
 from mopidy_gmusic import backend as backend_lib
 
 from tests.test_extension import ExtensionTest

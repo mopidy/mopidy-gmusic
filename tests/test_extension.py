@@ -2,11 +2,9 @@ import unittest
 
 import mock
 
-from mopidy_gmusic import (
-    Extension,
-    backend as backend_lib,
-    scrobbler_frontend,
-)
+from mopidy_gmusic import Extension
+from mopidy_gmusic import backend as backend_lib
+from mopidy_gmusic import scrobbler_frontend
 
 
 class ExtensionTest(unittest.TestCase):

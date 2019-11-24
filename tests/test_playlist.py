@@ -3,7 +3,6 @@ import unittest
 import mock
 
 from mopidy.models import Playlist, Ref, Track
-
 from mopidy_gmusic.playlists import GMusicPlaylistsProvider
 
 from tests.test_extension import ExtensionTest
