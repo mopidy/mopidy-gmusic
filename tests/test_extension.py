@@ -3,7 +3,7 @@ import unittest
 import mock
 
 from mopidy_gmusic import (
-    GMusicExtension, backend as backend_lib, scrobbler_frontend)
+    Extension, backend as backend_lib, scrobbler_frontend)
 
 
 class ExtensionTest(unittest.TestCase):
@@ -26,7 +26,7 @@ class ExtensionTest(unittest.TestCase):
         return {'gmusic': config}
 
     def test_get_default_config(self):
-        ext = GMusicExtension()
+        ext = Extension()
 
         config = ext.get_default_config()
 
@@ -38,7 +38,7 @@ class ExtensionTest(unittest.TestCase):
         self.assertIn('radio_tracks_count = 25', config)
 
     def test_get_config_schema(self):
-        ext = GMusicExtension()
+        ext = Extension()
 
         schema = ext.get_config_schema()
 
@@ -56,7 +56,7 @@ class ExtensionTest(unittest.TestCase):
     def test_get_backend_classes(self):
         registry = mock.Mock()
 
-        ext = GMusicExtension()
+        ext = Extension()
         ext.setup(registry)
 
         self.assertIn(

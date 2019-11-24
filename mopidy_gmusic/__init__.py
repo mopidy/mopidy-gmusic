@@ -8,7 +8,7 @@ from mopidy import config, ext
 __version__ = '4.0.0'
 
 
-class GMusicExtension(ext.Extension):
+class Extension(ext.Extension):
 
     dist_name = 'Mopidy-GMusic'
     ext_name = 'gmusic'
