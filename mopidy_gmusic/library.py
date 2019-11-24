@@ -1,4 +1,5 @@
 import logging
+from functools import reduce
 
 from cachetools import LRUCache
 from mopidy import backend
@@ -446,7 +447,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         )
 
     def _search(self, query=None, uris=None):
-        for (field, values) in query.iteritems():
+        for (field, values) in query.items():
             if not hasattr(values, "__iter__"):
                 values = [values]
 
@@ -481,7 +482,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         self._validate_query(query)
         result_tracks = self.tracks.values()
 
-        for (field, values) in query.iteritems():
+        for (field, values) in query.items():
             if not hasattr(values, "__iter__"):
                 values = [values]
             # FIXME this is bound to be slow for large libraries
@@ -555,7 +556,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         return result_tracks, result_artists, result_albums
 
     def _validate_query(self, query):
-        for (_, values) in query.iteritems():
+        for (_, values) in query.items():
             if not values:
                 raise LookupError("Missing query")
             for value in values:
@@ -575,7 +576,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             album=self._to_mopidy_album(song),
             track_no=song.get("trackNumber", 1),
             disc_no=song.get("discNumber", 1),
-            date=unicode(song.get("year", 0)),
+            date=str(song.get("year", 0)),
             length=int(song["durationMillis"]),
             bitrate=320,
         )
@@ -583,7 +584,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
     def _to_mopidy_album(self, song):
         name = song.get("album", "")
         artist = self._to_mopidy_album_artist(song)
-        date = unicode(song.get("year", 0))
+        date = str(song.get("year", 0))
 
         album_id = song.get("albumId")
         if album_id is None:
@@ -635,7 +636,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             uri="gmusic:album:" + track["albumId"],
             name=track["album"],
             artists=[artist],
-            date=unicode(track.get("year", 0)),
+            date=str(track.get("year", 0)),
         )
 
         return Track(
@@ -645,7 +646,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             album=album,
             track_no=track.get("trackNumber", 1),
             disc_no=track.get("discNumber", 1),
-            date=unicode(track.get("year", 0)),
+            date=str(track.get("year", 0)),
             length=int(track["durationMillis"]),
             bitrate=320,
         )
@@ -660,7 +661,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         uri = "gmusic:album:" + album["albumId"]
         name = album["name"]
         artist = self._aa_search_artist_album_to_mopidy_artist_album(album)
-        date = unicode(album.get("year", 0))
+        date = str(album.get("year", 0))
         return Album(uri=uri, name=name, artists=[artist], date=date)
 
     def _aa_search_artist_album_to_mopidy_artist_album(self, album):

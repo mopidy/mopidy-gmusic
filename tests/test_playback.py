@@ -8,7 +8,7 @@ from mopidy_gmusic import playback
 @pytest.fixture
 def backend():
     backend_mock = mock.Mock()
-    backend_mock.config = {"gmusic": {"bitrate": 160,}}
+    backend_mock.config = {"gmusic": {"bitrate": 160}}
     return backend_mock
 
 
