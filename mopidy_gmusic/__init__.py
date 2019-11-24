@@ -1,8 +1,10 @@
 import pathlib
 
+import pkg_resources
+
 from mopidy import config, ext
 
-__version__ = "4.0.0"
+__version__ = pkg_resources.get_distribution("Mopidy-GMusic").version
 
 
 class Extension(ext.Extension):
