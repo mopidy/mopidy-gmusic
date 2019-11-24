@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import functools
 import logging
 
@@ -43,7 +41,7 @@ def endpoint(default=None, require_all_access=False):
     return outer_wrapper
 
 
-class GMusicSession(object):
+class GMusicSession:
 
     def __init__(self, all_access, api=None):
         self._all_access = all_access

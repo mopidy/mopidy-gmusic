@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import logging
 import operator
 
@@ -12,7 +10,7 @@ logger = logging.getLogger(__name__)
 class GMusicPlaylistsProvider(backend.PlaylistsProvider):
 
     def __init__(self, *args, **kwargs):
-        super(GMusicPlaylistsProvider, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._radio_stations_as_playlists = (
             self.backend.config['gmusic']['radio_stations_as_playlists'])
         self._radio_stations_count = (
@@ -63,7 +61,7 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                 if entry['deleted']:
                     continue
 
-                if entry['source'] == u'1':
+                if entry['source'] == '1':
                     tracks.append(library_tracks[entry['trackId']])
                 else:
                     entry['track']['id'] = entry['trackId']
@@ -82,7 +80,7 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                 tracklist = self.backend.session.get_shared_playlist_contents(
                     playlist['shareToken'])
                 for entry in tracklist:
-                    if entry['source'] == u'1':
+                    if entry['source'] == '1':
                         tracks.append(library_tracks[entry['trackId']])
                     else:
                         entry['track']['id'] = entry['trackId']

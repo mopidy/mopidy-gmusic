@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import gmusicapi
 
 import mock
@@ -28,7 +26,7 @@ def online_session():
 # TODO login
 
 
-class TestLogout(object):
+class TestLogout:
 
     def test_when_offline(self, offline_session):
         assert offline_session.logout() is None
@@ -57,7 +55,7 @@ class TestLogout(object):
         assert 'HTTP request to Google Music failed' in caplog.text
 
 
-class TestGetAllSongs(object):
+class TestGetAllSongs:
 
     def test_when_offline(self, offline_session):
         assert offline_session.get_all_songs() == []
@@ -70,7 +68,7 @@ class TestGetAllSongs(object):
         online_session.api.get_all_songs.assert_called_once_with()
 
 
-class TestGetStreamUrl(object):
+class TestGetStreamUrl:
 
     def test_when_offline(self, offline_session):
         assert offline_session.get_stream_url('abc') is None
@@ -84,7 +82,7 @@ class TestGetStreamUrl(object):
             'abc', quality='hi')
 
 
-class TestGetAllPlaylists(object):
+class TestGetAllPlaylists:
 
     def test_when_offline(self, offline_session):
         assert offline_session.get_all_playlists() == []
@@ -98,7 +96,7 @@ class TestGetAllPlaylists(object):
         online_session.api.get_all_playlists.assert_called_once_with()
 
 
-class TestGetAllUserPlaylistContents(object):
+class TestGetAllUserPlaylistContents:
 
     def test_when_offline(self, offline_session):
         assert offline_session.get_all_user_playlist_contents() == []
@@ -115,7 +113,7 @@ class TestGetAllUserPlaylistContents(object):
          .assert_called_once_with())
 
 
-class TestGetSharedPlaylistContents(object):
+class TestGetSharedPlaylistContents:
 
     def test_when_offline(self, offline_session):
         assert offline_session.get_shared_playlist_contents('token') == []
@@ -132,7 +130,7 @@ class TestGetSharedPlaylistContents(object):
          .assert_called_once_with('token'))
 
 
-class TestGetTopSongs(object):
+class TestGetTopSongs:
 
     def test_when_offline(self, offline_session):
         assert offline_session.get_top_songs() == []
@@ -146,7 +144,7 @@ class TestGetTopSongs(object):
         online_session.api.get_top_songs.assert_called_once_with()
 
 
-class TestGetTrackInfo(object):
+class TestGetTrackInfo:
 
     def test_when_offline(self, offline_session):
         assert offline_session.get_track_info('id') is None
@@ -167,7 +165,7 @@ class TestGetTrackInfo(object):
             in caplog.text)
 
 
-class TestGetAlbumInfo(object):
+class TestGetAlbumInfo:
 
     def test_when_offline(self, offline_session):
         assert offline_session.get_album_info('id') is None
@@ -190,7 +188,7 @@ class TestGetAlbumInfo(object):
             in caplog.text)
 
 
-class TestGetArtistInfo(object):
+class TestGetArtistInfo:
 
     def test_when_offline(self, offline_session):
         assert offline_session.get_artist_info('id') is None
@@ -214,7 +212,7 @@ class TestGetArtistInfo(object):
             in caplog.text)
 
 
-class TestSearchAllAccess(object):
+class TestSearchAllAccess:
 
     def test_when_offline(self, offline_session):
         assert offline_session.search('abba') is None
@@ -239,7 +237,7 @@ class TestSearchAllAccess(object):
             not in caplog.text)
 
 
-class TestGetAllStations(object):
+class TestGetAllStations:
 
     def test_when_offline(self, offline_session):
         assert offline_session.get_all_stations() == [
@@ -254,7 +252,7 @@ class TestGetAllStations(object):
         online_session.api.get_all_stations.assert_called_once_with()
 
 
-class TestGetStationTracks(object):
+class TestGetStationTracks:
 
     def test_when_offline(self, offline_session):
         assert offline_session.get_station_tracks('IFL') == []
@@ -277,7 +275,7 @@ class TestGetStationTracks(object):
             in caplog.text)
 
 
-class TestIncrementSongPlayCount(object):
+class TestIncrementSongPlayCount:
 
     def test_when_offline(self, offline_session):
         assert offline_session.increment_song_playcount('foo') is None

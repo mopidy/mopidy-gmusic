@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import logging
 import time
 
@@ -23,7 +21,7 @@ class GMusicBackend(
         pykka.ThreadingActor, backend.Backend, GMusicScrobblerListener):
 
     def __init__(self, config, audio):
-        super(GMusicBackend, self).__init__()
+        super().__init__()
 
         self.config = config
 

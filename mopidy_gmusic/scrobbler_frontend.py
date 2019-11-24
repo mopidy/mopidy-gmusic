@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import logging
 
 from mopidy import core, listener
@@ -12,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class GMusicScrobblerFrontend(pykka.ThreadingActor, core.CoreListener):
     def __init__(self, config, core):
-        super(GMusicScrobblerFrontend, self).__init__()
+        super().__init__()
 
     def track_playback_ended(self, tl_track, time_position):
         track = tl_track.track

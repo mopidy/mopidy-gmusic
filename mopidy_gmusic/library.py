@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import logging
 
 from cachetools import LRUCache
@@ -17,7 +15,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
     root_directory = Ref.directory(uri='gmusic:directory', name='Google Music')
 
     def __init__(self, *args, **kwargs):
-        super(GMusicLibraryProvider, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # tracks, albums, and artists here refer to what is explicitly
         # in our library.

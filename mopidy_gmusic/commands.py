@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 from oauth2client.client import OAuth2WebServerFlow
 
 import gmusicapi
@@ -9,7 +7,7 @@ from mopidy import commands
 
 class GMusicCommand(commands.Command):
     def __init__(self):
-        super(GMusicCommand, self).__init__()
+        super().__init__()
         self.add_child('login', LoginCommand())
 
 
