@@ -47,14 +47,14 @@ class TestLogout(object):
             'foo', 'bar')
 
         assert online_session.logout() is None
-        assert 'Call to Google Music failed' in caplog.text()
+        assert 'Call to Google Music failed' in caplog.text
 
     def test_when_connection_error(self, online_session, caplog):
         online_session.api.logout.side_effect = (
             requests.exceptions.ConnectionError)
 
         assert online_session.logout() is None
-        assert 'HTTP request to Google Music failed' in caplog.text()
+        assert 'HTTP request to Google Music failed' in caplog.text
 
 
 class TestGetAllSongs(object):
@@ -164,7 +164,7 @@ class TestGetTrackInfo(object):
         assert online_session.get_track_info('id') is None
         assert (
             'Google Play Music All Access is required for get_track_info()'
-            in caplog.text())
+            in caplog.text)
 
 
 class TestGetAlbumInfo(object):
@@ -187,7 +187,7 @@ class TestGetAlbumInfo(object):
         assert online_session.get_album_info('id') is None
         assert (
             'Google Play Music All Access is required for get_album_info()'
-            in caplog.text())
+            in caplog.text)
 
 
 class TestGetArtistInfo(object):
@@ -211,7 +211,7 @@ class TestGetArtistInfo(object):
         assert online_session.get_artist_info('id') is None
         assert (
             'Google Play Music All Access is required for get_artist_info()'
-            in caplog.text())
+            in caplog.text)
 
 
 class TestSearchAllAccess(object):
@@ -236,7 +236,7 @@ class TestSearchAllAccess(object):
         assert online_session.search('abba') is mock.sentinel.rv
         assert (
             'Google Play Music All Access is required for'
-            not in caplog.text())
+            not in caplog.text)
 
 
 class TestGetAllStations(object):
@@ -274,7 +274,7 @@ class TestGetStationTracks(object):
         assert online_session.get_station_tracks('IFL') == []
         assert (
             'Google Play Music All Access is required for get_station_tracks()'
-            in caplog.text())
+            in caplog.text)
 
 
 class TestIncrementSongPlayCount(object):
