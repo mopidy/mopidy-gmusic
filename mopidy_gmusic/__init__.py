@@ -21,6 +21,9 @@ class GMusicExtension(ext.Extension):
     def get_config_schema(self):
         schema = super(GMusicExtension, self).get_config_schema()
 
+        schema['username'] = config.Deprecated()
+        schema['password'] = config.Deprecated()
+
         schema['refresh_token'] = config.Secret(optional=True)
 
         schema['bitrate'] = config.Integer(choices=(128, 160, 320))
