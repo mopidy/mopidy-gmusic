@@ -13,14 +13,16 @@ class ExtensionTest(unittest.TestCase):
         config = {}
         config['username'] = 'testuser@gmail.com'
         config['password'] = 'secret_password'
+        config['refresh_token'] = '0987654321'
         config['deviceid'] = '1234567890'
         config['all_access'] = False
+        config['refresh_library'] = 1440
+        config['refresh_playlists'] = 60
         config['radio_stations_in_browse'] = True
         config['radio_stations_as_playlists'] = False
         config['radio_stations_count'] = 0
         config['radio_tracks_count'] = 25
-        config['refresh_library'] = 1440
-        config['refresh_playlists'] = 60
+        config['top_tracks_count'] = 20
         return {'gmusic': config}
 
     def test_get_default_config(self):
