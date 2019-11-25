@@ -15,16 +15,12 @@ class LoginCommand(commands.Command):
         flow = OAuth2WebServerFlow(**oauth_info._asdict())
         print()
         print(
-            "Go to the following URL to get an initial auth code, then "
-            + "provide it below: "
-            + flow.step1_get_authorize_url()
+            "Go to the following URL to get an initial auth code, "
+            "then provide it below:"
         )
+        print(flow.step1_get_authorize_url())
         print()
-        try:
-            initial_code = raw_input("code: ")
-        except NameError:
-            # Python 3
-            initial_code = input("code: ")
+        initial_code = input("code: ")
         credentials = flow.step2_exchange(initial_code)
         refresh_token = credentials.refresh_token
         print("\nPlease update your config to include the following:")
