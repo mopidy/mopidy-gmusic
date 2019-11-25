@@ -8,7 +8,6 @@ from mopidy_gmusic.translator import (
     album_to_ref,
     artist_to_ref,
     create_id,
-    get_images,
     track_to_ref,
 )
 
@@ -591,7 +590,6 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             album_id = create_id(artist.name + name + date)
 
         uri = "gmusic:album:" + album_id
-        images = get_images(song)
         return Album(
             uri=uri,
             name=name,
@@ -599,7 +597,6 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             num_tracks=song.get("totalTrackCount"),
             num_discs=song.get("totalDiscCount"),
             date=date,
-            images=images,
         )
 
     def _to_mopidy_artist(self, song):
