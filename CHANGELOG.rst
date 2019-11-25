@@ -4,8 +4,8 @@ Changelog
 *********
 
 
-v4.0.0rc1 (UNRELEASED)
-======================
+v4.0.0a1 (2019-11-25)
+=====================
 
 - Require Mopidy >= 3.0.0a5. (PR: #227)
 - Require Python >= 3.7. (Fixes: #226, PR: #227)
