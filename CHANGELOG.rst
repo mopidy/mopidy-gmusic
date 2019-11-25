@@ -4,12 +4,15 @@ Changelog
 *********
 
 
-v4.0.0 (UNRELEASED)
-===================
+v4.0.0rc1 (UNRELEASED)
+======================
 
+- Require Mopidy >= 3.0.0a5. (PR: #227)
+- Require Python >= 3.7. (Fixes: #226, PR: #227)
 - Require gmusicapi >= 12.1.
 - Switch from username/password to OAuth flow.
 - Change name of the "Promoted" playlist to "Top".
+- Update project setup. (PR: #227)
 
 
 v3.0.0 (2018-06-27)
