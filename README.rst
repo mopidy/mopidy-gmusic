@@ -116,26 +116,6 @@ as well. You can even add songs from your All Access subscription to
 your library. Mopidy will able to play them.
 
 
-SSL Errors
-==========
-
-There have been reports of some errors relating to certificate verification like
-the following::
-
-    SSLError: ("bad handshake: Error([('SSL routines', 'SSL3_GET_SERVER_CERTIFICATE', 'certificate verify failed')],)",)
-
-This is because OpenSSL 1.0.1 cannot handle cross-signed certificates. There
-have been a number of possible solutions for this. Below, they are listed in
-order of preference. If one is not possible or does not work, try the next one.
-
-- Upgrade to OpenSSL 1.0.2
-- Assign the result of the following command to the REQUESTS_CA_BUNDLE::
-
-    python -c 'import certifi; print certifi.old_where()'
-
-- Downgrade to certifi==2015.04.28
-
-
 Project resources
 =================
 
