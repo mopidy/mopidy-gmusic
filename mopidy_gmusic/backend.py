@@ -1,13 +1,10 @@
-from __future__ import unicode_literals
-
 import logging
 import time
-
 from threading import Lock
 
-from mopidy import backend
-
 import pykka
+
+from mopidy import backend
 
 from .library import GMusicLibraryProvider
 from .playback import GMusicPlaybackProvider
@@ -20,17 +17,17 @@ logger = logging.getLogger(__name__)
 
 
 class GMusicBackend(
-        pykka.ThreadingActor, backend.Backend, GMusicScrobblerListener):
-
+    pykka.ThreadingActor, backend.Backend, GMusicScrobblerListener
+):
     def __init__(self, config, audio):
-        super(GMusicBackend, self).__init__()
+        super().__init__()
 
         self.config = config
 
-        self._refresh_library_rate = \
-            config['gmusic']['refresh_library'] * 60.0
-        self._refresh_playlists_rate = \
-            config['gmusic']['refresh_playlists'] * 60.0
+        self._refresh_library_rate = config["gmusic"]["refresh_library"] * 60.0
+        self._refresh_playlists_rate = (
+            config["gmusic"]["refresh_playlists"] * 60.0
+        )
         self._refresh_library_timer = None
         self._refresh_playlists_timer = None
         self._refresh_lock = Lock()
@@ -42,25 +39,27 @@ class GMusicBackend(
         self.library = GMusicLibraryProvider(backend=self)
         self.playback = GMusicPlaybackProvider(audio=audio, backend=self)
         self.playlists = GMusicPlaylistsProvider(backend=self)
-        self.session = GMusicSession(all_access=config['gmusic']['all_access'])
+        self.session = GMusicSession(all_access=config["gmusic"]["all_access"])
 
-        self.uri_schemes = ['gmusic']
+        self.uri_schemes = ["gmusic"]
 
     def on_start(self):
-        self.session.login(self.config['gmusic']['refresh_token'],
-                           self.config['gmusic']['deviceid'])
+        self.session.login(
+            self.config["gmusic"]["refresh_token"],
+            self.config["gmusic"]["deviceid"],
+        )
 
         # wait a few seconds to let mopidy settle
         # then refresh google music content asynchronously
         self._refresh_library_timer = RepeatingTimer(
-            self._refresh_library,
-            self._refresh_library_rate)
+            self._refresh_library, self._refresh_library_rate
+        )
         self._refresh_library_timer.start()
         # schedule playlist refresh as desired
         if self._refresh_playlists_rate > 0:
             self._refresh_playlists_timer = RepeatingTimer(
-                self._refresh_playlists,
-                self._refresh_playlists_rate)
+                self._refresh_playlists, self._refresh_playlists_rate
+            )
             self._refresh_playlists_timer.start()
 
     def on_stop(self):
@@ -79,15 +78,15 @@ class GMusicBackend(
     def _refresh_library(self):
         with self._refresh_lock:
             t0 = round(time.time())
-            logger.info('Start refreshing Google Music library')
+            logger.info("Start refreshing Google Music library")
             self.library.refresh()
             t = round(time.time()) - t0
-            logger.info('Finished refreshing Google Music library in %ds', t)
+            logger.info("Finished refreshing Google Music library in %ds", t)
 
     def _refresh_playlists(self):
         with self._playlist_lock:
             t0 = round(time.time())
-            logger.info('Start refreshing Google Music playlists')
+            logger.info("Start refreshing Google Music playlists")
             self.playlists.refresh()
             t = round(time.time()) - t0
-            logger.info('Finished refreshing Google Music playlists in %ds', t)
+            logger.info("Finished refreshing Google Music playlists in %ds", t)
