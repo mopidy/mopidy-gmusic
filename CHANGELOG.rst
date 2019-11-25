@@ -12,6 +12,7 @@ v4.0.0rc1 (UNRELEASED)
 - Require gmusicapi >= 12.1.
 - Switch from username/password to OAuth flow.
 - Change name of the "Promoted" playlist to "Top".
+- Report the bitrate of tracks based on the bitrate config. (PR: #111)
 - Update project setup. (PR: #227)
 
 
