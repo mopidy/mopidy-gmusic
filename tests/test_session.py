@@ -43,7 +43,7 @@ class TestLogout:
         )
 
         assert online_session.logout() is None
-        assert "Call to Google Music failed" in caplog.text
+        assert "Call to Google Play Music failed" in caplog.text
 
     def test_when_connection_error(self, online_session, caplog):
         online_session.api.logout.side_effect = (
@@ -51,7 +51,7 @@ class TestLogout:
         )
 
         assert online_session.logout() is None
-        assert "HTTP request to Google Music failed" in caplog.text
+        assert "HTTP request to Google Play Music failed" in caplog.text
 
 
 class TestGetAllSongs:

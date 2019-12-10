@@ -219,21 +219,21 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         try:
             return [self.tracks[uri]]
         except KeyError:
-            logger.debug("Track not a library track %r", uri)
+            logger.debug(f"Track {uri!r} is not a library track")
             pass
 
         if is_all_access and self.all_access:
             track = self.aa_tracks.get(uri)
             if track:
                 return [track]
-            song = self.backend.session.get_track_info(uri.split(":")[2])
-            if song is None:
-                logger.warning("There is no song %r", uri)
+            track = self.backend.session.get_track_info(uri.split(":")[2])
+            if track is None:
+                logger.warning(f"Could not find track {uri!r}")
                 return []
-            if "artistId" not in song:
-                logger.warning("Failed to lookup %r", uri)
+            if "artistId" not in track:
+                logger.warning(f"Failed to lookup {uri!r}")
                 return []
-            mopidy_track = self._to_mopidy_track(song)
+            mopidy_track = self._to_mopidy_track(track)
             self.aa_tracks[mopidy_track.uri] = mopidy_track
             return [mopidy_track]
         else:
@@ -258,9 +258,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 self.aa_albums[uri] = tracks
                 return tracks
 
-            logger.warning(
-                "Failed to lookup all access album %r: %r", uri, album
-            )
+            logger.warning(f"Failed to lookup all access album {uri!r}")
 
         # Even if the album has an all access ID, we need to look it
         # up here (as a fallback) because purchased tracks can have a
@@ -268,7 +266,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         try:
             album = self.albums[uri]
         except KeyError:
-            logger.debug("Failed to lookup %r", uri)
+            logger.debug(f"Failed to lookup {uri!r}")
             return []
 
         tracks = self._find_exact(
@@ -333,7 +331,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                 if artist in album.artists
             ]
         else:
-            logger.debug("0 albums available for artist %r", uri)
+            logger.debug(f"No albums available for artist {uri!r}")
             return []
 
     def _lookup_artist(self, uri, exact_match=False):
@@ -352,7 +350,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
                     all_access_id, max_top_tracks=0, max_rel_artist=0
                 )
                 if not artist_infos or not artist_infos["albums"]:
-                    logger.warning("Failed to lookup %r", artist_infos)
+                    logger.warning(f"Failed to lookup {artist_infos}!r")
                 tracks = [
                     self._lookup_album("gmusic:album:" + album["albumId"])
                     for album in artist_infos["albums"]
@@ -364,7 +362,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         try:
             artist = self.artists[uri]
         except KeyError:
-            logger.debug("Failed to lookup %r", uri)
+            logger.debug(f"Failed to lookup {uri!r}")
             return []
 
         tracks = self._find_exact(dict(artist=artist.name)).tracks
@@ -453,7 +451,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             # Since gmusic does not support search filters, just search for the
             # first 'searchable' filter
             if field in ["track_name", "album", "artist", "albumartist", "any"]:
-                logger.info("Searching Google Play Music for: %s", values[0])
+                logger.info(f"Searching Google Play Music for: {values[0]}")
                 res = self.backend.session.search(values[0], max_results=50)
                 if res is None:
                     return [], [], []

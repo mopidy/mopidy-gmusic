@@ -101,11 +101,11 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                 )
 
         num_playlists = len(playlists)
-        logger.info("Loaded %d playlists from Google Music", num_playlists)
+        logger.info("Loaded %d playlists from Google Play Music", num_playlists)
 
         # load radios as playlists
         if self._radio_stations_as_playlists:
-            logger.info("Starting to loading radio stations")
+            logger.debug("Loading radio stations")
             stations = self.backend.session.get_radio_stations(
                 self._radio_stations_count
             )
@@ -122,7 +122,9 @@ class GMusicPlaylistsProvider(backend.PlaylistsProvider):
                 )
 
             num_radios = len(playlists) - num_playlists
-            logger.info("Loaded %d radios from Google Music", num_radios)
+            logger.info(
+                f"Loaded {num_radios} radio stations from Google Play Music"
+            )
 
         self._playlists = playlists
         backend.BackendListener.send("playlists_loaded")

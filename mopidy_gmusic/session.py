@@ -29,10 +29,10 @@ def endpoint(default=None, require_all_access=False):
             try:
                 return func(self, *args, **kwargs)
             except gmusicapi.CallFailure:
-                logger.exception("Call to Google Music failed")
+                logger.exception("Call to Google Play Music failed")
                 return default
             except requests.exceptions.RequestException:
-                logger.exception("HTTP request to Google Music failed")
+                logger.exception("HTTP request to Google Play Music failed")
                 return default
 
         return inner_wrapper
@@ -73,9 +73,9 @@ class GMusicSession:
         )
 
         if authenticated:
-            logger.info("Logged in to Google Music")
+            logger.info("Logged in to Google Play Music")
         else:
-            logger.error("Failed to login to Google Music")
+            logger.error("Failed to login to Google Play Music")
 
         return authenticated
 

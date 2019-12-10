@@ -78,15 +78,15 @@ class GMusicBackend(
     def _refresh_library(self):
         with self._refresh_lock:
             t0 = round(time.time())
-            logger.info("Start refreshing Google Music library")
+            logger.debug("Refreshing library")
             self.library.refresh()
             t = round(time.time()) - t0
-            logger.info("Finished refreshing Google Music library in %ds", t)
+            logger.debug(f"Refreshed library in {t:.1f}s")
 
     def _refresh_playlists(self):
         with self._playlist_lock:
             t0 = round(time.time())
-            logger.info("Start refreshing Google Music playlists")
+            logger.debug("Refreshing playlists")
             self.playlists.refresh()
             t = round(time.time()) - t0
-            logger.info("Finished refreshing Google Music playlists in %ds", t)
+            logger.debug(f"Refreshed playlists in {t:.1f}s")
