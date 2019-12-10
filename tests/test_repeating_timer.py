@@ -26,7 +26,7 @@ class ExtensionTest(unittest.TestCase):
     def test_stop(self):
         timer = RepeatingTimer(self._run_by_timer, 10)
         timer.start()
-        assert timer.isAlive(), "timer is not running"
+        assert timer.is_alive(), "timer is not running"
         timer.cancel()
         timer.join(1)
-        assert not timer.isAlive(), "timer is still alive"
+        assert not timer.is_alive(), "timer is still alive"
