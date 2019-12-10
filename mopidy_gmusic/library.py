@@ -15,7 +15,9 @@ logger = logging.getLogger(__name__)
 
 
 class GMusicLibraryProvider(backend.LibraryProvider):
-    root_directory = Ref.directory(uri="gmusic:directory", name="Google Music")
+    root_directory = Ref.directory(
+        uri="gmusic:directory", name="Google Play Music"
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
