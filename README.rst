@@ -42,9 +42,11 @@ You must have a Google account, and either:
 Installation
 ============
 
-Install the Mopidy-GMusic extension by running::
+Install by running::
 
-    python3 -m pip install mopidy-gmusic
+    sudo python3 -m pip install Mopidy-GMusic
+
+See https://mopidy.com/ext/gmusic/ for alternative installation methods
 
 
 Configuration
