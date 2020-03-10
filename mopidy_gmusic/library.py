@@ -373,6 +373,8 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         return sorted(tracks, key=sorter)
 
     def refresh(self, uri=None):
+        logger.info("Refreshing library")
+
         self.tracks = {}
         self.albums = {}
         self.artists = {}
@@ -406,6 +408,13 @@ class GMusicLibraryProvider(backend.LibraryProvider):
             if not artist_found:
                 for artist in album.artists:
                     self.artists[artist.uri] = artist
+
+        logger.info(
+            "Loaded "
+            f"{len(self.artists)} artists, "
+            f"{len(self.albums)} albums, "
+            f"{len(self.tracks)} tracks from Google Play Music"
+        )
 
     def search(self, query=None, uris=None, exact=False):
         if exact:
@@ -589,9 +598,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
         artist = self._to_mopidy_album_artist(song)
         date = str(song.get("year", 0))
 
-        album_id = song.get("albumId")
-        if album_id is None:
-            album_id = create_id(artist.name + name + date)
+        album_id = create_id(f"{artist.name}|{name}|{date}")
 
         uri = "gmusic:album:" + album_id
         return Album(
@@ -605,11 +612,7 @@ class GMusicLibraryProvider(backend.LibraryProvider):
 
     def _to_mopidy_artist(self, song):
         name = song.get("artist", "")
-        artist_id = song.get("artistId")
-        if artist_id is not None:
-            artist_id = artist_id[0]
-        else:
-            artist_id = create_id(name)
+        artist_id = create_id(name)
         uri = "gmusic:artist:" + artist_id
         return Artist(uri=uri, name=name)
 
