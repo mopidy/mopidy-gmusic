@@ -4,6 +4,14 @@ Changelog
 *********
 
 
+v4.0.1 (2020-12-07)
+===================
+
+- Warn about Google Play Music service no longer being operational.
+- Fix track filtering (PR: #232)
+- Don't use inconsistent `albumId` or `artistId` (PR: #233)
+
+
 v4.0.0 (2019-12-22)
 ===================
 
