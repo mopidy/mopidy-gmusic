@@ -1,3 +1,14 @@
+*******
+WARNING
+*******
+
+As of December 2020, **the Google Play Music service is no longer operational**.
+Thus, the maintenance of this extension has been stopped.
+The ``mopidy-gmusic`` package has been removed from Debian/Ubuntu,
+and the Git repo is put into archive mode.
+
+----
+
 *************
 Mopidy-GMusic
 *************
@@ -16,18 +27,6 @@ Mopidy-GMusic
 
 `Mopidy <https://mopidy.com/>`_ extension for playing music from
 `Google Play Music <https://play.google.com/music/>`_.
-
-
-Co-maintainer wanted
-====================
-
-We are currently looking for a co-maintainer. Preferably someone who is
-familiar with the codebase, familiar with Python development, and uses the
-uploaded music feature. If you're interested, please take a look at the code
-base and work on submitting a pull request or two to show you understand how
-everything works together. If you need help getting a development environment
-set up, don't hesitate to ping "belak" in the ``#mopidy`` channel on the
-Freenode IRC network.
 
 
 Dependencies
